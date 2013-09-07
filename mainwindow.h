@@ -16,6 +16,7 @@ public:
     ~MainWindow();
     
 private slots:
+    void exitProgram();
 
 private:
     Ui::MainWindow *ui;

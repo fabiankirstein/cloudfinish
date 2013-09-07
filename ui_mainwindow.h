@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat 7. Sep 12:52:03 2013
+** Created: Sat 7. Sep 13:16:35 2013
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -19,8 +19,8 @@
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
+#include <QtGui/QPushButton>
 #include <QtGui/QStatusBar>
-#include <QtGui/QTabWidget>
 #include <QtGui/QToolBar>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
@@ -36,9 +36,7 @@ public:
     QWidget *widget_2;
     QWidget *widget_3;
     QWidget *widget;
-    QTabWidget *tabWidget;
-    QWidget *tab;
-    QWidget *tab_2;
+    QPushButton *exitButton;
     QMenuBar *menuBar;
     QMenu *menuDatei;
     QMenu *menuExtras;
@@ -89,16 +87,10 @@ public:
         sizePolicy1.setHeightForWidth(widget->sizePolicy().hasHeightForWidth());
         widget->setSizePolicy(sizePolicy1);
         widget->setMinimumSize(QSize(200, 0));
-        widget->setStyleSheet(QString::fromUtf8("background-color: rgb(219, 255, 255);"));
-        tabWidget = new QTabWidget(widget);
-        tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
-        tabWidget->setGeometry(QRect(0, 0, 191, 331));
-        tab = new QWidget();
-        tab->setObjectName(QString::fromUtf8("tab"));
-        tabWidget->addTab(tab, QString());
-        tab_2 = new QWidget();
-        tab_2->setObjectName(QString::fromUtf8("tab_2"));
-        tabWidget->addTab(tab_2, QString());
+        widget->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 138, 188);"));
+        exitButton = new QPushButton(widget);
+        exitButton->setObjectName(QString::fromUtf8("exitButton"));
+        exitButton->setGeometry(QRect(120, 430, 75, 23));
 
         horizontalLayout_2->addWidget(widget);
 
@@ -132,8 +124,7 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "CloundFinish v0.1", 0, QApplication::UnicodeUTF8));
-        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "Tab 1", 0, QApplication::UnicodeUTF8));
-        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("MainWindow", "Tab 2", 0, QApplication::UnicodeUTF8));
+        exitButton->setText(QApplication::translate("MainWindow", "Exit", 0, QApplication::UnicodeUTF8));
         menuDatei->setTitle(QApplication::translate("MainWindow", "Datei", 0, QApplication::UnicodeUTF8));
         menuExtras->setTitle(QApplication::translate("MainWindow", "Extras", 0, QApplication::UnicodeUTF8));
         menuHilfe->setTitle(QApplication::translate("MainWindow", "Hilfe", 0, QApplication::UnicodeUTF8));
