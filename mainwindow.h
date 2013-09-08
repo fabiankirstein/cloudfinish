@@ -3,6 +3,11 @@
 
 #include <QMainWindow>
 
+#include "cloudvisualizer.h"
+#include "cloudio.h"
+
+#include <QVTKWidget.h>
+
 namespace Ui {
 class MainWindow;
 }
@@ -20,6 +25,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    CF::CloudVisualizer *visu;
+
 };
 
 #endif // MAINWINDOW_H

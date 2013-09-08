@@ -24,12 +24,10 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QWidget" name="widget_2" native="true">
+       <widget class="QVTKWidget" name="vtkwidget" native="true">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(0, 0, 0);</string>
+         <string notr="true"/>
         </property>
-        <zorder>widget</zorder>
-        <zorder>widget</zorder>
        </widget>
       </item>
       <item>
@@ -95,8 +93,9 @@
    </property>
    <widget class="QMenu" name="menuDatei">
     <property name="title">
-     <string>Datei</string>
+     <string>File</string>
     </property>
+    <addaction name="actionOpenPointCloud"/>
    </widget>
    <widget class="QMenu" name="menuExtras">
     <property name="title">
@@ -105,7 +104,7 @@
    </widget>
    <widget class="QMenu" name="menuHilfe">
     <property name="title">
-     <string>Hilfe</string>
+     <string>Help</string>
     </property>
    </widget>
    <addaction name="menuDatei"/>
@@ -121,8 +120,21 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionOpenPointCloud">
+   <property name="text">
+    <string>Open Point Cloud</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QVTKWidget</class>
+   <extends>QWidget</extends>
+   <header>QVTKWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat 7. Sep 13:16:35 2013
+** Created: Sun 8. Sep 16:33:01 2013
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -24,16 +24,18 @@
 #include <QtGui/QToolBar>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
+#include "QVTKWidget.h"
 
 QT_BEGIN_NAMESPACE
 
 class Ui_MainWindow
 {
 public:
+    QAction *actionOpenPointCloud;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
-    QWidget *widget_2;
+    QVTKWidget *vtkwidget;
     QWidget *widget_3;
     QWidget *widget;
     QPushButton *exitButton;
@@ -49,6 +51,8 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->resize(860, 536);
+        actionOpenPointCloud = new QAction(MainWindow);
+        actionOpenPointCloud->setObjectName(QString::fromUtf8("actionOpenPointCloud"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         centralWidget->setMinimumSize(QSize(860, 0));
@@ -59,11 +63,11 @@ public:
         verticalLayout = new QVBoxLayout();
         verticalLayout->setSpacing(6);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        widget_2 = new QWidget(centralWidget);
-        widget_2->setObjectName(QString::fromUtf8("widget_2"));
-        widget_2->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 0);"));
+        vtkwidget = new QVTKWidget(centralWidget);
+        vtkwidget->setObjectName(QString::fromUtf8("vtkwidget"));
+        vtkwidget->setStyleSheet(QString::fromUtf8(""));
 
-        verticalLayout->addWidget(widget_2);
+        verticalLayout->addWidget(vtkwidget);
 
         widget_3 = new QWidget(centralWidget);
         widget_3->setObjectName(QString::fromUtf8("widget_3"));
@@ -115,6 +119,7 @@ public:
         menuBar->addAction(menuDatei->menuAction());
         menuBar->addAction(menuExtras->menuAction());
         menuBar->addAction(menuHilfe->menuAction());
+        menuDatei->addAction(actionOpenPointCloud);
 
         retranslateUi(MainWindow);
 
@@ -124,10 +129,11 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "CloundFinish v0.1", 0, QApplication::UnicodeUTF8));
+        actionOpenPointCloud->setText(QApplication::translate("MainWindow", "Open Point Cloud", 0, QApplication::UnicodeUTF8));
         exitButton->setText(QApplication::translate("MainWindow", "Exit", 0, QApplication::UnicodeUTF8));
-        menuDatei->setTitle(QApplication::translate("MainWindow", "Datei", 0, QApplication::UnicodeUTF8));
+        menuDatei->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
         menuExtras->setTitle(QApplication::translate("MainWindow", "Extras", 0, QApplication::UnicodeUTF8));
-        menuHilfe->setTitle(QApplication::translate("MainWindow", "Hilfe", 0, QApplication::UnicodeUTF8));
+        menuHilfe->setTitle(QApplication::translate("MainWindow", "Help", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
