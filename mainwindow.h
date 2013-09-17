@@ -2,9 +2,30 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFileDialog>
+#include <QMessageBox>
 
 #include "cloudvisualizer.h"
 #include "cloudio.h"
+
+// PCL //////////////////////////
+#include <pcl/io/pcd_io.h>
+#include <pcl/io/ply_io.h>
+#include <pcl/io/io.h>
+
+// Region Growing
+#include <vector>
+#include <pcl/point_types.h>
+#include <pcl/search/search.h>
+#include <pcl/search/kdtree.h>
+#include <pcl/features/normal_3d.h>
+#include <pcl/filters/passthrough.h>
+#include <pcl/segmentation/region_growing.h>
+
+
+// END PCL ///////////////////////
+
+
 
 #include <QVTKWidget.h>
 
@@ -19,13 +40,28 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    void printInfo(QString text);
+    void printError(QString text);
+    void printSuccess(QString text);
+
+    // The Main Cloud!
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr mainCloud;
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr fallbackCloud;
     
 private slots:
     void exitProgram();
+    void openFile();
+
+    void regionGrowing();
+
+    void undo();
 
 private:
     Ui::MainWindow *ui;
     CF::CloudVisualizer *visu;
+
+    void bleachCloud(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud);
 
 };
 

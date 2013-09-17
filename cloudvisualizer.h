@@ -19,6 +19,7 @@ class CloudVisualizer : public QObject
 public:
     explicit CloudVisualizer(QVTKWidget *vtkwidget, QObject *parent = 0);
     pcl::visualization::PCLVisualizer visualizer;
+    void update();
 
 signals:
     

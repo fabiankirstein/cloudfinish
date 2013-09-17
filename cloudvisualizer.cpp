@@ -8,3 +8,8 @@ CloudVisualizer::CloudVisualizer(QVTKWidget *vtkwidget, QObject *parent)
     this->vtkwidget->SetRenderWindow(this->visualizer.getRenderWindow());
 
 }
+
+void CloudVisualizer::update()
+{
+    this->vtkwidget->update();
+}
