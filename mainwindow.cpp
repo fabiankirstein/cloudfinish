@@ -12,11 +12,13 @@ MainWindow::MainWindow(QWidget *parent) :
     window()->showMaximized();
 
     ui->console->setFontPointSize(11.0);
-
     // CONNECTIONS
     connect(ui->actionOpenPointCloud, SIGNAL(triggered()), this, SLOT(openFile()));
+    connect(ui->actionSavePointCloud, SIGNAL(triggered()), this, SLOT(saveFile()));
     connect(ui->startRegionGrowing, SIGNAL(clicked()), this, SLOT(regionGrowing()));
     connect(ui->actionUndo, SIGNAL(triggered()), this, SLOT(undo()));
+    connect(ui->buttonSetWhite, SIGNAL(clicked()), this, SLOT(setWhite()));
+    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(showAboutDialog()));
 
 
     // END CONNECTIONS
@@ -35,19 +37,24 @@ MainWindow::~MainWindow()
 void MainWindow::printInfo(QString text)
 {
     ui->console->setTextColor(Qt::black);
-    ui->console->append(text);
+    this->printWithTime(text);
 }
 
 void MainWindow::printError(QString text)
 {
     ui->console->setTextColor(Qt::red);
-    ui->console->append(text);
+    this->printWithTime(text);
 }
 
 void MainWindow::printSuccess(QString text)
 {
     ui->console->setTextColor(Qt::darkGreen);
-    ui->console->append(text);
+    this->printWithTime(text);
+}
+
+void MainWindow::printWithTime(QString text)
+{
+     ui->console->append("[" + QTime::currentTime().toString() + "]  " + text);
 }
 
 
@@ -69,21 +76,33 @@ void MainWindow::openFile()
 
         if(fileName.endsWith(".pcd")) {
             this->printInfo("Loading File: " + fileName);
+            qApp->processEvents();
             pcl::io::loadPCDFile(fileName.toStdString(), *mainCloud);
             this->printSuccess("Done Loading File: " + fileName);
         }
 
         if(fileName.endsWith(".ply")) {
             this->printInfo("Loading File: " + fileName);
+            qApp->processEvents();
             pcl::io::loadPLYFile(fileName.toStdString(), *mainCloud);
             this->printSuccess("Done Loading File: " + fileName);
         }
 
         visu->visualizer.removePointCloud("cat");
-        this->bleachCloud(mainCloud);
+        //this->bleachCloud(mainCloud);
         visu->visualizer.addPointCloud(mainCloud, "cat");
         visu->visualizer.resetCamera();
         visu->update();
+    }
+
+}
+
+void MainWindow::saveFile()
+{
+    QString saveFile = QFileDialog::getSaveFileName(this, tr("Save as PCD"), "", ".pcd");
+
+    if(saveFile != NULL) {
+        pcl::io::savePCDFileASCII(saveFile.toStdString(), *mainCloud);
     }
 
 }
@@ -111,6 +130,7 @@ void MainWindow::regionGrowing()
         fallbackCloud = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(mainCloud);
 
         this->printInfo("Performing Region Growing ...");
+        qApp->processEvents();
 
         pcl::search::Search<pcl::PointXYZRGB>::Ptr tree = boost::shared_ptr<pcl::search::Search<pcl::PointXYZRGB>>(new pcl::search::KdTree<pcl::PointXYZRGB>);
         pcl::PointCloud <pcl::Normal>::Ptr normals (new pcl::PointCloud <pcl::Normal>);
@@ -138,15 +158,23 @@ void MainWindow::regionGrowing()
         std::vector <pcl::PointIndices> clusters;
         reg.extract (clusters);
 
-        pcl::PointCloud<pcl::PointXYZRGB>::Ptr colored_cloud = reg.getColoredCloud ();
+        mainCloud = reg.getColoredCloud ();
 
         this->printSuccess("Finished Region Growing");
 
         //visu->visualizer.removePointCloud("cat");
-        visu->visualizer.updatePointCloud(colored_cloud, "cat");
+        visu->visualizer.updatePointCloud(mainCloud, "cat");
         visu->update();
 
     }
+}
+
+void MainWindow::setWhite()
+{
+    this->bleachCloud(mainCloud);
+    visu->visualizer.updatePointCloud(mainCloud, "cat");
+    visu->update();
+    this->printSuccess("Set Color of Cloud to White");
 }
 
 void MainWindow::undo()
@@ -158,4 +186,14 @@ void MainWindow::undo()
         this->printSuccess("Undo last Step");
     }
 
+}
+
+void MainWindow::showAboutDialog()
+{
+    QDialog *about = new QDialog(0,0);
+
+    Ui_aboutDialog aboutUi;
+    aboutUi.setupUi(about);
+
+    about->show();
 }

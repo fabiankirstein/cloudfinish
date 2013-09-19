@@ -21,7 +21,8 @@ HEADERS  += mainwindow.h \
     cloudvisualizer.h \
     cloudio.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    about.ui
 
 
 win32:CONFIG(release, debug|release): LIBS += -L'C:/Program Files/Boost/lib/' \

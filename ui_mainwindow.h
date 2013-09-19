@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue 17. Sep 12:46:54 2013
+** Created: Thu 19. Sep 22:49:59 2013
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -23,6 +23,7 @@
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
+#include <QtGui/QPushButton>
 #include <QtGui/QStatusBar>
 #include <QtGui/QTextBrowser>
 #include <QtGui/QToolBar>
@@ -37,7 +38,7 @@ class Ui_MainWindow
 public:
     QAction *actionOpenPointCloud;
     QAction *actionUndo;
-    QAction *actionSave_Point_Cloud;
+    QAction *actionSavePointCloud;
     QAction *actionExport;
     QAction *actionAbout;
     QAction *actionUser_Guide;
@@ -51,6 +52,8 @@ public:
     QCommandLinkButton *startRegionGrowing;
     QDoubleSpinBox *rgSmothnessThres;
     QLabel *label;
+    QGroupBox *groupBox;
+    QPushButton *buttonSetWhite;
     QMenuBar *menuBar;
     QMenu *menuDatei;
     QMenu *menuExtras;
@@ -69,8 +72,8 @@ public:
         actionOpenPointCloud->setObjectName(QString::fromUtf8("actionOpenPointCloud"));
         actionUndo = new QAction(MainWindow);
         actionUndo->setObjectName(QString::fromUtf8("actionUndo"));
-        actionSave_Point_Cloud = new QAction(MainWindow);
-        actionSave_Point_Cloud->setObjectName(QString::fromUtf8("actionSave_Point_Cloud"));
+        actionSavePointCloud = new QAction(MainWindow);
+        actionSavePointCloud->setObjectName(QString::fromUtf8("actionSavePointCloud"));
         actionExport = new QAction(MainWindow);
         actionExport->setObjectName(QString::fromUtf8("actionExport"));
         actionAbout = new QAction(MainWindow);
@@ -120,7 +123,7 @@ public:
         widget->setStyleSheet(QString::fromUtf8(""));
         rgGroupBox = new QGroupBox(widget);
         rgGroupBox->setObjectName(QString::fromUtf8("rgGroupBox"));
-        rgGroupBox->setGeometry(QRect(10, 0, 281, 171));
+        rgGroupBox->setGeometry(QRect(10, 60, 281, 171));
         startRegionGrowing = new QCommandLinkButton(rgGroupBox);
         startRegionGrowing->setObjectName(QString::fromUtf8("startRegionGrowing"));
         startRegionGrowing->setGeometry(QRect(176, 120, 91, 40));
@@ -133,6 +136,12 @@ public:
         label = new QLabel(rgGroupBox);
         label->setObjectName(QString::fromUtf8("label"));
         label->setGeometry(QRect(50, 20, 131, 16));
+        groupBox = new QGroupBox(widget);
+        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        groupBox->setGeometry(QRect(9, 0, 281, 51));
+        buttonSetWhite = new QPushButton(groupBox);
+        buttonSetWhite->setObjectName(QString::fromUtf8("buttonSetWhite"));
+        buttonSetWhite->setGeometry(QRect(10, 20, 75, 23));
 
         horizontalLayout_2->addWidget(widget);
 
@@ -161,7 +170,7 @@ public:
         menuBar->addAction(menuExtras->menuAction());
         menuBar->addAction(menuHilfe->menuAction());
         menuDatei->addAction(actionOpenPointCloud);
-        menuDatei->addAction(actionSave_Point_Cloud);
+        menuDatei->addAction(actionSavePointCloud);
         menuDatei->addSeparator();
         menuDatei->addAction(actionExport);
         menuHilfe->addAction(actionUser_Guide);
@@ -178,13 +187,15 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "CloundFinish v0.1", 0, QApplication::UnicodeUTF8));
         actionOpenPointCloud->setText(QApplication::translate("MainWindow", "Open Point Cloud", 0, QApplication::UnicodeUTF8));
         actionUndo->setText(QApplication::translate("MainWindow", "Undo", 0, QApplication::UnicodeUTF8));
-        actionSave_Point_Cloud->setText(QApplication::translate("MainWindow", "Save Point Cloud", 0, QApplication::UnicodeUTF8));
+        actionSavePointCloud->setText(QApplication::translate("MainWindow", "Save Point Cloud", 0, QApplication::UnicodeUTF8));
         actionExport->setText(QApplication::translate("MainWindow", "Export", 0, QApplication::UnicodeUTF8));
         actionAbout->setText(QApplication::translate("MainWindow", "About", 0, QApplication::UnicodeUTF8));
         actionUser_Guide->setText(QApplication::translate("MainWindow", "User Guide", 0, QApplication::UnicodeUTF8));
         rgGroupBox->setTitle(QApplication::translate("MainWindow", "Region Growing", 0, QApplication::UnicodeUTF8));
         startRegionGrowing->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "Smoothness Threshold", 0, QApplication::UnicodeUTF8));
+        groupBox->setTitle(QApplication::translate("MainWindow", "Color", 0, QApplication::UnicodeUTF8));
+        buttonSetWhite->setText(QApplication::translate("MainWindow", "Set White", 0, QApplication::UnicodeUTF8));
         menuDatei->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
         menuExtras->setTitle(QApplication::translate("MainWindow", "Extras", 0, QApplication::UnicodeUTF8));
         menuHilfe->setTitle(QApplication::translate("MainWindow", "Help", 0, QApplication::UnicodeUTF8));
