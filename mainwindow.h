@@ -23,11 +23,27 @@
 #include <pcl/filters/passthrough.h>
 #include <pcl/segmentation/region_growing.h>
 
-#include "ui_about.h"
+
+// Correspondence Grouping
+#include <pcl/point_cloud.h>
+#include <pcl/correspondence.h>
+#include <pcl/features/normal_3d_omp.h>
+#include <pcl/features/shot_omp.h>
+#include <pcl/features/board.h>
+#include <pcl/keypoints/uniform_sampling.h>
+#include <pcl/recognition/cg/hough_3d.h>
+#include <pcl/recognition/cg/geometric_consistency.h>
+#include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/kdtree/kdtree_flann.h>
+#include <pcl/kdtree/impl/kdtree_flann.hpp>
+#include <pcl/common/transforms.h>
+#include <pcl/console/parse.h>
+
 
 // END PCL ///////////////////////
 
 
+#include "ui_about.h"
 
 #include <QVTKWidget.h>
 
@@ -56,8 +72,14 @@ private slots:
     void exitProgram();
     void openFile();
     void saveFile();
+    void saveAsPNG();
 
     void regionGrowing();
+
+    void minCut();
+
+    void corresGrouping();
+    void clSetCloud();
 
     void setWhite();
     void undo();
@@ -68,7 +90,14 @@ private:
     Ui::MainWindow *ui;
     CF::CloudVisualizer *visu;
 
+    QString clCloud;
     void bleachCloud(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud);
+    void setFallBack();
+    void displayError(QString message);
+    void updateCloud();
+
+    void mcPickPointCallback(const pcl::visualization::PointPickingEvent &event);
+    pcl::PointXYZ mcPickPoint;
 
 };
 

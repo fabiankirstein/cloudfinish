@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>860</width>
-    <height>536</height>
+    <height>1156</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -81,84 +81,334 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>60</y>
+         <y>0</y>
          <width>281</width>
          <height>171</height>
         </rect>
        </property>
        <property name="title">
-        <string>Region Growing</string>
+        <string>Region Growing Segmentation (Smoothness Contraint)</string>
        </property>
        <widget class="QCommandLinkButton" name="startRegionGrowing">
         <property name="geometry">
          <rect>
-          <x>176</x>
-          <y>120</y>
+          <x>180</x>
+          <y>130</y>
           <width>91</width>
-          <height>40</height>
+          <height>41</height>
          </rect>
         </property>
         <property name="text">
          <string>Start</string>
         </property>
        </widget>
-       <widget class="QDoubleSpinBox" name="rgSmothnessThres">
+       <widget class="QWidget" name="formLayoutWidget">
         <property name="geometry">
          <rect>
-          <x>190</x>
+          <x>10</x>
           <y>20</y>
-          <width>71</width>
-          <height>20</height>
+          <width>261</width>
+          <height>101</height>
          </rect>
         </property>
-        <property name="minimum">
-         <double>0.100000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>30.000000000000000</double>
-        </property>
-        <property name="value">
-         <double>5.000000000000000</double>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>20</y>
-          <width>131</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Smoothness Threshold</string>
-        </property>
+        <layout class="QFormLayout" name="formLayout">
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+         </property>
+         <property name="labelAlignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+         <property name="formAlignment">
+          <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Curvature Threshold:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QDoubleSpinBox" name="rgCurvature">
+           <property name="minimum">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Smoothness Threshold: </string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QDoubleSpinBox" name="rgSmothnessThres">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;bedfaer&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="minimum">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>30.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>5.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Min. Cluster Size:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QSpinBox" name="rgMinCluster">
+           <property name="minimum">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <number>100000</number>
+           </property>
+           <property name="singleStep">
+            <number>10</number>
+           </property>
+           <property name="value">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QSpinBox" name="rgMaxCluster">
+           <property name="maximum">
+            <number>1000000</number>
+           </property>
+           <property name="singleStep">
+            <number>100</number>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Max. Cluster Size:</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </widget>
       <widget class="QGroupBox" name="groupBox">
        <property name="geometry">
         <rect>
-         <x>9</x>
-         <y>0</y>
+         <x>10</x>
+         <y>380</y>
          <width>281</width>
-         <height>51</height>
+         <height>191</height>
         </rect>
        </property>
        <property name="title">
-        <string>Color</string>
+        <string>Classification</string>
        </property>
-       <widget class="QPushButton" name="buttonSetWhite">
+       <widget class="QPushButton" name="startGrouping">
+        <property name="geometry">
+         <rect>
+          <x>180</x>
+          <y>150</y>
+          <width>75</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Start</string>
+        </property>
+       </widget>
+       <widget class="QTextEdit" name="clFilePath">
         <property name="geometry">
          <rect>
           <x>10</x>
+          <y>20</y>
+          <width>181</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="tabChangesFocus">
+         <bool>true</bool>
+        </property>
+        <property name="lineWrapMode">
+         <enum>QTextEdit::NoWrap</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="clSetCloudButton">
+        <property name="geometry">
+         <rect>
+          <x>200</x>
           <y>20</y>
           <width>75</width>
           <height>23</height>
          </rect>
         </property>
         <property name="text">
-         <string>Set White</string>
+         <string>Set Cloud</string>
         </property>
+       </widget>
+      </widget>
+      <widget class="QGroupBox" name="groupBox_2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>180</y>
+         <width>281</width>
+         <height>191</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Min-Cut Segmentation</string>
+       </property>
+       <widget class="QPushButton" name="startMinCut">
+        <property name="geometry">
+         <rect>
+          <x>200</x>
+          <y>160</y>
+          <width>75</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Start</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_5">
+        <property name="geometry">
+         <rect>
+          <x>60</x>
+          <y>20</y>
+          <width>261</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Set the foreground with Shift + Mouseclick</string>
+        </property>
+       </widget>
+       <widget class="QWidget" name="formLayoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>40</y>
+          <width>261</width>
+          <height>111</height>
+         </rect>
+        </property>
+        <layout class="QFormLayout" name="formLayout_2">
+         <item row="0" column="1">
+          <widget class="QDoubleSpinBox" name="mcRadius">
+           <property name="minimum">
+            <double>0.010000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>10000.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>5.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Radius: </string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QDoubleSpinBox" name="mcSigma">
+           <property name="minimum">
+            <double>0.010000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.250000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.250000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_7">
+           <property name="text">
+            <string>Sigma:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QDoubleSpinBox" name="mcSourceWeight">
+           <property name="singleStep">
+            <double>0.500000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.500000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_8">
+           <property name="text">
+            <string>Source Weight:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QSpinBox" name="mcNeighbours">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>1000</number>
+           </property>
+           <property name="value">
+            <number>10</number>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_9">
+           <property name="text">
+            <string>Number of Neighbours: </string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </widget>
      </widget>
@@ -181,12 +431,13 @@
     <addaction name="actionOpenPointCloud"/>
     <addaction name="actionSavePointCloud"/>
     <addaction name="separator"/>
-    <addaction name="actionExport"/>
+    <addaction name="actionSavePNG"/>
    </widget>
    <widget class="QMenu" name="menuExtras">
     <property name="title">
      <string>Extras</string>
     </property>
+    <addaction name="actionResetColor"/>
    </widget>
    <widget class="QMenu" name="menuHilfe">
     <property name="title">
@@ -213,6 +464,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="iconOpenPointCloud"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpenPointCloud">
@@ -230,9 +482,9 @@
     <string>Save Point Cloud</string>
    </property>
   </action>
-  <action name="actionExport">
+  <action name="actionSavePNG">
    <property name="text">
-    <string>Export</string>
+    <string>Export as PNG</string>
    </property>
   </action>
   <action name="actionAbout">
@@ -243,6 +495,22 @@
   <action name="actionUser_Guide">
    <property name="text">
     <string>User Guide</string>
+   </property>
+  </action>
+  <action name="iconOpenPointCloud">
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Point Cloud</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionResetColor">
+   <property name="text">
+    <string>Reset Color</string>
    </property>
   </action>
  </widget>
