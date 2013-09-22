@@ -217,7 +217,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>380</y>
+         <y>520</y>
          <width>281</width>
          <height>191</height>
         </rect>
@@ -411,6 +411,110 @@
         </layout>
        </widget>
       </widget>
+      <widget class="QGroupBox" name="groupBox_3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>380</y>
+         <width>281</width>
+         <height>131</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Euclidean Cluster</string>
+       </property>
+       <widget class="QPushButton" name="startCluster">
+        <property name="geometry">
+         <rect>
+          <x>200</x>
+          <y>100</y>
+          <width>75</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Start</string>
+        </property>
+       </widget>
+       <widget class="QWidget" name="formLayoutWidget_3">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>261</width>
+          <height>81</height>
+         </rect>
+        </property>
+        <layout class="QFormLayout" name="formLayout_3">
+         <item row="0" column="1">
+          <widget class="QDoubleSpinBox" name="eclTolerance">
+           <property name="minimum">
+            <double>0.010000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.100000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>Cluster Tolerance:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QSpinBox" name="eclMinCluster">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>1000000</number>
+           </property>
+           <property name="singleStep">
+            <number>100</number>
+           </property>
+           <property name="value">
+            <number>100</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_11">
+           <property name="text">
+            <string>Min. Cluster Size:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QSpinBox" name="eclMaxCluster">
+           <property name="minimum">
+            <number>10</number>
+           </property>
+           <property name="maximum">
+            <number>100000000</number>
+           </property>
+           <property name="singleStep">
+            <number>1000</number>
+           </property>
+           <property name="value">
+            <number>100000</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>Max. Cluster Size:</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -452,9 +556,16 @@
     </property>
     <addaction name="actionUndo"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionShowCoordinateSystem"/>
+   </widget>
    <addaction name="menuDatei"/>
    <addaction name="menuBearbeiten"/>
    <addaction name="menuExtras"/>
+   <addaction name="menuView"/>
    <addaction name="menuHilfe"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -465,6 +576,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="iconOpenPointCloud"/>
+   <addaction name="iconResetColor"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpenPointCloud">
@@ -488,6 +600,9 @@
    </property>
   </action>
   <action name="actionAbout">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>About</string>
    </property>
@@ -511,6 +626,22 @@
   <action name="actionResetColor">
    <property name="text">
     <string>Reset Color</string>
+   </property>
+  </action>
+  <action name="iconResetColor">
+   <property name="text">
+    <string>Reset Color</string>
+   </property>
+   <property name="toolTip">
+    <string>Reset the Cloud Color to White</string>
+   </property>
+  </action>
+  <action name="actionShowCoordinateSystem">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Coordinate System</string>
    </property>
   </action>
  </widget>

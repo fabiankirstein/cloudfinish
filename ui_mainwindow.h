@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun 22. Sep 17:51:57 2013
+** Created: Sun 22. Sep 21:26:53 2013
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -47,6 +47,8 @@ public:
     QAction *actionUser_Guide;
     QAction *iconOpenPointCloud;
     QAction *actionResetColor;
+    QAction *iconResetColor;
+    QAction *actionShowCoordinateSystem;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
@@ -82,11 +84,22 @@ public:
     QLabel *label_8;
     QSpinBox *mcNeighbours;
     QLabel *label_9;
+    QGroupBox *groupBox_3;
+    QPushButton *startCluster;
+    QWidget *formLayoutWidget_3;
+    QFormLayout *formLayout_3;
+    QDoubleSpinBox *eclTolerance;
+    QLabel *label_10;
+    QSpinBox *eclMinCluster;
+    QLabel *label_11;
+    QSpinBox *eclMaxCluster;
+    QLabel *label_12;
     QMenuBar *menuBar;
     QMenu *menuDatei;
     QMenu *menuExtras;
     QMenu *menuHilfe;
     QMenu *menuBearbeiten;
+    QMenu *menuView;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -106,12 +119,18 @@ public:
         actionSavePNG->setObjectName(QString::fromUtf8("actionSavePNG"));
         actionAbout = new QAction(MainWindow);
         actionAbout->setObjectName(QString::fromUtf8("actionAbout"));
+        actionAbout->setCheckable(false);
         actionUser_Guide = new QAction(MainWindow);
         actionUser_Guide->setObjectName(QString::fromUtf8("actionUser_Guide"));
         iconOpenPointCloud = new QAction(MainWindow);
         iconOpenPointCloud->setObjectName(QString::fromUtf8("iconOpenPointCloud"));
         actionResetColor = new QAction(MainWindow);
         actionResetColor->setObjectName(QString::fromUtf8("actionResetColor"));
+        iconResetColor = new QAction(MainWindow);
+        iconResetColor->setObjectName(QString::fromUtf8("iconResetColor"));
+        actionShowCoordinateSystem = new QAction(MainWindow);
+        actionShowCoordinateSystem->setObjectName(QString::fromUtf8("actionShowCoordinateSystem"));
+        actionShowCoordinateSystem->setCheckable(true);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         centralWidget->setMinimumSize(QSize(860, 0));
@@ -224,7 +243,7 @@ public:
 
         groupBox = new QGroupBox(widget);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        groupBox->setGeometry(QRect(10, 380, 281, 191));
+        groupBox->setGeometry(QRect(10, 520, 281, 191));
         startGrouping = new QPushButton(groupBox);
         startGrouping->setObjectName(QString::fromUtf8("startGrouping"));
         startGrouping->setGeometry(QRect(180, 150, 75, 23));
@@ -312,6 +331,61 @@ public:
 
         formLayout_2->setWidget(3, QFormLayout::LabelRole, label_9);
 
+        groupBox_3 = new QGroupBox(widget);
+        groupBox_3->setObjectName(QString::fromUtf8("groupBox_3"));
+        groupBox_3->setGeometry(QRect(10, 380, 281, 131));
+        startCluster = new QPushButton(groupBox_3);
+        startCluster->setObjectName(QString::fromUtf8("startCluster"));
+        startCluster->setGeometry(QRect(200, 100, 75, 23));
+        formLayoutWidget_3 = new QWidget(groupBox_3);
+        formLayoutWidget_3->setObjectName(QString::fromUtf8("formLayoutWidget_3"));
+        formLayoutWidget_3->setGeometry(QRect(10, 20, 261, 81));
+        formLayout_3 = new QFormLayout(formLayoutWidget_3);
+        formLayout_3->setSpacing(6);
+        formLayout_3->setContentsMargins(11, 11, 11, 11);
+        formLayout_3->setObjectName(QString::fromUtf8("formLayout_3"));
+        formLayout_3->setContentsMargins(0, 0, 0, 0);
+        eclTolerance = new QDoubleSpinBox(formLayoutWidget_3);
+        eclTolerance->setObjectName(QString::fromUtf8("eclTolerance"));
+        eclTolerance->setMinimum(0.01);
+        eclTolerance->setSingleStep(0.01);
+        eclTolerance->setValue(0.1);
+
+        formLayout_3->setWidget(0, QFormLayout::FieldRole, eclTolerance);
+
+        label_10 = new QLabel(formLayoutWidget_3);
+        label_10->setObjectName(QString::fromUtf8("label_10"));
+
+        formLayout_3->setWidget(0, QFormLayout::LabelRole, label_10);
+
+        eclMinCluster = new QSpinBox(formLayoutWidget_3);
+        eclMinCluster->setObjectName(QString::fromUtf8("eclMinCluster"));
+        eclMinCluster->setMinimum(1);
+        eclMinCluster->setMaximum(1000000);
+        eclMinCluster->setSingleStep(100);
+        eclMinCluster->setValue(100);
+
+        formLayout_3->setWidget(1, QFormLayout::FieldRole, eclMinCluster);
+
+        label_11 = new QLabel(formLayoutWidget_3);
+        label_11->setObjectName(QString::fromUtf8("label_11"));
+
+        formLayout_3->setWidget(1, QFormLayout::LabelRole, label_11);
+
+        eclMaxCluster = new QSpinBox(formLayoutWidget_3);
+        eclMaxCluster->setObjectName(QString::fromUtf8("eclMaxCluster"));
+        eclMaxCluster->setMinimum(10);
+        eclMaxCluster->setMaximum(100000000);
+        eclMaxCluster->setSingleStep(1000);
+        eclMaxCluster->setValue(100000);
+
+        formLayout_3->setWidget(2, QFormLayout::FieldRole, eclMaxCluster);
+
+        label_12 = new QLabel(formLayoutWidget_3);
+        label_12->setObjectName(QString::fromUtf8("label_12"));
+
+        formLayout_3->setWidget(2, QFormLayout::LabelRole, label_12);
+
 
         horizontalLayout_2->addWidget(widget);
 
@@ -327,6 +401,8 @@ public:
         menuHilfe->setObjectName(QString::fromUtf8("menuHilfe"));
         menuBearbeiten = new QMenu(menuBar);
         menuBearbeiten->setObjectName(QString::fromUtf8("menuBearbeiten"));
+        menuView = new QMenu(menuBar);
+        menuView->setObjectName(QString::fromUtf8("menuView"));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
@@ -338,6 +414,7 @@ public:
         menuBar->addAction(menuDatei->menuAction());
         menuBar->addAction(menuBearbeiten->menuAction());
         menuBar->addAction(menuExtras->menuAction());
+        menuBar->addAction(menuView->menuAction());
         menuBar->addAction(menuHilfe->menuAction());
         menuDatei->addAction(actionOpenPointCloud);
         menuDatei->addAction(actionSavePointCloud);
@@ -347,7 +424,9 @@ public:
         menuHilfe->addAction(actionUser_Guide);
         menuHilfe->addAction(actionAbout);
         menuBearbeiten->addAction(actionUndo);
+        menuView->addAction(actionShowCoordinateSystem);
         mainToolBar->addAction(iconOpenPointCloud);
+        mainToolBar->addAction(iconResetColor);
 
         retranslateUi(MainWindow);
 
@@ -369,7 +448,12 @@ public:
 #endif // QT_NO_TOOLTIP
         iconOpenPointCloud->setShortcut(QApplication::translate("MainWindow", "Ctrl+O", 0, QApplication::UnicodeUTF8));
         actionResetColor->setText(QApplication::translate("MainWindow", "Reset Color", 0, QApplication::UnicodeUTF8));
-        rgGroupBox->setTitle(QApplication::translate("MainWindow", "Region Growing (Smoothness Contraint)", 0, QApplication::UnicodeUTF8));
+        iconResetColor->setText(QApplication::translate("MainWindow", "Reset Color", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        iconResetColor->setToolTip(QApplication::translate("MainWindow", "Reset the Cloud Color to White", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        actionShowCoordinateSystem->setText(QApplication::translate("MainWindow", "Show Coordinate System", 0, QApplication::UnicodeUTF8));
+        rgGroupBox->setTitle(QApplication::translate("MainWindow", "Region Growing Segmentation (Smoothness Contraint)", 0, QApplication::UnicodeUTF8));
         startRegionGrowing->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("MainWindow", "Curvature Threshold:", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "Smoothness Threshold: ", 0, QApplication::UnicodeUTF8));
@@ -381,17 +465,23 @@ public:
         groupBox->setTitle(QApplication::translate("MainWindow", "Classification", 0, QApplication::UnicodeUTF8));
         startGrouping->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
         clSetCloudButton->setText(QApplication::translate("MainWindow", "Set Cloud", 0, QApplication::UnicodeUTF8));
-        groupBox_2->setTitle(QApplication::translate("MainWindow", "Min-Cut", 0, QApplication::UnicodeUTF8));
+        groupBox_2->setTitle(QApplication::translate("MainWindow", "Min-Cut Segmentation", 0, QApplication::UnicodeUTF8));
         startMinCut->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("MainWindow", "Set the foreground with Shift + Mouseclick", 0, QApplication::UnicodeUTF8));
         label_6->setText(QApplication::translate("MainWindow", "Radius: ", 0, QApplication::UnicodeUTF8));
         label_7->setText(QApplication::translate("MainWindow", "Sigma:", 0, QApplication::UnicodeUTF8));
         label_8->setText(QApplication::translate("MainWindow", "Source Weight:", 0, QApplication::UnicodeUTF8));
         label_9->setText(QApplication::translate("MainWindow", "Number of Neighbours: ", 0, QApplication::UnicodeUTF8));
+        groupBox_3->setTitle(QApplication::translate("MainWindow", "Euclidean Cluster", 0, QApplication::UnicodeUTF8));
+        startCluster->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
+        label_10->setText(QApplication::translate("MainWindow", "Cluster Tolerance:", 0, QApplication::UnicodeUTF8));
+        label_11->setText(QApplication::translate("MainWindow", "Min. Cluster Size:", 0, QApplication::UnicodeUTF8));
+        label_12->setText(QApplication::translate("MainWindow", "Max. Cluster Size:", 0, QApplication::UnicodeUTF8));
         menuDatei->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
         menuExtras->setTitle(QApplication::translate("MainWindow", "Extras", 0, QApplication::UnicodeUTF8));
         menuHilfe->setTitle(QApplication::translate("MainWindow", "Help", 0, QApplication::UnicodeUTF8));
         menuBearbeiten->setTitle(QApplication::translate("MainWindow", "Edit", 0, QApplication::UnicodeUTF8));
+        menuView->setTitle(QApplication::translate("MainWindow", "View", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

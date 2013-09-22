@@ -25,15 +25,21 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(showAboutDialog()));
     connect(ui->actionUndo, SIGNAL(triggered()), this, SLOT(undo()));
     connect(ui->actionResetColor, SIGNAL(triggered()), this, SLOT(setWhite()));
+    connect(ui->actionShowCoordinateSystem, SIGNAL(triggered()), this, SLOT(toggleCoordinateSystem()));
+
+
 
     // Icons
     connect(ui->iconOpenPointCloud, SIGNAL(triggered()), this, SLOT(openFile()));
+    connect(ui->iconResetColor, SIGNAL(triggered()), this, SLOT(setWhite()));
+
 
     // Algorithms
     connect(ui->startRegionGrowing, SIGNAL(clicked()), this, SLOT(regionGrowing()));
     connect(ui->startGrouping, SIGNAL(clicked()), this, SLOT(corresGrouping()));
     connect(ui->clSetCloudButton, SIGNAL(clicked()), this, SLOT(clSetCloud()));
     connect(ui->startMinCut, SIGNAL(clicked()), this, SLOT(minCut()));
+    connect(ui->startCluster, SIGNAL(clicked()), this, SLOT(cluster()));
 
     // END CONNECTIONS
     mainCloud = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(new pcl::PointCloud<pcl::PointXYZRGB>);
@@ -48,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->mcPickPoint = pcl::PointXYZ();
 
     this->printInfo("Welcome ...");
+    this->setStatusTip("No Point Cloud loaded");
 
 }
 
@@ -110,12 +117,15 @@ void MainWindow::openFile()
             this->printSuccess("Done Loading File: " + fileName);
         }
 
+
         visu->visualizer.removeAllPointClouds();
         visu->visualizer.removeAllShapes();
         //this->bleachCloud(mainCloud);
         visu->visualizer.addPointCloud(mainCloud, cloud);
         visu->visualizer.resetCamera();
         visu->update();
+
+        this->setStatusTip("Loaded Point Cloud: " + fileName);
     }
 
 }
@@ -289,17 +299,24 @@ void MainWindow::minCut()
     seg.setInputCloud (cloud);
     //seg.setIndices (indices);
 
+
+    pcl::PointCloud<pcl::PointXYZ>::Ptr background_points(new pcl::PointCloud<pcl::PointXYZ> ());
+    pcl::PointXYZ bgPoint;
+
     pcl::PointCloud<pcl::PointXYZ>::Ptr foreground_points(new pcl::PointCloud<pcl::PointXYZ> ());
     pcl::PointXYZ point;
 //    point.x = 68.97;
 //    point.y = -18.55;
 //    point.z = 0.57;
 
-    point.x = 0;
-    point.y = 0;
-    point.z = 0;
+    bgPoint.x = 1.08;
+    bgPoint.y = 3.13;
+    bgPoint.z = -9.77;
+
+    background_points->points.push_back(bgPoint);
     foreground_points->points.push_back(this->mcPickPoint);
     seg.setForegroundPoints (foreground_points);
+    seg.setBackgroundPoints(background_points);
 
     seg.setSigma(sigma);
     seg.setRadius(radius);
@@ -316,6 +333,127 @@ void MainWindow::minCut()
     this->printSuccess("Finished Min-Cut Segmentation ");
     this->updateCloud();
 
+}
+
+/**
+ * @brief MainWindow::cluster
+ *
+ * Based on PCL-Tutorial
+ * http://pointclouds.org/documentation/tutorials/cluster_extraction.php
+ */
+void MainWindow::cluster()
+{
+    if(mainCloud->size() == 0) {
+        this->displayError("Please open a Point Cloud first!");
+        return;
+    }
+
+    this->setFallBack();
+
+    // Get User Input
+    double clusterTolerance = ui->eclTolerance->value();
+    int minCluster = ui->eclMinCluster->value();
+    int maxCluster = ui->eclMaxCluster->value();
+
+
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_f (new pcl::PointCloud<pcl::PointXYZRGB>);
+
+    // Create the filtering object: downsample the dataset using a leaf size of 1cm
+    pcl::VoxelGrid<pcl::PointXYZRGB> vg;
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZRGB>);
+    vg.setInputCloud (mainCloud);
+    vg.setLeafSize (0.01f, 0.01f, 0.01f);
+    vg.filter (*cloud_filtered);
+
+
+     // Create the segmentation object for the planar model and set all the parameters
+     pcl::SACSegmentation<pcl::PointXYZRGB> seg;
+     pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
+     pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
+     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_plane (new pcl::PointCloud<pcl::PointXYZRGB> ());
+     pcl::PCDWriter writer;
+     seg.setOptimizeCoefficients (true);
+     seg.setModelType (pcl::SACMODEL_PLANE);
+     seg.setMethodType (pcl::SAC_RANSAC);
+     seg.setMaxIterations (100);
+     seg.setDistanceThreshold (0.02);
+
+     int i=0, nr_points = (int) cloud_filtered->points.size ();
+     while (cloud_filtered->points.size () > 0.3 * nr_points)
+     {
+         // Segment the largest planar component from the remaining cloud
+         seg.setInputCloud (cloud_filtered);
+         seg.segment (*inliers, *coefficients);
+         if (inliers->indices.size () == 0)
+         {
+             std::cout << "Could not estimate a planar model for the given dataset." << std::endl;
+             break;
+         }
+
+         // Extract the planar inliers from the input cloud
+         pcl::ExtractIndices<pcl::PointXYZRGB> extract;
+         extract.setInputCloud (cloud_filtered);
+         extract.setIndices (inliers);
+         extract.setNegative (false);
+
+         // Get the points associated with the planar surface
+         extract.filter (*cloud_plane);
+         std::cout << "PointCloud representing the planar component: " << cloud_plane->points.size () << " data points." << std::endl;
+
+         // Remove the planar inliers, extract the rest
+         extract.setNegative (true);
+         extract.filter (*cloud_f);
+         *cloud_filtered = *cloud_f;
+     }
+
+     // Creating the KdTree object for the search method of the extraction
+     pcl::search::KdTree<pcl::PointXYZRGB>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZRGB>);
+     tree->setInputCloud (cloud_filtered);
+
+     std::vector<pcl::PointIndices> cluster_indices;
+     pcl::EuclideanClusterExtraction<pcl::PointXYZRGB> ec;
+     ec.setClusterTolerance (clusterTolerance);
+     ec.setMinClusterSize (minCluster);
+     ec.setMaxClusterSize (maxCluster);
+     ec.setSearchMethod (tree);
+     ec.setInputCloud (cloud_filtered);
+     ec.extract (cluster_indices);
+
+
+     pcl::PointCloud<pcl::PointXYZRGB>::Ptr result (new pcl::PointCloud<pcl::PointXYZRGB>);
+
+     int j = 0;
+     for (std::vector<pcl::PointIndices>::const_iterator it = cluster_indices.begin (); it != cluster_indices.end (); ++it)
+     {
+       pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster (new pcl::PointCloud<pcl::PointXYZRGB>);
+       for (std::vector<int>::const_iterator pit = it->indices.begin (); pit != it->indices.end (); pit++)
+         cloud_cluster->points.push_back (cloud_filtered->points[*pit]); //*
+       cloud_cluster->width = cloud_cluster->points.size ();
+       cloud_cluster->height = 1;
+       cloud_cluster->is_dense = true;
+
+       int colorR = qrand() % ((255 + 1) - 100);
+       int colorG = qrand() % ((255 + 1) - 100);
+       int colorB = qrand() % ((255 + 1) - 100);
+
+       for(int i = 0; i < cloud_cluster->points.size(); i++) {
+           cloud_cluster->points[i].r = colorR;
+           cloud_cluster->points[i].g = colorG;
+           cloud_cluster->points[i].b = colorB;
+       }
+
+       result->operator +=(*cloud_cluster);
+
+       std::cout << "PointCloud representing the Cluster: " << cloud_cluster->points.size () << " data points." << std::endl;
+       std::stringstream ss;
+       ss << "cloud_cluster_" << j << ".pcd";
+       //writer.write<pcl::PointXYZRGB> (ss.str (), *cloud_cluster, false); //*
+       j++;
+     }
+
+     mainCloud = result;
+     this->printSuccess("Finished Clustering");
+     this->updateCloud();
 }
 
 /**
@@ -607,3 +745,15 @@ void MainWindow::showAboutDialog()
 
     about->show();
 }
+
+void MainWindow::toggleCoordinateSystem()
+{
+    if(ui->actionShowCoordinateSystem->isChecked()) {
+        visu->visualizer.addCoordinateSystem();
+    }
+    else {
+        visu->visualizer.removeCoordinateSystem();
+    }
+    visu->update();
+}
+
