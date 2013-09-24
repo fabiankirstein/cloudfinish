@@ -11,6 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = cloudfinish
 TEMPLATE = app
 
+RESOURCES = icons.qrc
+
 
 SOURCES += main.cpp\
         mainwindow.cpp \

@@ -52,6 +52,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // Init Properties
     this->clCloud = QString();
     this->mcPickPoint = pcl::PointXYZ();
+    this->lastFile = QString();
+    this->lastClFile = QString();
 
     this->printInfo("Welcome ...");
     this->setStatusTip("No Point Cloud loaded");
@@ -84,6 +86,7 @@ void MainWindow::printSuccess(QString text)
 void MainWindow::printWithTime(QString text)
 {
      ui->console->append("[" + QTime::currentTime().toString() + "]  " + text);
+     qApp->processEvents();
 }
 
 
@@ -99,9 +102,11 @@ void MainWindow::exitProgram()
  */
 void MainWindow::openFile()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Point Cloud"), "", tr("PCD (*.pcd);;PLY (*.ply)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Point Cloud"), this->lastFile, tr("PCD (*.pcd);;PLY (*.ply)"));
 
     if(fileName != NULL) {
+
+        this->lastFile = QFileInfo(fileName).path();
 
         if(fileName.endsWith(".pcd")) {
             this->printInfo("Loading File: " + fileName);
@@ -121,11 +126,13 @@ void MainWindow::openFile()
         visu->visualizer.removeAllPointClouds();
         visu->visualizer.removeAllShapes();
         //this->bleachCloud(mainCloud);
-        visu->visualizer.addPointCloud(mainCloud, cloud);
+        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZRGB> colorHandler (mainCloud, 255, 255, 255);
+        visu->visualizer.addPointCloud(mainCloud, colorHandler, cloud);
         visu->visualizer.resetCamera();
         visu->update();
 
-        this->setStatusTip("Loaded Point Cloud: " + fileName);
+        QString numberPoints = QString::number(mainCloud->points.size());
+        this->setStatusTip("Loaded Point Cloud: " + fileName + " (Points: " + numberPoints + ")");
     }
 
 }
@@ -350,15 +357,17 @@ void MainWindow::cluster()
 
     this->setFallBack();
 
+    this->printInfo("Performing Euclidean Clustering ...");
+
     // Get User Input
     double clusterTolerance = ui->eclTolerance->value();
     int minCluster = ui->eclMinCluster->value();
     int maxCluster = ui->eclMaxCluster->value();
 
-
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_f (new pcl::PointCloud<pcl::PointXYZRGB>);
 
-    // Create the filtering object: downsample the dataset using a leaf size of 1cm
+    // Downsampling
+
     pcl::VoxelGrid<pcl::PointXYZRGB> vg;
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZRGB>);
     vg.setInputCloud (mainCloud);
@@ -371,7 +380,6 @@ void MainWindow::cluster()
      pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
      pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
      pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_plane (new pcl::PointCloud<pcl::PointXYZRGB> ());
-     pcl::PCDWriter writer;
      seg.setOptimizeCoefficients (true);
      seg.setModelType (pcl::SACMODEL_PLANE);
      seg.setMethodType (pcl::SAC_RANSAC);
@@ -426,8 +434,10 @@ void MainWindow::cluster()
      for (std::vector<pcl::PointIndices>::const_iterator it = cluster_indices.begin (); it != cluster_indices.end (); ++it)
      {
        pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster (new pcl::PointCloud<pcl::PointXYZRGB>);
+
        for (std::vector<int>::const_iterator pit = it->indices.begin (); pit != it->indices.end (); pit++)
-         cloud_cluster->points.push_back (cloud_filtered->points[*pit]); //*
+         cloud_cluster->points.push_back (cloud_filtered->points[*pit]);
+
        cloud_cluster->width = cloud_cluster->points.size ();
        cloud_cluster->height = 1;
        cloud_cluster->is_dense = true;
@@ -465,6 +475,7 @@ void MainWindow::cluster()
 void MainWindow::corresGrouping()
 {
 
+    // Set Typedefs
     typedef pcl::PointXYZRGB PointType;
     typedef pcl::Normal NormalType;
     typedef pcl::ReferenceFrame RFType;
@@ -473,18 +484,9 @@ void MainWindow::corresGrouping()
     //Algorithm params
     bool show_keypoints_ (true);
     bool show_correspondences_ (true);
-    bool use_cloud_resolution_ (false);
-    bool use_hough_ (true);
-    float model_ss_ (0.4f);
-    float scene_ss_ (0.4f);
-    float rf_rad_ (0.015f*20);
-    float descr_rad_ (0.1yf);
-    float cg_size_ (0.01f);
-    float cg_thresh_ (5.0f);
 
     pcl::PointCloud<PointType>::Ptr model (new pcl::PointCloud<PointType> ());
     pcl::PointCloud<PointType>::Ptr model_keypoints (new pcl::PointCloud<PointType> ());
-    //pcl::PointCloud<PointType>::Ptr scene (new pcl::PointCloud<PointType> ());
     pcl::PointCloud<PointType>::Ptr scene_keypoints (new pcl::PointCloud<PointType> ());
     pcl::PointCloud<NormalType>::Ptr model_normals (new pcl::PointCloud<NormalType> ());
     pcl::PointCloud<NormalType>::Ptr scene_normals (new pcl::PointCloud<NormalType> ());
@@ -499,6 +501,23 @@ void MainWindow::corresGrouping()
         pcl::io::loadPCDFile(this->clCloud.toStdString(), *model);
     }
 
+    // Get User Input
+    double sceneRadius = ui->clSceneRadius->value();
+    double modelRadius = ui->clModelRadius->value();
+    double descriptorRadius = ui->clDescriptorRadius->value();
+    double descriptorDistance = ui->clDescriptorDistance->value();
+    double referenceRadius = ui->clReferenceRadius->value();
+    double binSize = ui->clBinSize->value();
+    double threshold = ui->clThreshold->value();
+    bool keypoints = false;
+    if(ui->clKeypoints->isChecked()) {
+        keypoints = true;
+    }
+
+    this->setFallBack();
+    this->printInfo("Performing Recognition ...");
+
+
     // Maybe CLoud Resolution here
 
     // Compute Normals
@@ -509,47 +528,48 @@ void MainWindow::corresGrouping()
     norm_est.setInputCloud (mainCloud);
     norm_est.compute (*scene_normals);
 
+
+    this->printInfo("Downsampling of the input clouds ...");
+
     //  Downsample Clouds to Extract keypoints
     pcl::PointCloud<int> sampled_indices;
 
     pcl::UniformSampling<PointType> uniform_sampling;
     uniform_sampling.setInputCloud (model);
-    uniform_sampling.setRadiusSearch (model_ss_);
+    uniform_sampling.setRadiusSearch (modelRadius);
     uniform_sampling.compute (sampled_indices);
     pcl::copyPointCloud (*model, sampled_indices.points, *model_keypoints);
-    //std::cout << "Model total points: " << model->size () << "; Selected Keypoints: " << model_keypoints->size () << std::endl;
+    this->printInfo("Model Points: " + QString::number(model->size()) + " - Selected Keypoints: " + QString::number(model_keypoints->size()));
 
     uniform_sampling.setInputCloud (mainCloud);
-    uniform_sampling.setRadiusSearch (scene_ss_);
+    uniform_sampling.setRadiusSearch (sceneRadius);
     uniform_sampling.compute (sampled_indices);
     pcl::copyPointCloud (*mainCloud, sampled_indices.points, *scene_keypoints);
-    //std::cout << "Scene total points: " << scene->size () << "; Selected Keypoints: " << scene_keypoints->size () << std::endl;
+    this->printInfo("Scene Points: " + QString::number(mainCloud->size()) + " - Selected Keypoints: " + QString::number(scene_keypoints->size()));
 
 
     //  Compute Descriptor for keypoints
+    this->printInfo("Determine Descriptors ...");
+
     pcl::SHOTEstimationOMP<PointType, NormalType, DescriptorType> descr_est;
-    descr_est.setRadiusSearch (descr_rad_);
+    descr_est.setRadiusSearch (descriptorRadius);
 
     descr_est.setInputCloud (model_keypoints);
     descr_est.setInputNormals (model_normals);
     descr_est.setSearchSurface (model);
     descr_est.compute (*model_descriptors);
+    this->printInfo("Descriptors for model found: " + QString::number(model_descriptors->size()));
 
     descr_est.setInputCloud (scene_keypoints);
     descr_est.setInputNormals (scene_normals);
     descr_est.setSearchSurface (mainCloud);
     descr_est.compute (*scene_descriptors);
-
-    this->printInfo("Descriptors for model found: " + QString::number(model_descriptors->size()));
     this->printInfo("Descriptors for scene found: " + QString::number(scene_descriptors->size()));
 
-    if(model_descriptors->empty()) {
-        this->printError("Input Cloud is empty");
-        return;
-    }
 
     //  Find Model-Scene Correspondences with KdTree
-    pcl::CorrespondencesPtr model_scene_corrs (new pcl::Correspondences ());
+    this->printInfo("Find Correspondences ...");
+    pcl::CorrespondencesPtr model_scene_corrs (new pcl::Correspondences());
 
     pcl::KdTreeFLANN<DescriptorType> match_search;
     match_search.setInputCloud (model_descriptors);
@@ -564,7 +584,7 @@ void MainWindow::corresGrouping()
             continue;
         }
         int found_neighs = match_search.nearestKSearch (scene_descriptors->at (i), 1, neigh_indices, neigh_sqr_dists);
-        if(found_neighs == 1 && neigh_sqr_dists[0] < 0.01f) //  add match only if the squared descriptor distance is less than 0.25 (SHOT descriptor distances are between 0 and 1 by design)
+        if(found_neighs == 1 && neigh_sqr_dists[0] < (float)descriptorDistance) //  add match only if the squared descriptor distance is less than 0.25 (SHOT descriptor distances are between 0 and 1 by design)
         {
             pcl::Correspondence corr (neigh_indices[0], static_cast<int> (i), neigh_sqr_dists[0]);
             model_scene_corrs->push_back (corr);
@@ -573,56 +593,57 @@ void MainWindow::corresGrouping()
 
     this->printInfo("Correspondences found: " + QString::number(model_scene_corrs->size()));
 
+    this->printInfo("Performing Clustering with Hough3D ...");
 
     //  Actual Clustering
     std::vector<Eigen::Matrix4f, Eigen::aligned_allocator<Eigen::Matrix4f> > rototranslations;
     std::vector<pcl::Correspondences> clustered_corrs;
 
     //  Using Hough3D
-//    pcl::PointCloud<RFType>::Ptr model_rf (new pcl::PointCloud<RFType> ());
-//    pcl::PointCloud<RFType>::Ptr scene_rf (new pcl::PointCloud<RFType> ());
+    pcl::PointCloud<RFType>::Ptr model_rf (new pcl::PointCloud<RFType> ());
+    pcl::PointCloud<RFType>::Ptr scene_rf (new pcl::PointCloud<RFType> ());
 
-//    pcl::BOARDLocalReferenceFrameEstimation<PointType, NormalType, RFType> rf_est;
-//    rf_est.setFindHoles (true);
-//    rf_est.setRadiusSearch (rf_rad_);
+    pcl::BOARDLocalReferenceFrameEstimation<PointType, NormalType, RFType> rf_est;
+    rf_est.setFindHoles (true);
+    rf_est.setRadiusSearch (referenceRadius);
 
-//    rf_est.setInputCloud (model_keypoints);
-//    rf_est.setInputNormals (model_normals);
-//    rf_est.setSearchSurface (model);
-//    rf_est.compute (*model_rf);
+    rf_est.setInputCloud (model_keypoints);
+    rf_est.setInputNormals (model_normals);
+    rf_est.setSearchSurface (model);
+    rf_est.compute (*model_rf);
 
-//    rf_est.setInputCloud (scene_keypoints);
-//    rf_est.setInputNormals (scene_normals);
-//    rf_est.setSearchSurface (mainCloud);
-//    rf_est.compute (*scene_rf);
+    rf_est.setInputCloud (scene_keypoints);
+    rf_est.setInputNormals (scene_normals);
+    rf_est.setSearchSurface (mainCloud);
+    rf_est.compute (*scene_rf);
 
-//    //  Clustering
-//    pcl::Hough3DGrouping<PointType, PointType, RFType, RFType> clusterer;
-//    clusterer.setHoughBinSize (cg_size_);
-//    clusterer.setHoughThreshold (cg_thresh_);
-//    clusterer.setUseInterpolation (true);
-//    clusterer.setUseDistanceWeight (false);
+    //  Clustering
+    pcl::Hough3DGrouping<PointType, PointType, RFType, RFType> clusterer;
+    clusterer.setHoughBinSize (binSize);
+    clusterer.setHoughThreshold (threshold);
+    clusterer.setUseInterpolation (true);
+    clusterer.setUseDistanceWeight (false);
 
-//    clusterer.setInputCloud (model_keypoints);
-//    clusterer.setInputRf (model_rf);
-//    clusterer.setSceneCloud (scene_keypoints);
-//    clusterer.setSceneRf (scene_rf);
-//    clusterer.setModelSceneCorrespondences (model_scene_corrs);
+    clusterer.setInputCloud (model_keypoints);
+    clusterer.setInputRf (model_rf);
+    clusterer.setSceneCloud (scene_keypoints);
+    clusterer.setSceneRf (scene_rf);
+    clusterer.setModelSceneCorrespondences (model_scene_corrs);
 
-//    //clusterer.cluster (clustered_corrs);
-//    clusterer.recognize (rototranslations, clustered_corrs);
+    //clusterer.cluster (clustered_corrs);
+    clusterer.recognize (rototranslations, clustered_corrs);
 
     // Using GeometricConsistency
-    pcl::GeometricConsistencyGrouping<PointType, PointType> gc_clusterer;
-    gc_clusterer.setGCSize (cg_size_);
-    gc_clusterer.setGCThreshold (cg_thresh_);
+//    pcl::GeometricConsistencyGrouping<PointType, PointType> gc_clusterer;
+//    gc_clusterer.setGCSize (cg_size_);
+//    gc_clusterer.setGCThreshold (cg_thresh_);
 
-    gc_clusterer.setInputCloud (model_keypoints);
-    gc_clusterer.setSceneCloud (scene_keypoints);
-    gc_clusterer.setModelSceneCorrespondences (model_scene_corrs);
+//    gc_clusterer.setInputCloud (model_keypoints);
+//    gc_clusterer.setSceneCloud (scene_keypoints);
+//    gc_clusterer.setModelSceneCorrespondences (model_scene_corrs);
 
-    //gc_clusterer.cluster (clustered_corrs);
-    gc_clusterer.recognize (rototranslations, clustered_corrs);
+//    //gc_clusterer.cluster (clustered_corrs);
+//    gc_clusterer.recognize (rototranslations, clustered_corrs);
 
 
     this->printInfo("Model instances found: " + QString::number(rototranslations.size()));
@@ -630,14 +651,12 @@ void MainWindow::corresGrouping()
     for (size_t i = 0; i < rototranslations.size (); ++i)
     {
 
-        this->printInfo("Instance " + QString::number(i + 1) + ": ");
-        this->printInfo("Correspondences belonging to this instance: " + QString::number(clustered_corrs[i].size()));
+        //this->printInfo("Instance " + QString::number(i + 1) + ": ");
+        //this->printInfo("Correspondences belonging to this instance: " + QString::number(clustered_corrs[i].size()));
 
       // Print the rotation matrix and translation vector
       Eigen::Matrix3f rotation = rototranslations[i].block<3,3>(0, 0);
       Eigen::Vector3f translation = rototranslations[i].block<3,1>(0, 3);
-
-
 
 //      printf ("\n");
 //      printf ("            | %6.3f %6.3f %6.3f | \n", rotation (0,0), rotation (0,1), rotation (0,2));
@@ -647,37 +666,36 @@ void MainWindow::corresGrouping()
 //      printf ("        t = < %0.3f, %0.3f, %0.3f >\n", translation (0), translation (1), translation (2));
     }
 
-    //  Visualization
-    //pcl::visualization::PCLVisualizer viewer ("Correspondence Grouping");
-    //viewer.addPointCloud (scene, "scene_cloud");
-
-    this->updateCloud();
 
     pcl::PointCloud<PointType>::Ptr off_scene_model (new pcl::PointCloud<PointType> ());
     pcl::PointCloud<PointType>::Ptr off_scene_model_keypoints (new pcl::PointCloud<PointType> ());
 
-    if (show_correspondences_ || show_keypoints_)
-    {
-        //  We are translating the model so that it doesn't end in the middle of the scene representation
-        pcl::transformPointCloud (*model, *off_scene_model, Eigen::Vector3f (-1,0,0), Eigen::Quaternionf (1, 0, 0, 0));
-        pcl::transformPointCloud (*model_keypoints, *off_scene_model_keypoints, Eigen::Vector3f (-1,0,0), Eigen::Quaternionf (1, 0, 0, 0));
+    //  We are translating the model so that it doesn't end in the middle of the scene representation
+    pcl::transformPointCloud (*model, *off_scene_model, Eigen::Vector3f (-1,0,0), Eigen::Quaternionf (1, 0, 0, 0));
+    pcl::transformPointCloud (*model_keypoints, *off_scene_model_keypoints, Eigen::Vector3f (-1,0,0), Eigen::Quaternionf (1, 0, 0, 0));
 
+    pcl::visualization::PointCloudColorHandlerCustom<PointType> off_scene_model_color_handler (off_scene_model, 255, 255, 128);
+    visu->visualizer.removePointCloud("off_scene_model");
+    visu->visualizer.addPointCloud (off_scene_model, off_scene_model_color_handler, "off_scene_model");
 
-        pcl::visualization::PointCloudColorHandlerCustom<PointType> off_scene_model_color_handler (off_scene_model, 255, 255, 128);
-        visu->visualizer.addPointCloud (off_scene_model, off_scene_model_color_handler, "off_scene_model");
-    }
+    visu->visualizer.removePointCloud("scene_keypoints");
+    visu->visualizer.removePointCloud("off_scene_model_keypoints");
 
-    if (show_keypoints_)
+    if(keypoints)
     {
         pcl::visualization::PointCloudColorHandlerCustom<PointType> scene_keypoints_color_handler (scene_keypoints, 0, 0, 255);
+
         visu->visualizer.addPointCloud (scene_keypoints, scene_keypoints_color_handler, "scene_keypoints");
         visu->visualizer.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 5, "scene_keypoints");
 
         pcl::visualization::PointCloudColorHandlerCustom<PointType> off_scene_model_keypoints_color_handler (off_scene_model_keypoints, 0, 0, 255);
+
         visu->visualizer.addPointCloud (off_scene_model_keypoints, off_scene_model_keypoints_color_handler, "off_scene_model_keypoints");
         visu->visualizer.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 5, "off_scene_model_keypoints");
     }
 
+
+    visu->visualizer.removeAllShapes();
     for (size_t i = 0; i < rototranslations.size (); ++i)
     {
         pcl::PointCloud<PointType>::Ptr rotated_model (new pcl::PointCloud<PointType> ());
@@ -687,6 +705,7 @@ void MainWindow::corresGrouping()
         ss_cloud << "instance" << i;
 
         pcl::visualization::PointCloudColorHandlerCustom<PointType> rotated_model_color_handler (rotated_model, 255, 0, 0);
+        visu->visualizer.removePointCloud(ss_cloud.str());
         visu->visualizer.addPointCloud (rotated_model, rotated_model_color_handler, ss_cloud.str ());
 
         if (show_correspondences_)
@@ -704,13 +723,19 @@ void MainWindow::corresGrouping()
         }
     }
 
+    this->printInfo("Finished Recognition");
+    this->updateCloud();
+
 }
 
 void MainWindow::clSetCloud()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Point Cloud"), "", tr("PCD (*.pcd)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Point Cloud"), this->lastClFile, tr("PCD (*.pcd)"));
 
     if(fileName != NULL) {
+
+        this->lastClFile = QFileInfo(fileName).path();
+
         this->clCloud = fileName;
         ui->clFilePath->clear();
         ui->clFilePath->append(fileName);
@@ -729,7 +754,9 @@ void MainWindow::undo()
 {
     if(fallbackCloud != NULL) {
         mainCloud = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(fallbackCloud);
-        visu->visualizer.updatePointCloud(mainCloud, cloud);
+        visu->visualizer.removeAllPointClouds();
+        visu->visualizer.removeAllShapes();
+        visu->visualizer.addPointCloud(mainCloud, cloud);
         visu->update();
         this->printSuccess("Undo last Step");
     }

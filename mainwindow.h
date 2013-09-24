@@ -113,6 +113,9 @@ private:
     void mcPickPointCallback(const pcl::visualization::PointPickingEvent &event);
     pcl::PointXYZ mcPickPoint;
 
+    QString lastFile;
+    QString lastClFile;
+
 };
 
 #endif // MAINWINDOW_H

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon 23. Sep 11:21:39 2013
+** Created: Tue 24. Sep 23:03:20 2013
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -14,7 +14,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
-#include <QtGui/QCommandLinkButton>
+#include <QtGui/QCheckBox>
 #include <QtGui/QDoubleSpinBox>
 #include <QtGui/QFormLayout>
 #include <QtGui/QGroupBox>
@@ -49,6 +49,7 @@ public:
     QAction *actionResetColor;
     QAction *iconResetColor;
     QAction *actionShowCoordinateSystem;
+    QAction *iconSaveCloud;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
@@ -56,7 +57,6 @@ public:
     QTextBrowser *console;
     QWidget *widget;
     QGroupBox *rgGroupBox;
-    QCommandLinkButton *startRegionGrowing;
     QWidget *formLayoutWidget;
     QFormLayout *formLayout;
     QLabel *label_3;
@@ -67,10 +67,29 @@ public:
     QSpinBox *rgMinCluster;
     QSpinBox *rgMaxCluster;
     QLabel *label_4;
+    QPushButton *startRegionGrowing;
     QGroupBox *groupBox;
     QPushButton *startGrouping;
     QTextEdit *clFilePath;
     QPushButton *clSetCloudButton;
+    QWidget *formLayoutWidget_4;
+    QFormLayout *formLayout_4;
+    QLabel *label_13;
+    QDoubleSpinBox *clSceneRadius;
+    QLabel *label_14;
+    QDoubleSpinBox *clModelRadius;
+    QLabel *label_15;
+    QDoubleSpinBox *clDescriptorRadius;
+    QLabel *label_16;
+    QDoubleSpinBox *clDescriptorDistance;
+    QLabel *label_17;
+    QDoubleSpinBox *clReferenceRadius;
+    QLabel *label_18;
+    QDoubleSpinBox *clBinSize;
+    QDoubleSpinBox *clThreshold;
+    QLabel *label_19;
+    QCheckBox *clKeypoints;
+    QLabel *label_20;
     QGroupBox *groupBox_2;
     QPushButton *startMinCut;
     QLabel *label_5;
@@ -109,6 +128,9 @@ public:
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->setEnabled(true);
         MainWindow->resize(860, 1156);
+        QIcon icon;
+        icon.addFile(QString::fromUtf8(":/icons/save.png"), QSize(), QIcon::Normal, QIcon::Off);
+        MainWindow->setWindowIcon(icon);
         actionOpenPointCloud = new QAction(MainWindow);
         actionOpenPointCloud->setObjectName(QString::fromUtf8("actionOpenPointCloud"));
         actionUndo = new QAction(MainWindow);
@@ -124,6 +146,9 @@ public:
         actionUser_Guide->setObjectName(QString::fromUtf8("actionUser_Guide"));
         iconOpenPointCloud = new QAction(MainWindow);
         iconOpenPointCloud->setObjectName(QString::fromUtf8("iconOpenPointCloud"));
+        QIcon icon1;
+        icon1.addFile(QString::fromUtf8(":/icons/open.png"), QSize(), QIcon::Normal, QIcon::Off);
+        iconOpenPointCloud->setIcon(icon1);
         actionResetColor = new QAction(MainWindow);
         actionResetColor->setObjectName(QString::fromUtf8("actionResetColor"));
         iconResetColor = new QAction(MainWindow);
@@ -131,6 +156,9 @@ public:
         actionShowCoordinateSystem = new QAction(MainWindow);
         actionShowCoordinateSystem->setObjectName(QString::fromUtf8("actionShowCoordinateSystem"));
         actionShowCoordinateSystem->setCheckable(true);
+        iconSaveCloud = new QAction(MainWindow);
+        iconSaveCloud->setObjectName(QString::fromUtf8("iconSaveCloud"));
+        iconSaveCloud->setIcon(icon);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         centralWidget->setMinimumSize(QSize(860, 0));
@@ -175,9 +203,6 @@ public:
         rgGroupBox = new QGroupBox(widget);
         rgGroupBox->setObjectName(QString::fromUtf8("rgGroupBox"));
         rgGroupBox->setGeometry(QRect(10, 0, 281, 171));
-        startRegionGrowing = new QCommandLinkButton(rgGroupBox);
-        startRegionGrowing->setObjectName(QString::fromUtf8("startRegionGrowing"));
-        startRegionGrowing->setGeometry(QRect(180, 130, 91, 41));
         formLayoutWidget = new QWidget(rgGroupBox);
         formLayoutWidget->setObjectName(QString::fromUtf8("formLayoutWidget"));
         formLayoutWidget->setGeometry(QRect(10, 20, 261, 101));
@@ -241,12 +266,15 @@ public:
 
         formLayout->setWidget(3, QFormLayout::LabelRole, label_4);
 
+        startRegionGrowing = new QPushButton(rgGroupBox);
+        startRegionGrowing->setObjectName(QString::fromUtf8("startRegionGrowing"));
+        startRegionGrowing->setGeometry(QRect(200, 130, 75, 23));
         groupBox = new QGroupBox(widget);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        groupBox->setGeometry(QRect(10, 520, 281, 191));
+        groupBox->setGeometry(QRect(10, 520, 281, 301));
         startGrouping = new QPushButton(groupBox);
         startGrouping->setObjectName(QString::fromUtf8("startGrouping"));
-        startGrouping->setGeometry(QRect(180, 150, 75, 23));
+        startGrouping->setGeometry(QRect(200, 270, 75, 23));
         clFilePath = new QTextEdit(groupBox);
         clFilePath->setObjectName(QString::fromUtf8("clFilePath"));
         clFilePath->setGeometry(QRect(10, 20, 181, 21));
@@ -263,6 +291,119 @@ public:
         clSetCloudButton = new QPushButton(groupBox);
         clSetCloudButton->setObjectName(QString::fromUtf8("clSetCloudButton"));
         clSetCloudButton->setGeometry(QRect(200, 20, 75, 23));
+        formLayoutWidget_4 = new QWidget(groupBox);
+        formLayoutWidget_4->setObjectName(QString::fromUtf8("formLayoutWidget_4"));
+        formLayoutWidget_4->setGeometry(QRect(10, 50, 261, 211));
+        formLayout_4 = new QFormLayout(formLayoutWidget_4);
+        formLayout_4->setSpacing(6);
+        formLayout_4->setContentsMargins(11, 11, 11, 11);
+        formLayout_4->setObjectName(QString::fromUtf8("formLayout_4"));
+        formLayout_4->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
+        formLayout_4->setContentsMargins(0, 0, 0, 0);
+        label_13 = new QLabel(formLayoutWidget_4);
+        label_13->setObjectName(QString::fromUtf8("label_13"));
+
+        formLayout_4->setWidget(0, QFormLayout::LabelRole, label_13);
+
+        clSceneRadius = new QDoubleSpinBox(formLayoutWidget_4);
+        clSceneRadius->setObjectName(QString::fromUtf8("clSceneRadius"));
+        clSceneRadius->setMinimum(0.01);
+        clSceneRadius->setSingleStep(0.1);
+        clSceneRadius->setValue(0.4);
+
+        formLayout_4->setWidget(0, QFormLayout::FieldRole, clSceneRadius);
+
+        label_14 = new QLabel(formLayoutWidget_4);
+        label_14->setObjectName(QString::fromUtf8("label_14"));
+
+        formLayout_4->setWidget(1, QFormLayout::LabelRole, label_14);
+
+        clModelRadius = new QDoubleSpinBox(formLayoutWidget_4);
+        clModelRadius->setObjectName(QString::fromUtf8("clModelRadius"));
+        clModelRadius->setMinimum(0.01);
+        clModelRadius->setSingleStep(0.1);
+        clModelRadius->setValue(0.4);
+
+        formLayout_4->setWidget(1, QFormLayout::FieldRole, clModelRadius);
+
+        label_15 = new QLabel(formLayoutWidget_4);
+        label_15->setObjectName(QString::fromUtf8("label_15"));
+
+        formLayout_4->setWidget(2, QFormLayout::LabelRole, label_15);
+
+        clDescriptorRadius = new QDoubleSpinBox(formLayoutWidget_4);
+        clDescriptorRadius->setObjectName(QString::fromUtf8("clDescriptorRadius"));
+        clDescriptorRadius->setMinimum(0.01);
+        clDescriptorRadius->setSingleStep(0.1);
+        clDescriptorRadius->setValue(0.1);
+
+        formLayout_4->setWidget(2, QFormLayout::FieldRole, clDescriptorRadius);
+
+        label_16 = new QLabel(formLayoutWidget_4);
+        label_16->setObjectName(QString::fromUtf8("label_16"));
+
+        formLayout_4->setWidget(3, QFormLayout::LabelRole, label_16);
+
+        clDescriptorDistance = new QDoubleSpinBox(formLayoutWidget_4);
+        clDescriptorDistance->setObjectName(QString::fromUtf8("clDescriptorDistance"));
+        clDescriptorDistance->setMinimum(0.01);
+        clDescriptorDistance->setMaximum(0.99);
+        clDescriptorDistance->setSingleStep(0.1);
+        clDescriptorDistance->setValue(0.01);
+
+        formLayout_4->setWidget(3, QFormLayout::FieldRole, clDescriptorDistance);
+
+        label_17 = new QLabel(formLayoutWidget_4);
+        label_17->setObjectName(QString::fromUtf8("label_17"));
+
+        formLayout_4->setWidget(4, QFormLayout::LabelRole, label_17);
+
+        clReferenceRadius = new QDoubleSpinBox(formLayoutWidget_4);
+        clReferenceRadius->setObjectName(QString::fromUtf8("clReferenceRadius"));
+        clReferenceRadius->setMinimum(0.01);
+        clReferenceRadius->setSingleStep(0.1);
+        clReferenceRadius->setValue(0.2);
+
+        formLayout_4->setWidget(4, QFormLayout::FieldRole, clReferenceRadius);
+
+        label_18 = new QLabel(formLayoutWidget_4);
+        label_18->setObjectName(QString::fromUtf8("label_18"));
+
+        formLayout_4->setWidget(5, QFormLayout::LabelRole, label_18);
+
+        clBinSize = new QDoubleSpinBox(formLayoutWidget_4);
+        clBinSize->setObjectName(QString::fromUtf8("clBinSize"));
+        clBinSize->setMinimum(0.01);
+        clBinSize->setSingleStep(0.1);
+        clBinSize->setValue(0.4);
+
+        formLayout_4->setWidget(5, QFormLayout::FieldRole, clBinSize);
+
+        clThreshold = new QDoubleSpinBox(formLayoutWidget_4);
+        clThreshold->setObjectName(QString::fromUtf8("clThreshold"));
+        clThreshold->setMinimum(-1);
+        clThreshold->setSingleStep(0.1);
+        clThreshold->setValue(-0.5);
+
+        formLayout_4->setWidget(6, QFormLayout::FieldRole, clThreshold);
+
+        label_19 = new QLabel(formLayoutWidget_4);
+        label_19->setObjectName(QString::fromUtf8("label_19"));
+
+        formLayout_4->setWidget(6, QFormLayout::LabelRole, label_19);
+
+        clKeypoints = new QCheckBox(formLayoutWidget_4);
+        clKeypoints->setObjectName(QString::fromUtf8("clKeypoints"));
+        clKeypoints->setChecked(true);
+        clKeypoints->setTristate(false);
+
+        formLayout_4->setWidget(7, QFormLayout::FieldRole, clKeypoints);
+
+        label_20 = new QLabel(formLayoutWidget_4);
+        label_20->setObjectName(QString::fromUtf8("label_20"));
+
+        formLayout_4->setWidget(7, QFormLayout::LabelRole, label_20);
+
         groupBox_2 = new QGroupBox(widget);
         groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
         groupBox_2->setGeometry(QRect(10, 180, 281, 191));
@@ -426,6 +567,8 @@ public:
         menuBearbeiten->addAction(actionUndo);
         menuView->addAction(actionShowCoordinateSystem);
         mainToolBar->addAction(iconOpenPointCloud);
+        mainToolBar->addAction(iconSaveCloud);
+        mainToolBar->addSeparator();
         mainToolBar->addAction(iconResetColor);
 
         retranslateUi(MainWindow);
@@ -453,8 +596,8 @@ public:
         iconResetColor->setToolTip(QApplication::translate("MainWindow", "Reset the Cloud Color to White", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         actionShowCoordinateSystem->setText(QApplication::translate("MainWindow", "Show Coordinate System", 0, QApplication::UnicodeUTF8));
+        iconSaveCloud->setText(QApplication::translate("MainWindow", "Save Cloud", 0, QApplication::UnicodeUTF8));
         rgGroupBox->setTitle(QApplication::translate("MainWindow", "Region Growing Segmentation (Smoothness Contraint)", 0, QApplication::UnicodeUTF8));
-        startRegionGrowing->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("MainWindow", "Curvature Threshold:", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "Smoothness Threshold: ", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_WHATSTHIS
@@ -462,9 +605,19 @@ public:
 #endif // QT_NO_WHATSTHIS
         label_2->setText(QApplication::translate("MainWindow", "Min. Cluster Size:", 0, QApplication::UnicodeUTF8));
         label_4->setText(QApplication::translate("MainWindow", "Max. Cluster Size:", 0, QApplication::UnicodeUTF8));
-        groupBox->setTitle(QApplication::translate("MainWindow", "Classification", 0, QApplication::UnicodeUTF8));
+        startRegionGrowing->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
+        groupBox->setTitle(QApplication::translate("MainWindow", "Recognition", 0, QApplication::UnicodeUTF8));
         startGrouping->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
-        clSetCloudButton->setText(QApplication::translate("MainWindow", "Set Cloud", 0, QApplication::UnicodeUTF8));
+        clSetCloudButton->setText(QApplication::translate("MainWindow", "Set Model", 0, QApplication::UnicodeUTF8));
+        label_13->setText(QApplication::translate("MainWindow", "Scene Radius:", 0, QApplication::UnicodeUTF8));
+        label_14->setText(QApplication::translate("MainWindow", "Model Radius:", 0, QApplication::UnicodeUTF8));
+        label_15->setText(QApplication::translate("MainWindow", "Descriptor Radius:", 0, QApplication::UnicodeUTF8));
+        label_16->setText(QApplication::translate("MainWindow", "Descriptor Distance:", 0, QApplication::UnicodeUTF8));
+        label_17->setText(QApplication::translate("MainWindow", "Reference Frame Radius: ", 0, QApplication::UnicodeUTF8));
+        label_18->setText(QApplication::translate("MainWindow", "Bin Size:", 0, QApplication::UnicodeUTF8));
+        label_19->setText(QApplication::translate("MainWindow", "Threshold:", 0, QApplication::UnicodeUTF8));
+        clKeypoints->setText(QString());
+        label_20->setText(QApplication::translate("MainWindow", "Display Keypoints:", 0, QApplication::UnicodeUTF8));
         groupBox_2->setTitle(QApplication::translate("MainWindow", "Min-Cut Segmentation", 0, QApplication::UnicodeUTF8));
         startMinCut->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("MainWindow", "Set the foreground with Shift + Mouseclick", 0, QApplication::UnicodeUTF8));
