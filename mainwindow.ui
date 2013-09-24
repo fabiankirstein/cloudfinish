@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>CloundFinish v0.1</string>
+   <string>CloudFinish v0.1</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="minimumSize">

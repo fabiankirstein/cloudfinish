@@ -475,10 +475,10 @@ void MainWindow::corresGrouping()
     bool show_correspondences_ (true);
     bool use_cloud_resolution_ (false);
     bool use_hough_ (true);
-    float model_ss_ (0.01f);
-    float scene_ss_ (0.03f);
+    float model_ss_ (0.4f);
+    float scene_ss_ (0.4f);
     float rf_rad_ (0.015f*20);
-    float descr_rad_ (0.02f);
+    float descr_rad_ (0.1yf);
     float cg_size_ (0.01f);
     float cg_thresh_ (5.0f);
 
@@ -564,7 +564,7 @@ void MainWindow::corresGrouping()
             continue;
         }
         int found_neighs = match_search.nearestKSearch (scene_descriptors->at (i), 1, neigh_indices, neigh_sqr_dists);
-        if(found_neighs == 1 && neigh_sqr_dists[0] < 1.0f) //  add match only if the squared descriptor distance is less than 0.25 (SHOT descriptor distances are between 0 and 1 by design)
+        if(found_neighs == 1 && neigh_sqr_dists[0] < 0.01f) //  add match only if the squared descriptor distance is less than 0.25 (SHOT descriptor distances are between 0 and 1 by design)
         {
             pcl::Correspondence corr (neigh_indices[0], static_cast<int> (i), neigh_sqr_dists[0]);
             model_scene_corrs->push_back (corr);
