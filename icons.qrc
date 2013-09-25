@@ -2,5 +2,11 @@
     <qresource prefix="/">
         <file>icons/open.png</file>
         <file>icons/save.png</file>
+        <file>icons/about.png</file>
+        <file>icons/coordinate.png</file>
+        <file>icons/export.png</file>
+        <file>icons/undo.png</file>
+        <file>icons/white.png</file>
+        <file>icons/logo.png</file>
     </qresource>
 </RCC>

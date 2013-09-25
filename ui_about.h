@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'about.ui'
 **
-** Created: Sun 22. Sep 21:15:28 2013
+** Created: Wed 25. Sep 10:26:21 2013
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -30,6 +30,9 @@ public:
         if (aboutDialog->objectName().isEmpty())
             aboutDialog->setObjectName(QString::fromUtf8("aboutDialog"));
         aboutDialog->resize(240, 320);
+        QIcon icon;
+        icon.addFile(QString::fromUtf8(":/icons/logo.png"), QSize(), QIcon::Normal, QIcon::Off);
+        aboutDialog->setWindowIcon(icon);
         buttonBox = new QDialogButtonBox(aboutDialog);
         buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
         buttonBox->setGeometry(QRect(10, 270, 221, 41));

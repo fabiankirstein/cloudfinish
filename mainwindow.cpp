@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     window()->showMaximized();
 
-    ui->console->setFontPointSize(11.0);
+    ui->console->setFontPointSize(10.5);
     // CONNECTIONS
 
     // Menu
@@ -27,11 +27,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionResetColor, SIGNAL(triggered()), this, SLOT(setWhite()));
     connect(ui->actionShowCoordinateSystem, SIGNAL(triggered()), this, SLOT(toggleCoordinateSystem()));
 
-
-
     // Icons
     connect(ui->iconOpenPointCloud, SIGNAL(triggered()), this, SLOT(openFile()));
+    connect(ui->iconSavePNG, SIGNAL(triggered()), this, SLOT(saveAsPNG()));
+    connect(ui->iconSavePointCloud, SIGNAL(triggered()), this, SLOT(saveFile()));
+    connect(ui->iconUndo, SIGNAL(triggered()), this, SLOT(undo()));
     connect(ui->iconResetColor, SIGNAL(triggered()), this, SLOT(setWhite()));
+    connect(ui->iconAbout, SIGNAL(triggered()), this, SLOT(showAboutDialog()));
 
 
     // Algorithms
@@ -126,8 +128,8 @@ void MainWindow::openFile()
         visu->visualizer.removeAllPointClouds();
         visu->visualizer.removeAllShapes();
         //this->bleachCloud(mainCloud);
-        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZRGB> colorHandler (mainCloud, 255, 255, 255);
-        visu->visualizer.addPointCloud(mainCloud, colorHandler, cloud);
+        //pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZRGB> colorHandler (mainCloud, 255, 255, 255);
+        visu->visualizer.addPointCloud(mainCloud, cloud);
         visu->visualizer.resetCamera();
         visu->update();
 

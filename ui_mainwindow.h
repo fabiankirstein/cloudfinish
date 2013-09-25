@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue 24. Sep 23:03:20 2013
+** Created: Wed 25. Sep 10:34:15 2013
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -49,7 +49,11 @@ public:
     QAction *actionResetColor;
     QAction *iconResetColor;
     QAction *actionShowCoordinateSystem;
-    QAction *iconSaveCloud;
+    QAction *iconSavePointCloud;
+    QAction *iconSavePNG;
+    QAction *iconUndo;
+    QAction *iconShowCoordinateSystem;
+    QAction *iconAbout;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
@@ -129,7 +133,7 @@ public:
         MainWindow->setEnabled(true);
         MainWindow->resize(860, 1156);
         QIcon icon;
-        icon.addFile(QString::fromUtf8(":/icons/save.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8(":/icons/logo.png"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
         actionOpenPointCloud = new QAction(MainWindow);
         actionOpenPointCloud->setObjectName(QString::fromUtf8("actionOpenPointCloud"));
@@ -153,12 +157,38 @@ public:
         actionResetColor->setObjectName(QString::fromUtf8("actionResetColor"));
         iconResetColor = new QAction(MainWindow);
         iconResetColor->setObjectName(QString::fromUtf8("iconResetColor"));
+        QIcon icon2;
+        icon2.addFile(QString::fromUtf8(":/icons/white.png"), QSize(), QIcon::Normal, QIcon::Off);
+        iconResetColor->setIcon(icon2);
         actionShowCoordinateSystem = new QAction(MainWindow);
         actionShowCoordinateSystem->setObjectName(QString::fromUtf8("actionShowCoordinateSystem"));
         actionShowCoordinateSystem->setCheckable(true);
-        iconSaveCloud = new QAction(MainWindow);
-        iconSaveCloud->setObjectName(QString::fromUtf8("iconSaveCloud"));
-        iconSaveCloud->setIcon(icon);
+        iconSavePointCloud = new QAction(MainWindow);
+        iconSavePointCloud->setObjectName(QString::fromUtf8("iconSavePointCloud"));
+        QIcon icon3;
+        icon3.addFile(QString::fromUtf8(":/icons/save.png"), QSize(), QIcon::Normal, QIcon::Off);
+        iconSavePointCloud->setIcon(icon3);
+        iconSavePNG = new QAction(MainWindow);
+        iconSavePNG->setObjectName(QString::fromUtf8("iconSavePNG"));
+        QIcon icon4;
+        icon4.addFile(QString::fromUtf8(":/icons/export.png"), QSize(), QIcon::Normal, QIcon::Off);
+        iconSavePNG->setIcon(icon4);
+        iconUndo = new QAction(MainWindow);
+        iconUndo->setObjectName(QString::fromUtf8("iconUndo"));
+        QIcon icon5;
+        icon5.addFile(QString::fromUtf8(":/icons/undo.png"), QSize(), QIcon::Normal, QIcon::Off);
+        iconUndo->setIcon(icon5);
+        iconShowCoordinateSystem = new QAction(MainWindow);
+        iconShowCoordinateSystem->setObjectName(QString::fromUtf8("iconShowCoordinateSystem"));
+        iconShowCoordinateSystem->setCheckable(true);
+        QIcon icon6;
+        icon6.addFile(QString::fromUtf8(":/icons/coordinate.png"), QSize(), QIcon::Normal, QIcon::Off);
+        iconShowCoordinateSystem->setIcon(icon6);
+        iconAbout = new QAction(MainWindow);
+        iconAbout->setObjectName(QString::fromUtf8("iconAbout"));
+        QIcon icon7;
+        icon7.addFile(QString::fromUtf8(":/icons/about.png"), QSize(), QIcon::Normal, QIcon::Off);
+        iconAbout->setIcon(icon7);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         centralWidget->setMinimumSize(QSize(860, 0));
@@ -567,9 +597,13 @@ public:
         menuBearbeiten->addAction(actionUndo);
         menuView->addAction(actionShowCoordinateSystem);
         mainToolBar->addAction(iconOpenPointCloud);
-        mainToolBar->addAction(iconSaveCloud);
+        mainToolBar->addAction(iconSavePNG);
+        mainToolBar->addAction(iconSavePointCloud);
         mainToolBar->addSeparator();
+        mainToolBar->addAction(iconUndo);
         mainToolBar->addAction(iconResetColor);
+        mainToolBar->addSeparator();
+        mainToolBar->addAction(iconAbout);
 
         retranslateUi(MainWindow);
 
@@ -578,7 +612,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "CloudFinish v0.1", 0, QApplication::UnicodeUTF8));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "CloudFinish", 0, QApplication::UnicodeUTF8));
         actionOpenPointCloud->setText(QApplication::translate("MainWindow", "Open Point Cloud", 0, QApplication::UnicodeUTF8));
         actionUndo->setText(QApplication::translate("MainWindow", "Undo", 0, QApplication::UnicodeUTF8));
         actionSavePointCloud->setText(QApplication::translate("MainWindow", "Save Point Cloud", 0, QApplication::UnicodeUTF8));
@@ -596,7 +630,24 @@ public:
         iconResetColor->setToolTip(QApplication::translate("MainWindow", "Reset the Cloud Color to White", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         actionShowCoordinateSystem->setText(QApplication::translate("MainWindow", "Show Coordinate System", 0, QApplication::UnicodeUTF8));
-        iconSaveCloud->setText(QApplication::translate("MainWindow", "Save Cloud", 0, QApplication::UnicodeUTF8));
+        iconSavePointCloud->setText(QApplication::translate("MainWindow", "Save Cloud", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        iconSavePointCloud->setToolTip(QApplication::translate("MainWindow", "Save Point Cloud", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        iconSavePointCloud->setShortcut(QApplication::translate("MainWindow", "Ctrl+S", 0, QApplication::UnicodeUTF8));
+        iconSavePNG->setText(QApplication::translate("MainWindow", "Export as PNG", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        iconSavePNG->setToolTip(QApplication::translate("MainWindow", "Export as PNG", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        iconUndo->setText(QApplication::translate("MainWindow", "Undo", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        iconUndo->setToolTip(QApplication::translate("MainWindow", "Undo the last step", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        iconShowCoordinateSystem->setText(QApplication::translate("MainWindow", "Show Coordinate System", 0, QApplication::UnicodeUTF8));
+        iconAbout->setText(QApplication::translate("MainWindow", "About", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        iconAbout->setToolTip(QApplication::translate("MainWindow", "About", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
         rgGroupBox->setTitle(QApplication::translate("MainWindow", "Region Growing Segmentation (Smoothness Contraint)", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("MainWindow", "Curvature Threshold:", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "Smoothness Threshold: ", 0, QApplication::UnicodeUTF8));
@@ -635,6 +686,7 @@ public:
         menuHilfe->setTitle(QApplication::translate("MainWindow", "Help", 0, QApplication::UnicodeUTF8));
         menuBearbeiten->setTitle(QApplication::translate("MainWindow", "Edit", 0, QApplication::UnicodeUTF8));
         menuView->setTitle(QApplication::translate("MainWindow", "View", 0, QApplication::UnicodeUTF8));
+        mainToolBar->setWindowTitle(QApplication::translate("MainWindow", "Toolbar", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
