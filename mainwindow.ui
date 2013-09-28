@@ -87,7 +87,7 @@
          <x>10</x>
          <y>0</y>
          <width>281</width>
-         <height>171</height>
+         <height>161</height>
         </rect>
        </property>
        <property name="title">
@@ -122,6 +122,9 @@
          <item row="0" column="1">
           <widget class="QDoubleSpinBox" name="rgCurvature">
            <property name="minimum">
+            <double>0.010000000000000</double>
+           </property>
+           <property name="value">
             <double>1.000000000000000</double>
            </property>
           </widget>
@@ -227,7 +230,7 @@
         </rect>
        </property>
        <property name="title">
-        <string>Recognition</string>
+        <string>Recognition with Hough3D</string>
        </property>
        <widget class="QPushButton" name="startGrouping">
         <property name="geometry">
@@ -469,7 +472,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>180</y>
+         <y>170</y>
          <width>281</width>
          <height>191</height>
         </rect>
@@ -493,14 +496,14 @@
        <widget class="QLabel" name="label_5">
         <property name="geometry">
          <rect>
-          <x>60</x>
+          <x>20</x>
           <y>20</y>
           <width>261</width>
           <height>16</height>
          </rect>
         </property>
         <property name="text">
-         <string>Set the foreground with Shift + Mouseclick</string>
+         <string>Set the center of the object with Shift + Mouseclick</string>
         </property>
        </widget>
        <widget class="QWidget" name="formLayoutWidget_2">
@@ -597,19 +600,19 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>380</y>
+         <y>370</y>
          <width>281</width>
-         <height>131</height>
+         <height>141</height>
         </rect>
        </property>
        <property name="title">
-        <string>Euclidean Cluster</string>
+        <string>Euclidean Cluster Segmentation</string>
        </property>
        <widget class="QPushButton" name="startCluster">
         <property name="geometry">
          <rect>
           <x>200</x>
-          <y>100</y>
+          <y>110</y>
           <width>75</width>
           <height>23</height>
          </rect>

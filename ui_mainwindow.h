@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed 25. Sep 10:34:15 2013
+** Created: Sat 28. Sep 16:28:07 2013
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -232,7 +232,7 @@ public:
         widget->setStyleSheet(QString::fromUtf8(""));
         rgGroupBox = new QGroupBox(widget);
         rgGroupBox->setObjectName(QString::fromUtf8("rgGroupBox"));
-        rgGroupBox->setGeometry(QRect(10, 0, 281, 171));
+        rgGroupBox->setGeometry(QRect(10, 0, 281, 161));
         formLayoutWidget = new QWidget(rgGroupBox);
         formLayoutWidget->setObjectName(QString::fromUtf8("formLayoutWidget"));
         formLayoutWidget->setGeometry(QRect(10, 20, 261, 101));
@@ -251,7 +251,8 @@ public:
 
         rgCurvature = new QDoubleSpinBox(formLayoutWidget);
         rgCurvature->setObjectName(QString::fromUtf8("rgCurvature"));
-        rgCurvature->setMinimum(1);
+        rgCurvature->setMinimum(0.01);
+        rgCurvature->setValue(1);
 
         formLayout->setWidget(0, QFormLayout::FieldRole, rgCurvature);
 
@@ -436,13 +437,13 @@ public:
 
         groupBox_2 = new QGroupBox(widget);
         groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
-        groupBox_2->setGeometry(QRect(10, 180, 281, 191));
+        groupBox_2->setGeometry(QRect(10, 170, 281, 191));
         startMinCut = new QPushButton(groupBox_2);
         startMinCut->setObjectName(QString::fromUtf8("startMinCut"));
         startMinCut->setGeometry(QRect(200, 160, 75, 23));
         label_5 = new QLabel(groupBox_2);
         label_5->setObjectName(QString::fromUtf8("label_5"));
-        label_5->setGeometry(QRect(60, 20, 261, 16));
+        label_5->setGeometry(QRect(20, 20, 261, 16));
         formLayoutWidget_2 = new QWidget(groupBox_2);
         formLayoutWidget_2->setObjectName(QString::fromUtf8("formLayoutWidget_2"));
         formLayoutWidget_2->setGeometry(QRect(10, 40, 261, 111));
@@ -504,10 +505,10 @@ public:
 
         groupBox_3 = new QGroupBox(widget);
         groupBox_3->setObjectName(QString::fromUtf8("groupBox_3"));
-        groupBox_3->setGeometry(QRect(10, 380, 281, 131));
+        groupBox_3->setGeometry(QRect(10, 370, 281, 141));
         startCluster = new QPushButton(groupBox_3);
         startCluster->setObjectName(QString::fromUtf8("startCluster"));
-        startCluster->setGeometry(QRect(200, 100, 75, 23));
+        startCluster->setGeometry(QRect(200, 110, 75, 23));
         formLayoutWidget_3 = new QWidget(groupBox_3);
         formLayoutWidget_3->setObjectName(QString::fromUtf8("formLayoutWidget_3"));
         formLayoutWidget_3->setGeometry(QRect(10, 20, 261, 81));
@@ -657,7 +658,7 @@ public:
         label_2->setText(QApplication::translate("MainWindow", "Min. Cluster Size:", 0, QApplication::UnicodeUTF8));
         label_4->setText(QApplication::translate("MainWindow", "Max. Cluster Size:", 0, QApplication::UnicodeUTF8));
         startRegionGrowing->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
-        groupBox->setTitle(QApplication::translate("MainWindow", "Recognition", 0, QApplication::UnicodeUTF8));
+        groupBox->setTitle(QApplication::translate("MainWindow", "Recognition with Hough3D", 0, QApplication::UnicodeUTF8));
         startGrouping->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
         clSetCloudButton->setText(QApplication::translate("MainWindow", "Set Model", 0, QApplication::UnicodeUTF8));
         label_13->setText(QApplication::translate("MainWindow", "Scene Radius:", 0, QApplication::UnicodeUTF8));
@@ -671,12 +672,12 @@ public:
         label_20->setText(QApplication::translate("MainWindow", "Display Keypoints:", 0, QApplication::UnicodeUTF8));
         groupBox_2->setTitle(QApplication::translate("MainWindow", "Min-Cut Segmentation", 0, QApplication::UnicodeUTF8));
         startMinCut->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
-        label_5->setText(QApplication::translate("MainWindow", "Set the foreground with Shift + Mouseclick", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("MainWindow", "Set the center of the object with Shift + Mouseclick", 0, QApplication::UnicodeUTF8));
         label_6->setText(QApplication::translate("MainWindow", "Radius: ", 0, QApplication::UnicodeUTF8));
         label_7->setText(QApplication::translate("MainWindow", "Sigma:", 0, QApplication::UnicodeUTF8));
         label_8->setText(QApplication::translate("MainWindow", "Source Weight:", 0, QApplication::UnicodeUTF8));
         label_9->setText(QApplication::translate("MainWindow", "Number of Neighbours: ", 0, QApplication::UnicodeUTF8));
-        groupBox_3->setTitle(QApplication::translate("MainWindow", "Euclidean Cluster", 0, QApplication::UnicodeUTF8));
+        groupBox_3->setTitle(QApplication::translate("MainWindow", "Euclidean Cluster Segmentation", 0, QApplication::UnicodeUTF8));
         startCluster->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
         label_10->setText(QApplication::translate("MainWindow", "Cluster Tolerance:", 0, QApplication::UnicodeUTF8));
         label_11->setText(QApplication::translate("MainWindow", "Min. Cluster Size:", 0, QApplication::UnicodeUTF8));

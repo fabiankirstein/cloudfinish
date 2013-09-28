@@ -767,7 +767,7 @@ void MainWindow::undo()
 
 void MainWindow::showAboutDialog()
 {
-    QDialog *about = new QDialog(0,0);
+    QDialog *about = new QDialog(0,Qt::WindowSystemMenuHint | Qt::WindowTitleHint);
 
     Ui_aboutDialog aboutUi;
     aboutUi.setupUi(about);
