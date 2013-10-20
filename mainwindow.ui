@@ -244,6 +244,9 @@
         <property name="text">
          <string>Start</string>
         </property>
+        <property name="shortcut">
+         <string>Ctrl+H</string>
+        </property>
        </widget>
        <widget class="QTextEdit" name="clFilePath">
         <property name="geometry">

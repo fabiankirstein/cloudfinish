@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat 28. Sep 16:28:07 2013
+** Created: Thu 17. Oct 18:46:03 2013
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -660,6 +660,7 @@ public:
         startRegionGrowing->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
         groupBox->setTitle(QApplication::translate("MainWindow", "Recognition with Hough3D", 0, QApplication::UnicodeUTF8));
         startGrouping->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
+        startGrouping->setShortcut(QApplication::translate("MainWindow", "Ctrl+H", 0, QApplication::UnicodeUTF8));
         clSetCloudButton->setText(QApplication::translate("MainWindow", "Set Model", 0, QApplication::UnicodeUTF8));
         label_13->setText(QApplication::translate("MainWindow", "Scene Radius:", 0, QApplication::UnicodeUTF8));
         label_14->setText(QApplication::translate("MainWindow", "Model Radius:", 0, QApplication::UnicodeUTF8));
