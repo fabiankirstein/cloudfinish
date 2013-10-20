@@ -13,7 +13,6 @@ TEMPLATE = app
 
 RESOURCES = icons.qrc
 
-
 SOURCES += main.cpp\
         mainwindow.cpp \
     cloudvisualizer.cpp \
@@ -27,7 +26,7 @@ FORMS    += mainwindow.ui \
     about.ui
 
 
-win32:CONFIG(release, debug|release): LIBS += -L'C:/Program Files/Boost/lib/' \
+win32:CONFIG(release, debug|release): LIBS += -L'$$(CF_BOOST)/lib/' \
 -llibboost_system-vc100-mt-1_50 \
 -llibboost_filesystem-vc100-mt-1_50 \
 -llibboost_thread-vc100-mt-1_50 \
@@ -38,7 +37,7 @@ win32:CONFIG(release, debug|release): LIBS += -L'C:/Program Files/Boost/lib/' \
 -llibboost_chrono-vc100-mt-1_50
 
 
-win32:CONFIG(release, debug|release): LIBS += -L'C:/Program Files/PCL 1.7.0/lib/' \
+win32:CONFIG(release, debug|release): LIBS += -L'$$(CF_PCL)/lib/' \
 -lpcl_common_release \
 -lpcl_features_release \
 -lpcl_filters_release \
@@ -61,7 +60,7 @@ win32:CONFIG(release, debug|release): LIBS += -L'C:/Program Files/PCL 1.7.0/lib/
 -lpcl_visualization_release
 
 
-win32:CONFIG(release, debug|release): LIBS += -L'C:/Program Files/VTK/lib/vtk-5.8/' \
+win32:CONFIG(release, debug|release): LIBS += -L'$$(CF_VTK)/lib/vtk-5.8/' \
 -lQVTK \
 -lvtkCommon \
 -lvtkRendering \
@@ -94,12 +93,12 @@ win32:CONFIG(release, debug|release): LIBS += -L'C:/Program Files/VTK/lib/vtk-5.
 -lvtkalglib \
 
 
-LIBS += -L'C:/Program Files/OpenNI/Lib64' -lopenNI64
-LIBS += -L'C:/Program Files/flann/lib' -lflann_cpp_s
+LIBS += -L'$$(CF_OPENNI)/Lib64' -lopenNI64
+LIBS += -L'$$(CF_FLANN)/lib' -lflann_cpp_s
 
-INCLUDEPATH += 'C:/Program Files/PCL 1.7.0/include/pcl-1.7'
-INCLUDEPATH += 'C:/Program Files/Boost/include'
-INCLUDEPATH += 'C:/Program Files (x86)/Eigen/include'
-INCLUDEPATH += 'C:/Program Files/flann/include'
-INCLUDEPATH += 'C:/Program Files/VTK/include/vtk-5.8'
-INCLUDEPATH += 'C:/Program Files/OpenNI/include'
+INCLUDEPATH += '$$(CF_PCL)/include/pcl-1.7'
+INCLUDEPATH += '$$(CF_BOOST)/include'
+INCLUDEPATH += '$$(CF_EIGEN)/include'
+INCLUDEPATH += '$$(CF_FLANN)/include'
+INCLUDEPATH += '$$(CF_VTK)/include/vtk-5.8'
+INCLUDEPATH += '$$(CF_OPENNI)/include'
