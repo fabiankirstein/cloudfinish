@@ -45,7 +45,6 @@ win32:CONFIG(release, debug|release): LIBS += -L'$$(CF_PCL)/lib/' \
 -lpcl_io_release \
 -lpcl_kdtree_release \
 -lpcl_keypoints_release \
--lpcl_ml_release \
 -lpcl_octree_release \
 -lpcl_outofcore_release \
 -lpcl_people_release \
@@ -54,7 +53,6 @@ win32:CONFIG(release, debug|release): LIBS += -L'$$(CF_PCL)/lib/' \
 -lpcl_sample_consensus_release \
 -lpcl_search_release \
 -lpcl_segmentation_release \
--lpcl_stereo_release \
 -lpcl_surface_release \
 -lpcl_tracking_release \
 -lpcl_visualization_release
@@ -93,7 +91,7 @@ win32:CONFIG(release, debug|release): LIBS += -L'$$(CF_VTK)/lib/vtk-5.8/' \
 -lvtkalglib \
 
 
-LIBS += -L'$$(CF_OPENNI)/Lib64' -lopenNI64
+LIBS += -L'$$(CF_OPENNI)/Lib' -lopenNI
 LIBS += -L'$$(CF_FLANN)/lib' -lflann_cpp_s
 
 INCLUDEPATH += '$$(CF_PCL)/include/pcl-1.7'
