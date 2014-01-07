@@ -54,6 +54,7 @@
 
 
 #include "ui_about.h"
+#include "databaseDialog.h"
 
 #include <QVTKWidget.h>
 
@@ -98,11 +99,16 @@ private slots:
 
     void showAboutDialog();
 
+    void showDatabaseDialog();
+
     void toggleCoordinateSystem();
+
+    void toggleObjectsDock();
 
 private:
     Ui::MainWindow *ui;
     CF::CloudVisualizer *visu;
+    QDialog *database;
 
     QString clCloud;
     void bleachCloud(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud);
@@ -115,6 +121,8 @@ private:
 
     QString lastFile;
     QString lastClFile;
+
+    std::string databasePath;
 
 };
 

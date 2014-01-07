@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     window()->showMaximized();
 
+    database = new DatabaseDialog(this);
+
     ui->console->setFontPointSize(10.5);
     // CONNECTIONS
 
@@ -26,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionUndo, SIGNAL(triggered()), this, SLOT(undo()));
     connect(ui->actionResetColor, SIGNAL(triggered()), this, SLOT(setWhite()));
     connect(ui->actionShowCoordinateSystem, SIGNAL(triggered()), this, SLOT(toggleCoordinateSystem()));
+    connect(ui->actionObjectsDock, SIGNAL(triggered()), this, SLOT(toggleObjectsDock()));
 
     // Icons
     connect(ui->iconOpenPointCloud, SIGNAL(triggered()), this, SLOT(openFile()));
@@ -43,6 +46,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->startMinCut, SIGNAL(clicked()), this, SLOT(minCut()));
     connect(ui->startCluster, SIGNAL(clicked()), this, SLOT(cluster()));
 
+    // Misc
+    connect(ui->openDatabase, SIGNAL(clicked()), this, SLOT(showDatabaseDialog()));
+
+    // Test Connection
+    connect(database, SIGNAL(buttonClicked()), this, SLOT(showAboutDialog()));
+
     // END CONNECTIONS
     mainCloud = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(new pcl::PointCloud<pcl::PointXYZRGB>);
     visu = new CF::CloudVisualizer(ui->vtkwidget, this);
@@ -59,6 +68,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->printInfo("Welcome ...");
     this->setStatusTip("No Point Cloud loaded");
+
+    // Init Windows
+    ui->ecDockWidget->hide();
+    ui->mcDockWidget->hide();
+    ui->rgDockWidget->hide();
+
+    this->databasePath = "D:\Studium\FP\database";
 
 }
 
@@ -568,6 +584,7 @@ void MainWindow::corresGrouping()
     descr_est.compute (*scene_descriptors);
     this->printInfo("Descriptors for scene found: " + QString::number(scene_descriptors->size()));
 
+    //pcl::io::savePCDFile("C:/Temp/test.pcd", *scene_descriptors);
 
     //  Find Model-Scene Correspondences with KdTree
     this->printInfo("Find Correspondences ...");
@@ -775,6 +792,18 @@ void MainWindow::showAboutDialog()
     about->show();
 }
 
+void MainWindow::showDatabaseDialog()
+{
+    database->exec();
+
+//    QDialog *database = new QDialog(0,Qt::WindowSystemMenuHint | Qt::WindowTitleHint);
+
+//    Ui_databaseDialog databaseUi;
+//    databaseUi.setupUi(database);
+
+//    database->show();
+}
+
 void MainWindow::toggleCoordinateSystem()
 {
     if(ui->actionShowCoordinateSystem->isChecked()) {
@@ -784,5 +813,16 @@ void MainWindow::toggleCoordinateSystem()
         visu->visualizer.removeCoordinateSystem();
     }
     visu->update();
+}
+
+void MainWindow::toggleObjectsDock()
+{
+    if(ui->rgDockWidget->isVisible()) {
+        ui->rgDockWidget->hide();
+        ui->actionObjectsDock->setChecked(false);
+    } else {
+        ui->rgDockWidget->show();
+        ui->actionObjectsDock->setChecked(true);
+    }
 }
 

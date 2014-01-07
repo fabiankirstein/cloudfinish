@@ -16,14 +16,17 @@ RESOURCES = icons.qrc
 SOURCES += main.cpp\
         mainwindow.cpp \
     cloudvisualizer.cpp \
-    cloudio.cpp
+    cloudio.cpp \
+    databaseDialog.cpp
 
 HEADERS  += mainwindow.h \
     cloudvisualizer.h \
-    cloudio.h
+    cloudio.h \
+    databaseDialog.h
 
 FORMS    += mainwindow.ui \
-    about.ui
+    about.ui \
+    database.ui
 
 
 win32:CONFIG(release, debug|release): LIBS += -L'$$(CF_BOOST)/lib/' \

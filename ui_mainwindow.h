@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun 17. Nov 12:49:07 2013
+** Created: Tue 7. Jan 16:42:57 2014
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -15,9 +15,9 @@
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QCheckBox>
+#include <QtGui/QDockWidget>
 #include <QtGui/QDoubleSpinBox>
 #include <QtGui/QFormLayout>
-#include <QtGui/QGroupBox>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
@@ -54,13 +54,24 @@ public:
     QAction *iconUndo;
     QAction *iconShowCoordinateSystem;
     QAction *iconAbout;
+    QAction *actionObjectsDock;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
     QVTKWidget *vtkwidget;
     QTextBrowser *console;
-    QWidget *widget;
-    QGroupBox *rgGroupBox;
+    QMenuBar *menuBar;
+    QMenu *menuDatei;
+    QMenu *menuExtras;
+    QMenu *menuHilfe;
+    QMenu *menuBearbeiten;
+    QMenu *menuView;
+    QMenu *menuWindows;
+    QToolBar *mainToolBar;
+    QStatusBar *statusBar;
+    QDockWidget *rgDockWidget;
+    QWidget *dockWidgetContents;
+    QPushButton *startRegionGrowing;
     QWidget *formLayoutWidget;
     QFormLayout *formLayout;
     QLabel *label_3;
@@ -71,9 +82,33 @@ public:
     QSpinBox *rgMinCluster;
     QSpinBox *rgMaxCluster;
     QLabel *label_4;
-    QPushButton *startRegionGrowing;
-    QGroupBox *groupBox;
-    QPushButton *startGrouping;
+    QDockWidget *mcDockWidget;
+    QWidget *dockWidgetContents_2;
+    QLabel *label_5;
+    QWidget *formLayoutWidget_2;
+    QFormLayout *formLayout_2;
+    QDoubleSpinBox *mcRadius;
+    QLabel *label_6;
+    QDoubleSpinBox *mcSigma;
+    QLabel *label_7;
+    QDoubleSpinBox *mcSourceWeight;
+    QLabel *label_8;
+    QSpinBox *mcNeighbours;
+    QLabel *label_9;
+    QPushButton *startMinCut;
+    QDockWidget *ecDockWidget;
+    QWidget *dockWidgetContents_3;
+    QWidget *formLayoutWidget_3;
+    QFormLayout *formLayout_3;
+    QDoubleSpinBox *eclTolerance;
+    QLabel *label_10;
+    QSpinBox *eclMinCluster;
+    QLabel *label_11;
+    QSpinBox *eclMaxCluster;
+    QLabel *label_12;
+    QPushButton *startCluster;
+    QDockWidget *houghDockWidget;
+    QWidget *dockWidgetContents_4;
     QTextEdit *clFilePath;
     QPushButton *clSetCloudButton;
     QWidget *formLayoutWidget_4;
@@ -94,44 +129,17 @@ public:
     QLabel *label_19;
     QCheckBox *clKeypoints;
     QLabel *label_20;
-    QGroupBox *groupBox_2;
-    QPushButton *startMinCut;
-    QLabel *label_5;
-    QWidget *formLayoutWidget_2;
-    QFormLayout *formLayout_2;
-    QDoubleSpinBox *mcRadius;
-    QLabel *label_6;
-    QDoubleSpinBox *mcSigma;
-    QLabel *label_7;
-    QDoubleSpinBox *mcSourceWeight;
-    QLabel *label_8;
-    QSpinBox *mcNeighbours;
-    QLabel *label_9;
-    QGroupBox *groupBox_3;
-    QPushButton *startCluster;
-    QWidget *formLayoutWidget_3;
-    QFormLayout *formLayout_3;
-    QDoubleSpinBox *eclTolerance;
-    QLabel *label_10;
-    QSpinBox *eclMinCluster;
-    QLabel *label_11;
-    QSpinBox *eclMaxCluster;
-    QLabel *label_12;
-    QMenuBar *menuBar;
-    QMenu *menuDatei;
-    QMenu *menuExtras;
-    QMenu *menuHilfe;
-    QMenu *menuBearbeiten;
-    QMenu *menuView;
-    QToolBar *mainToolBar;
-    QStatusBar *statusBar;
+    QPushButton *startGrouping;
+    QDockWidget *dockWidget;
+    QWidget *dockWidgetContents_5;
+    QPushButton *openDatabase;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->setEnabled(true);
-        MainWindow->resize(860, 1156);
+        MainWindow->resize(1141, 1386);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/icons/logo.png"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
@@ -189,6 +197,10 @@ public:
         QIcon icon7;
         icon7.addFile(QString::fromUtf8(":/icons/about.png"), QSize(), QIcon::Normal, QIcon::Off);
         iconAbout->setIcon(icon7);
+        actionObjectsDock = new QAction(MainWindow);
+        actionObjectsDock->setObjectName(QString::fromUtf8("actionObjectsDock"));
+        actionObjectsDock->setCheckable(true);
+        actionObjectsDock->setChecked(true);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         centralWidget->setMinimumSize(QSize(860, 0));
@@ -221,21 +233,41 @@ public:
 
         horizontalLayout_2->addLayout(verticalLayout);
 
-        widget = new QWidget(centralWidget);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        QSizePolicy sizePolicy1(QSizePolicy::Fixed, QSizePolicy::Preferred);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(widget->sizePolicy().hasHeightForWidth());
-        widget->setSizePolicy(sizePolicy1);
-        widget->setMinimumSize(QSize(300, 0));
-        widget->setStyleSheet(QString::fromUtf8(""));
-        rgGroupBox = new QGroupBox(widget);
-        rgGroupBox->setObjectName(QString::fromUtf8("rgGroupBox"));
-        rgGroupBox->setGeometry(QRect(10, 0, 281, 161));
-        formLayoutWidget = new QWidget(rgGroupBox);
+        MainWindow->setCentralWidget(centralWidget);
+        menuBar = new QMenuBar(MainWindow);
+        menuBar->setObjectName(QString::fromUtf8("menuBar"));
+        menuBar->setGeometry(QRect(0, 0, 1141, 21));
+        menuDatei = new QMenu(menuBar);
+        menuDatei->setObjectName(QString::fromUtf8("menuDatei"));
+        menuExtras = new QMenu(menuBar);
+        menuExtras->setObjectName(QString::fromUtf8("menuExtras"));
+        menuHilfe = new QMenu(menuBar);
+        menuHilfe->setObjectName(QString::fromUtf8("menuHilfe"));
+        menuBearbeiten = new QMenu(menuBar);
+        menuBearbeiten->setObjectName(QString::fromUtf8("menuBearbeiten"));
+        menuView = new QMenu(menuBar);
+        menuView->setObjectName(QString::fromUtf8("menuView"));
+        menuWindows = new QMenu(menuBar);
+        menuWindows->setObjectName(QString::fromUtf8("menuWindows"));
+        MainWindow->setMenuBar(menuBar);
+        mainToolBar = new QToolBar(MainWindow);
+        mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
+        MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
+        statusBar = new QStatusBar(MainWindow);
+        statusBar->setObjectName(QString::fromUtf8("statusBar"));
+        MainWindow->setStatusBar(statusBar);
+        rgDockWidget = new QDockWidget(MainWindow);
+        rgDockWidget->setObjectName(QString::fromUtf8("rgDockWidget"));
+        rgDockWidget->setMinimumSize(QSize(280, 180));
+        rgDockWidget->setMaximumSize(QSize(300, 180));
+        dockWidgetContents = new QWidget();
+        dockWidgetContents->setObjectName(QString::fromUtf8("dockWidgetContents"));
+        startRegionGrowing = new QPushButton(dockWidgetContents);
+        startRegionGrowing->setObjectName(QString::fromUtf8("startRegionGrowing"));
+        startRegionGrowing->setGeometry(QRect(190, 120, 75, 23));
+        formLayoutWidget = new QWidget(dockWidgetContents);
         formLayoutWidget->setObjectName(QString::fromUtf8("formLayoutWidget"));
-        formLayoutWidget->setGeometry(QRect(10, 20, 261, 101));
+        formLayoutWidget->setGeometry(QRect(10, 10, 261, 101));
         formLayout = new QFormLayout(formLayoutWidget);
         formLayout->setSpacing(6);
         formLayout->setContentsMargins(11, 11, 11, 11);
@@ -297,34 +329,166 @@ public:
 
         formLayout->setWidget(3, QFormLayout::LabelRole, label_4);
 
-        startRegionGrowing = new QPushButton(rgGroupBox);
-        startRegionGrowing->setObjectName(QString::fromUtf8("startRegionGrowing"));
-        startRegionGrowing->setGeometry(QRect(200, 130, 75, 23));
-        groupBox = new QGroupBox(widget);
-        groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        groupBox->setGeometry(QRect(10, 520, 281, 301));
-        startGrouping = new QPushButton(groupBox);
-        startGrouping->setObjectName(QString::fromUtf8("startGrouping"));
-        startGrouping->setGeometry(QRect(200, 270, 75, 23));
-        clFilePath = new QTextEdit(groupBox);
+        rgDockWidget->setWidget(dockWidgetContents);
+        MainWindow->addDockWidget(static_cast<Qt::DockWidgetArea>(1), rgDockWidget);
+        mcDockWidget = new QDockWidget(MainWindow);
+        mcDockWidget->setObjectName(QString::fromUtf8("mcDockWidget"));
+        mcDockWidget->setMinimumSize(QSize(280, 200));
+        mcDockWidget->setMaximumSize(QSize(280, 200));
+        dockWidgetContents_2 = new QWidget();
+        dockWidgetContents_2->setObjectName(QString::fromUtf8("dockWidgetContents_2"));
+        label_5 = new QLabel(dockWidgetContents_2);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+        label_5->setGeometry(QRect(10, 0, 261, 16));
+        formLayoutWidget_2 = new QWidget(dockWidgetContents_2);
+        formLayoutWidget_2->setObjectName(QString::fromUtf8("formLayoutWidget_2"));
+        formLayoutWidget_2->setGeometry(QRect(10, 20, 261, 111));
+        formLayout_2 = new QFormLayout(formLayoutWidget_2);
+        formLayout_2->setSpacing(6);
+        formLayout_2->setContentsMargins(11, 11, 11, 11);
+        formLayout_2->setObjectName(QString::fromUtf8("formLayout_2"));
+        formLayout_2->setContentsMargins(0, 0, 0, 0);
+        mcRadius = new QDoubleSpinBox(formLayoutWidget_2);
+        mcRadius->setObjectName(QString::fromUtf8("mcRadius"));
+        mcRadius->setMinimum(0.01);
+        mcRadius->setMaximum(10000);
+        mcRadius->setValue(5);
+
+        formLayout_2->setWidget(0, QFormLayout::FieldRole, mcRadius);
+
+        label_6 = new QLabel(formLayoutWidget_2);
+        label_6->setObjectName(QString::fromUtf8("label_6"));
+
+        formLayout_2->setWidget(0, QFormLayout::LabelRole, label_6);
+
+        mcSigma = new QDoubleSpinBox(formLayoutWidget_2);
+        mcSigma->setObjectName(QString::fromUtf8("mcSigma"));
+        mcSigma->setMinimum(0.01);
+        mcSigma->setSingleStep(0.25);
+        mcSigma->setValue(0.25);
+
+        formLayout_2->setWidget(1, QFormLayout::FieldRole, mcSigma);
+
+        label_7 = new QLabel(formLayoutWidget_2);
+        label_7->setObjectName(QString::fromUtf8("label_7"));
+
+        formLayout_2->setWidget(1, QFormLayout::LabelRole, label_7);
+
+        mcSourceWeight = new QDoubleSpinBox(formLayoutWidget_2);
+        mcSourceWeight->setObjectName(QString::fromUtf8("mcSourceWeight"));
+        mcSourceWeight->setSingleStep(0.5);
+        mcSourceWeight->setValue(0.5);
+
+        formLayout_2->setWidget(2, QFormLayout::FieldRole, mcSourceWeight);
+
+        label_8 = new QLabel(formLayoutWidget_2);
+        label_8->setObjectName(QString::fromUtf8("label_8"));
+
+        formLayout_2->setWidget(2, QFormLayout::LabelRole, label_8);
+
+        mcNeighbours = new QSpinBox(formLayoutWidget_2);
+        mcNeighbours->setObjectName(QString::fromUtf8("mcNeighbours"));
+        mcNeighbours->setMinimum(1);
+        mcNeighbours->setMaximum(1000);
+        mcNeighbours->setValue(10);
+
+        formLayout_2->setWidget(3, QFormLayout::FieldRole, mcNeighbours);
+
+        label_9 = new QLabel(formLayoutWidget_2);
+        label_9->setObjectName(QString::fromUtf8("label_9"));
+
+        formLayout_2->setWidget(3, QFormLayout::LabelRole, label_9);
+
+        startMinCut = new QPushButton(dockWidgetContents_2);
+        startMinCut->setObjectName(QString::fromUtf8("startMinCut"));
+        startMinCut->setGeometry(QRect(190, 140, 75, 23));
+        mcDockWidget->setWidget(dockWidgetContents_2);
+        MainWindow->addDockWidget(static_cast<Qt::DockWidgetArea>(1), mcDockWidget);
+        ecDockWidget = new QDockWidget(MainWindow);
+        ecDockWidget->setObjectName(QString::fromUtf8("ecDockWidget"));
+        ecDockWidget->setMinimumSize(QSize(280, 160));
+        ecDockWidget->setMaximumSize(QSize(280, 160));
+        dockWidgetContents_3 = new QWidget();
+        dockWidgetContents_3->setObjectName(QString::fromUtf8("dockWidgetContents_3"));
+        formLayoutWidget_3 = new QWidget(dockWidgetContents_3);
+        formLayoutWidget_3->setObjectName(QString::fromUtf8("formLayoutWidget_3"));
+        formLayoutWidget_3->setGeometry(QRect(10, 10, 261, 81));
+        formLayout_3 = new QFormLayout(formLayoutWidget_3);
+        formLayout_3->setSpacing(6);
+        formLayout_3->setContentsMargins(11, 11, 11, 11);
+        formLayout_3->setObjectName(QString::fromUtf8("formLayout_3"));
+        formLayout_3->setContentsMargins(0, 0, 0, 0);
+        eclTolerance = new QDoubleSpinBox(formLayoutWidget_3);
+        eclTolerance->setObjectName(QString::fromUtf8("eclTolerance"));
+        eclTolerance->setMinimum(0.01);
+        eclTolerance->setSingleStep(0.01);
+        eclTolerance->setValue(0.1);
+
+        formLayout_3->setWidget(0, QFormLayout::FieldRole, eclTolerance);
+
+        label_10 = new QLabel(formLayoutWidget_3);
+        label_10->setObjectName(QString::fromUtf8("label_10"));
+
+        formLayout_3->setWidget(0, QFormLayout::LabelRole, label_10);
+
+        eclMinCluster = new QSpinBox(formLayoutWidget_3);
+        eclMinCluster->setObjectName(QString::fromUtf8("eclMinCluster"));
+        eclMinCluster->setMinimum(1);
+        eclMinCluster->setMaximum(1000000);
+        eclMinCluster->setSingleStep(100);
+        eclMinCluster->setValue(100);
+
+        formLayout_3->setWidget(1, QFormLayout::FieldRole, eclMinCluster);
+
+        label_11 = new QLabel(formLayoutWidget_3);
+        label_11->setObjectName(QString::fromUtf8("label_11"));
+
+        formLayout_3->setWidget(1, QFormLayout::LabelRole, label_11);
+
+        eclMaxCluster = new QSpinBox(formLayoutWidget_3);
+        eclMaxCluster->setObjectName(QString::fromUtf8("eclMaxCluster"));
+        eclMaxCluster->setMinimum(10);
+        eclMaxCluster->setMaximum(100000000);
+        eclMaxCluster->setSingleStep(1000);
+        eclMaxCluster->setValue(100000);
+
+        formLayout_3->setWidget(2, QFormLayout::FieldRole, eclMaxCluster);
+
+        label_12 = new QLabel(formLayoutWidget_3);
+        label_12->setObjectName(QString::fromUtf8("label_12"));
+
+        formLayout_3->setWidget(2, QFormLayout::LabelRole, label_12);
+
+        startCluster = new QPushButton(dockWidgetContents_3);
+        startCluster->setObjectName(QString::fromUtf8("startCluster"));
+        startCluster->setGeometry(QRect(190, 100, 75, 23));
+        ecDockWidget->setWidget(dockWidgetContents_3);
+        MainWindow->addDockWidget(static_cast<Qt::DockWidgetArea>(1), ecDockWidget);
+        houghDockWidget = new QDockWidget(MainWindow);
+        houghDockWidget->setObjectName(QString::fromUtf8("houghDockWidget"));
+        houghDockWidget->setMinimumSize(QSize(280, 320));
+        houghDockWidget->setMaximumSize(QSize(280, 320));
+        dockWidgetContents_4 = new QWidget();
+        dockWidgetContents_4->setObjectName(QString::fromUtf8("dockWidgetContents_4"));
+        clFilePath = new QTextEdit(dockWidgetContents_4);
         clFilePath->setObjectName(QString::fromUtf8("clFilePath"));
-        clFilePath->setGeometry(QRect(10, 20, 181, 21));
-        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(clFilePath->sizePolicy().hasHeightForWidth());
-        clFilePath->setSizePolicy(sizePolicy2);
+        clFilePath->setGeometry(QRect(10, 10, 181, 21));
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(clFilePath->sizePolicy().hasHeightForWidth());
+        clFilePath->setSizePolicy(sizePolicy1);
         clFilePath->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         clFilePath->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         clFilePath->setTabChangesFocus(true);
         clFilePath->setLineWrapMode(QTextEdit::NoWrap);
         clFilePath->setReadOnly(true);
-        clSetCloudButton = new QPushButton(groupBox);
+        clSetCloudButton = new QPushButton(dockWidgetContents_4);
         clSetCloudButton->setObjectName(QString::fromUtf8("clSetCloudButton"));
-        clSetCloudButton->setGeometry(QRect(200, 20, 75, 23));
-        formLayoutWidget_4 = new QWidget(groupBox);
+        clSetCloudButton->setGeometry(QRect(200, 10, 75, 23));
+        formLayoutWidget_4 = new QWidget(dockWidgetContents_4);
         formLayoutWidget_4->setObjectName(QString::fromUtf8("formLayoutWidget_4"));
-        formLayoutWidget_4->setGeometry(QRect(10, 50, 261, 211));
+        formLayoutWidget_4->setGeometry(QRect(10, 40, 261, 211));
         formLayout_4 = new QFormLayout(formLayoutWidget_4);
         formLayout_4->setSpacing(6);
         formLayout_4->setContentsMargins(11, 11, 11, 11);
@@ -435,158 +599,28 @@ public:
 
         formLayout_4->setWidget(7, QFormLayout::LabelRole, label_20);
 
-        groupBox_2 = new QGroupBox(widget);
-        groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
-        groupBox_2->setGeometry(QRect(10, 170, 281, 191));
-        startMinCut = new QPushButton(groupBox_2);
-        startMinCut->setObjectName(QString::fromUtf8("startMinCut"));
-        startMinCut->setGeometry(QRect(200, 160, 75, 23));
-        label_5 = new QLabel(groupBox_2);
-        label_5->setObjectName(QString::fromUtf8("label_5"));
-        label_5->setGeometry(QRect(20, 20, 261, 16));
-        formLayoutWidget_2 = new QWidget(groupBox_2);
-        formLayoutWidget_2->setObjectName(QString::fromUtf8("formLayoutWidget_2"));
-        formLayoutWidget_2->setGeometry(QRect(10, 40, 261, 111));
-        formLayout_2 = new QFormLayout(formLayoutWidget_2);
-        formLayout_2->setSpacing(6);
-        formLayout_2->setContentsMargins(11, 11, 11, 11);
-        formLayout_2->setObjectName(QString::fromUtf8("formLayout_2"));
-        formLayout_2->setContentsMargins(0, 0, 0, 0);
-        mcRadius = new QDoubleSpinBox(formLayoutWidget_2);
-        mcRadius->setObjectName(QString::fromUtf8("mcRadius"));
-        mcRadius->setMinimum(0.01);
-        mcRadius->setMaximum(10000);
-        mcRadius->setValue(5);
-
-        formLayout_2->setWidget(0, QFormLayout::FieldRole, mcRadius);
-
-        label_6 = new QLabel(formLayoutWidget_2);
-        label_6->setObjectName(QString::fromUtf8("label_6"));
-
-        formLayout_2->setWidget(0, QFormLayout::LabelRole, label_6);
-
-        mcSigma = new QDoubleSpinBox(formLayoutWidget_2);
-        mcSigma->setObjectName(QString::fromUtf8("mcSigma"));
-        mcSigma->setMinimum(0.01);
-        mcSigma->setSingleStep(0.25);
-        mcSigma->setValue(0.25);
-
-        formLayout_2->setWidget(1, QFormLayout::FieldRole, mcSigma);
-
-        label_7 = new QLabel(formLayoutWidget_2);
-        label_7->setObjectName(QString::fromUtf8("label_7"));
-
-        formLayout_2->setWidget(1, QFormLayout::LabelRole, label_7);
-
-        mcSourceWeight = new QDoubleSpinBox(formLayoutWidget_2);
-        mcSourceWeight->setObjectName(QString::fromUtf8("mcSourceWeight"));
-        mcSourceWeight->setSingleStep(0.5);
-        mcSourceWeight->setValue(0.5);
-
-        formLayout_2->setWidget(2, QFormLayout::FieldRole, mcSourceWeight);
-
-        label_8 = new QLabel(formLayoutWidget_2);
-        label_8->setObjectName(QString::fromUtf8("label_8"));
-
-        formLayout_2->setWidget(2, QFormLayout::LabelRole, label_8);
-
-        mcNeighbours = new QSpinBox(formLayoutWidget_2);
-        mcNeighbours->setObjectName(QString::fromUtf8("mcNeighbours"));
-        mcNeighbours->setMinimum(1);
-        mcNeighbours->setMaximum(1000);
-        mcNeighbours->setValue(10);
-
-        formLayout_2->setWidget(3, QFormLayout::FieldRole, mcNeighbours);
-
-        label_9 = new QLabel(formLayoutWidget_2);
-        label_9->setObjectName(QString::fromUtf8("label_9"));
-
-        formLayout_2->setWidget(3, QFormLayout::LabelRole, label_9);
-
-        groupBox_3 = new QGroupBox(widget);
-        groupBox_3->setObjectName(QString::fromUtf8("groupBox_3"));
-        groupBox_3->setGeometry(QRect(10, 370, 281, 141));
-        startCluster = new QPushButton(groupBox_3);
-        startCluster->setObjectName(QString::fromUtf8("startCluster"));
-        startCluster->setGeometry(QRect(200, 110, 75, 23));
-        formLayoutWidget_3 = new QWidget(groupBox_3);
-        formLayoutWidget_3->setObjectName(QString::fromUtf8("formLayoutWidget_3"));
-        formLayoutWidget_3->setGeometry(QRect(10, 20, 261, 81));
-        formLayout_3 = new QFormLayout(formLayoutWidget_3);
-        formLayout_3->setSpacing(6);
-        formLayout_3->setContentsMargins(11, 11, 11, 11);
-        formLayout_3->setObjectName(QString::fromUtf8("formLayout_3"));
-        formLayout_3->setContentsMargins(0, 0, 0, 0);
-        eclTolerance = new QDoubleSpinBox(formLayoutWidget_3);
-        eclTolerance->setObjectName(QString::fromUtf8("eclTolerance"));
-        eclTolerance->setMinimum(0.01);
-        eclTolerance->setSingleStep(0.01);
-        eclTolerance->setValue(0.1);
-
-        formLayout_3->setWidget(0, QFormLayout::FieldRole, eclTolerance);
-
-        label_10 = new QLabel(formLayoutWidget_3);
-        label_10->setObjectName(QString::fromUtf8("label_10"));
-
-        formLayout_3->setWidget(0, QFormLayout::LabelRole, label_10);
-
-        eclMinCluster = new QSpinBox(formLayoutWidget_3);
-        eclMinCluster->setObjectName(QString::fromUtf8("eclMinCluster"));
-        eclMinCluster->setMinimum(1);
-        eclMinCluster->setMaximum(1000000);
-        eclMinCluster->setSingleStep(100);
-        eclMinCluster->setValue(100);
-
-        formLayout_3->setWidget(1, QFormLayout::FieldRole, eclMinCluster);
-
-        label_11 = new QLabel(formLayoutWidget_3);
-        label_11->setObjectName(QString::fromUtf8("label_11"));
-
-        formLayout_3->setWidget(1, QFormLayout::LabelRole, label_11);
-
-        eclMaxCluster = new QSpinBox(formLayoutWidget_3);
-        eclMaxCluster->setObjectName(QString::fromUtf8("eclMaxCluster"));
-        eclMaxCluster->setMinimum(10);
-        eclMaxCluster->setMaximum(100000000);
-        eclMaxCluster->setSingleStep(1000);
-        eclMaxCluster->setValue(100000);
-
-        formLayout_3->setWidget(2, QFormLayout::FieldRole, eclMaxCluster);
-
-        label_12 = new QLabel(formLayoutWidget_3);
-        label_12->setObjectName(QString::fromUtf8("label_12"));
-
-        formLayout_3->setWidget(2, QFormLayout::LabelRole, label_12);
-
-
-        horizontalLayout_2->addWidget(widget);
-
-        MainWindow->setCentralWidget(centralWidget);
-        menuBar = new QMenuBar(MainWindow);
-        menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 860, 21));
-        menuDatei = new QMenu(menuBar);
-        menuDatei->setObjectName(QString::fromUtf8("menuDatei"));
-        menuExtras = new QMenu(menuBar);
-        menuExtras->setObjectName(QString::fromUtf8("menuExtras"));
-        menuHilfe = new QMenu(menuBar);
-        menuHilfe->setObjectName(QString::fromUtf8("menuHilfe"));
-        menuBearbeiten = new QMenu(menuBar);
-        menuBearbeiten->setObjectName(QString::fromUtf8("menuBearbeiten"));
-        menuView = new QMenu(menuBar);
-        menuView->setObjectName(QString::fromUtf8("menuView"));
-        MainWindow->setMenuBar(menuBar);
-        mainToolBar = new QToolBar(MainWindow);
-        mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
-        MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
-        statusBar = new QStatusBar(MainWindow);
-        statusBar->setObjectName(QString::fromUtf8("statusBar"));
-        MainWindow->setStatusBar(statusBar);
+        startGrouping = new QPushButton(dockWidgetContents_4);
+        startGrouping->setObjectName(QString::fromUtf8("startGrouping"));
+        startGrouping->setGeometry(QRect(190, 260, 75, 23));
+        houghDockWidget->setWidget(dockWidgetContents_4);
+        MainWindow->addDockWidget(static_cast<Qt::DockWidgetArea>(1), houghDockWidget);
+        dockWidget = new QDockWidget(MainWindow);
+        dockWidget->setObjectName(QString::fromUtf8("dockWidget"));
+        dockWidget->setMinimumSize(QSize(280, 38));
+        dockWidget->setMaximumSize(QSize(280, 524287));
+        dockWidgetContents_5 = new QWidget();
+        dockWidgetContents_5->setObjectName(QString::fromUtf8("dockWidgetContents_5"));
+        openDatabase = new QPushButton(dockWidgetContents_5);
+        openDatabase->setObjectName(QString::fromUtf8("openDatabase"));
+        openDatabase->setGeometry(QRect(20, 20, 75, 23));
+        dockWidget->setWidget(dockWidgetContents_5);
+        MainWindow->addDockWidget(static_cast<Qt::DockWidgetArea>(1), dockWidget);
 
         menuBar->addAction(menuDatei->menuAction());
         menuBar->addAction(menuBearbeiten->menuAction());
         menuBar->addAction(menuExtras->menuAction());
         menuBar->addAction(menuView->menuAction());
+        menuBar->addAction(menuWindows->menuAction());
         menuBar->addAction(menuHilfe->menuAction());
         menuDatei->addAction(actionOpenPointCloud);
         menuDatei->addAction(actionSavePointCloud);
@@ -597,6 +631,7 @@ public:
         menuHilfe->addAction(actionAbout);
         menuBearbeiten->addAction(actionUndo);
         menuView->addAction(actionShowCoordinateSystem);
+        menuWindows->addAction(actionObjectsDock);
         mainToolBar->addAction(iconOpenPointCloud);
         mainToolBar->addAction(iconSavePNG);
         mainToolBar->addAction(iconSavePointCloud);
@@ -649,7 +684,16 @@ public:
 #ifndef QT_NO_TOOLTIP
         iconAbout->setToolTip(QApplication::translate("MainWindow", "About", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
-        rgGroupBox->setTitle(QApplication::translate("MainWindow", "Region Growing Segmentation (Smoothness Contraint)", 0, QApplication::UnicodeUTF8));
+        actionObjectsDock->setText(QApplication::translate("MainWindow", "Objects", 0, QApplication::UnicodeUTF8));
+        menuDatei->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
+        menuExtras->setTitle(QApplication::translate("MainWindow", "Extras", 0, QApplication::UnicodeUTF8));
+        menuHilfe->setTitle(QApplication::translate("MainWindow", "Help", 0, QApplication::UnicodeUTF8));
+        menuBearbeiten->setTitle(QApplication::translate("MainWindow", "Edit", 0, QApplication::UnicodeUTF8));
+        menuView->setTitle(QApplication::translate("MainWindow", "View", 0, QApplication::UnicodeUTF8));
+        menuWindows->setTitle(QApplication::translate("MainWindow", "Windows", 0, QApplication::UnicodeUTF8));
+        mainToolBar->setWindowTitle(QApplication::translate("MainWindow", "Toolbar", 0, QApplication::UnicodeUTF8));
+        rgDockWidget->setWindowTitle(QApplication::translate("MainWindow", " Region Growing Segmentation (Smoothness Constraint)", 0, QApplication::UnicodeUTF8));
+        startRegionGrowing->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("MainWindow", "Curvature Threshold:", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "Smoothness Threshold: ", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_WHATSTHIS
@@ -657,10 +701,19 @@ public:
 #endif // QT_NO_WHATSTHIS
         label_2->setText(QApplication::translate("MainWindow", "Min. Cluster Size:", 0, QApplication::UnicodeUTF8));
         label_4->setText(QApplication::translate("MainWindow", "Max. Cluster Size:", 0, QApplication::UnicodeUTF8));
-        startRegionGrowing->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
-        groupBox->setTitle(QApplication::translate("MainWindow", "Recognition with Hough3D", 0, QApplication::UnicodeUTF8));
-        startGrouping->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
-        startGrouping->setShortcut(QApplication::translate("MainWindow", "Ctrl+H", 0, QApplication::UnicodeUTF8));
+        mcDockWidget->setWindowTitle(QApplication::translate("MainWindow", "Min-Cut Segmentation", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("MainWindow", "Set the center of the object with Shift + Mouseclick", 0, QApplication::UnicodeUTF8));
+        label_6->setText(QApplication::translate("MainWindow", "Radius: ", 0, QApplication::UnicodeUTF8));
+        label_7->setText(QApplication::translate("MainWindow", "Sigma:", 0, QApplication::UnicodeUTF8));
+        label_8->setText(QApplication::translate("MainWindow", "Source Weight:", 0, QApplication::UnicodeUTF8));
+        label_9->setText(QApplication::translate("MainWindow", "Number of Neighbours: ", 0, QApplication::UnicodeUTF8));
+        startMinCut->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
+        ecDockWidget->setWindowTitle(QApplication::translate("MainWindow", "Euclidean Cluster Segmentation", 0, QApplication::UnicodeUTF8));
+        label_10->setText(QApplication::translate("MainWindow", "Cluster Tolerance:", 0, QApplication::UnicodeUTF8));
+        label_11->setText(QApplication::translate("MainWindow", "Min. Cluster Size:", 0, QApplication::UnicodeUTF8));
+        label_12->setText(QApplication::translate("MainWindow", "Max. Cluster Size:", 0, QApplication::UnicodeUTF8));
+        startCluster->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
+        houghDockWidget->setWindowTitle(QApplication::translate("MainWindow", "Recognition with Hough3D", 0, QApplication::UnicodeUTF8));
         clSetCloudButton->setText(QApplication::translate("MainWindow", "Set Model", 0, QApplication::UnicodeUTF8));
         label_13->setText(QApplication::translate("MainWindow", "Scene Radius:", 0, QApplication::UnicodeUTF8));
         label_14->setText(QApplication::translate("MainWindow", "Model Radius:", 0, QApplication::UnicodeUTF8));
@@ -671,24 +724,10 @@ public:
         label_19->setText(QApplication::translate("MainWindow", "Threshold:", 0, QApplication::UnicodeUTF8));
         clKeypoints->setText(QString());
         label_20->setText(QApplication::translate("MainWindow", "Display Keypoints:", 0, QApplication::UnicodeUTF8));
-        groupBox_2->setTitle(QApplication::translate("MainWindow", "Min-Cut Segmentation", 0, QApplication::UnicodeUTF8));
-        startMinCut->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
-        label_5->setText(QApplication::translate("MainWindow", "Set the center of the object with Shift + Mouseclick", 0, QApplication::UnicodeUTF8));
-        label_6->setText(QApplication::translate("MainWindow", "Radius: ", 0, QApplication::UnicodeUTF8));
-        label_7->setText(QApplication::translate("MainWindow", "Sigma:", 0, QApplication::UnicodeUTF8));
-        label_8->setText(QApplication::translate("MainWindow", "Source Weight:", 0, QApplication::UnicodeUTF8));
-        label_9->setText(QApplication::translate("MainWindow", "Number of Neighbours: ", 0, QApplication::UnicodeUTF8));
-        groupBox_3->setTitle(QApplication::translate("MainWindow", "Euclidean Cluster Segmentation", 0, QApplication::UnicodeUTF8));
-        startCluster->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
-        label_10->setText(QApplication::translate("MainWindow", "Cluster Tolerance:", 0, QApplication::UnicodeUTF8));
-        label_11->setText(QApplication::translate("MainWindow", "Min. Cluster Size:", 0, QApplication::UnicodeUTF8));
-        label_12->setText(QApplication::translate("MainWindow", "Max. Cluster Size:", 0, QApplication::UnicodeUTF8));
-        menuDatei->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
-        menuExtras->setTitle(QApplication::translate("MainWindow", "Extras", 0, QApplication::UnicodeUTF8));
-        menuHilfe->setTitle(QApplication::translate("MainWindow", "Help", 0, QApplication::UnicodeUTF8));
-        menuBearbeiten->setTitle(QApplication::translate("MainWindow", "Edit", 0, QApplication::UnicodeUTF8));
-        menuView->setTitle(QApplication::translate("MainWindow", "View", 0, QApplication::UnicodeUTF8));
-        mainToolBar->setWindowTitle(QApplication::translate("MainWindow", "Toolbar", 0, QApplication::UnicodeUTF8));
+        startGrouping->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
+        startGrouping->setShortcut(QApplication::translate("MainWindow", "Ctrl+H", 0, QApplication::UnicodeUTF8));
+        dockWidget->setWindowTitle(QApplication::translate("MainWindow", "Feature Database", 0, QApplication::UnicodeUTF8));
+        openDatabase->setText(QApplication::translate("MainWindow", "Database", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
