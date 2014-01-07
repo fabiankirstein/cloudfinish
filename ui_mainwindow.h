@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue 7. Jan 16:42:57 2014
+** Created: Tue 7. Jan 20:41:41 2014
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -27,6 +27,7 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QSpinBox>
 #include <QtGui/QStatusBar>
+#include <QtGui/QTabWidget>
 #include <QtGui/QTextBrowser>
 #include <QtGui/QTextEdit>
 #include <QtGui/QToolBar>
@@ -118,21 +119,33 @@ public:
     QLabel *label_14;
     QDoubleSpinBox *clModelRadius;
     QLabel *label_15;
-    QDoubleSpinBox *clDescriptorRadius;
     QLabel *label_16;
     QDoubleSpinBox *clDescriptorDistance;
     QLabel *label_17;
     QDoubleSpinBox *clReferenceRadius;
     QLabel *label_18;
     QDoubleSpinBox *clBinSize;
-    QDoubleSpinBox *clThreshold;
     QLabel *label_19;
-    QCheckBox *clKeypoints;
+    QDoubleSpinBox *clThreshold;
     QLabel *label_20;
+    QCheckBox *clKeypoints;
+    QDoubleSpinBox *clDescriptorRadius;
     QPushButton *startGrouping;
     QDockWidget *dockWidget;
     QWidget *dockWidgetContents_5;
     QPushButton *openDatabase;
+    QTabWidget *tabWidget;
+    QWidget *tab;
+    QPushButton *calcFeatures;
+    QWidget *formLayoutWidget_5;
+    QFormLayout *formLayout_5;
+    QLabel *label_21;
+    QDoubleSpinBox *fdShotSceneRadius;
+    QLabel *label_22;
+    QDoubleSpinBox *fdShotDescriptorRadius;
+    QWidget *tab_2;
+    QTextEdit *fdDatabasePath;
+    QPushButton *fdSetDatabase;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -488,7 +501,7 @@ public:
         clSetCloudButton->setGeometry(QRect(200, 10, 75, 23));
         formLayoutWidget_4 = new QWidget(dockWidgetContents_4);
         formLayoutWidget_4->setObjectName(QString::fromUtf8("formLayoutWidget_4"));
-        formLayoutWidget_4->setGeometry(QRect(10, 40, 261, 211));
+        formLayoutWidget_4->setGeometry(QRect(10, 40, 261, 216));
         formLayout_4 = new QFormLayout(formLayoutWidget_4);
         formLayout_4->setSpacing(6);
         formLayout_4->setContentsMargins(11, 11, 11, 11);
@@ -525,14 +538,6 @@ public:
         label_15->setObjectName(QString::fromUtf8("label_15"));
 
         formLayout_4->setWidget(2, QFormLayout::LabelRole, label_15);
-
-        clDescriptorRadius = new QDoubleSpinBox(formLayoutWidget_4);
-        clDescriptorRadius->setObjectName(QString::fromUtf8("clDescriptorRadius"));
-        clDescriptorRadius->setMinimum(0.01);
-        clDescriptorRadius->setSingleStep(0.1);
-        clDescriptorRadius->setValue(0.1);
-
-        formLayout_4->setWidget(2, QFormLayout::FieldRole, clDescriptorRadius);
 
         label_16 = new QLabel(formLayoutWidget_4);
         label_16->setObjectName(QString::fromUtf8("label_16"));
@@ -574,6 +579,11 @@ public:
 
         formLayout_4->setWidget(5, QFormLayout::FieldRole, clBinSize);
 
+        label_19 = new QLabel(formLayoutWidget_4);
+        label_19->setObjectName(QString::fromUtf8("label_19"));
+
+        formLayout_4->setWidget(6, QFormLayout::LabelRole, label_19);
+
         clThreshold = new QDoubleSpinBox(formLayoutWidget_4);
         clThreshold->setObjectName(QString::fromUtf8("clThreshold"));
         clThreshold->setMinimum(-1);
@@ -582,10 +592,10 @@ public:
 
         formLayout_4->setWidget(6, QFormLayout::FieldRole, clThreshold);
 
-        label_19 = new QLabel(formLayoutWidget_4);
-        label_19->setObjectName(QString::fromUtf8("label_19"));
+        label_20 = new QLabel(formLayoutWidget_4);
+        label_20->setObjectName(QString::fromUtf8("label_20"));
 
-        formLayout_4->setWidget(6, QFormLayout::LabelRole, label_19);
+        formLayout_4->setWidget(7, QFormLayout::LabelRole, label_20);
 
         clKeypoints = new QCheckBox(formLayoutWidget_4);
         clKeypoints->setObjectName(QString::fromUtf8("clKeypoints"));
@@ -594,10 +604,13 @@ public:
 
         formLayout_4->setWidget(7, QFormLayout::FieldRole, clKeypoints);
 
-        label_20 = new QLabel(formLayoutWidget_4);
-        label_20->setObjectName(QString::fromUtf8("label_20"));
+        clDescriptorRadius = new QDoubleSpinBox(formLayoutWidget_4);
+        clDescriptorRadius->setObjectName(QString::fromUtf8("clDescriptorRadius"));
+        clDescriptorRadius->setMinimum(0.01);
+        clDescriptorRadius->setSingleStep(0.1);
+        clDescriptorRadius->setValue(0.1);
 
-        formLayout_4->setWidget(7, QFormLayout::LabelRole, label_20);
+        formLayout_4->setWidget(2, QFormLayout::FieldRole, clDescriptorRadius);
 
         startGrouping = new QPushButton(dockWidgetContents_4);
         startGrouping->setObjectName(QString::fromUtf8("startGrouping"));
@@ -612,7 +625,67 @@ public:
         dockWidgetContents_5->setObjectName(QString::fromUtf8("dockWidgetContents_5"));
         openDatabase = new QPushButton(dockWidgetContents_5);
         openDatabase->setObjectName(QString::fromUtf8("openDatabase"));
-        openDatabase->setGeometry(QRect(20, 20, 75, 23));
+        openDatabase->setGeometry(QRect(10, 210, 111, 23));
+        tabWidget = new QTabWidget(dockWidgetContents_5);
+        tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
+        tabWidget->setGeometry(QRect(0, 50, 281, 131));
+        tab = new QWidget();
+        tab->setObjectName(QString::fromUtf8("tab"));
+        calcFeatures = new QPushButton(tab);
+        calcFeatures->setObjectName(QString::fromUtf8("calcFeatures"));
+        calcFeatures->setGeometry(QRect(150, 70, 111, 23));
+        formLayoutWidget_5 = new QWidget(tab);
+        formLayoutWidget_5->setObjectName(QString::fromUtf8("formLayoutWidget_5"));
+        formLayoutWidget_5->setGeometry(QRect(10, 10, 251, 51));
+        formLayout_5 = new QFormLayout(formLayoutWidget_5);
+        formLayout_5->setSpacing(6);
+        formLayout_5->setContentsMargins(11, 11, 11, 11);
+        formLayout_5->setObjectName(QString::fromUtf8("formLayout_5"));
+        formLayout_5->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
+        formLayout_5->setContentsMargins(0, 0, 0, 0);
+        label_21 = new QLabel(formLayoutWidget_5);
+        label_21->setObjectName(QString::fromUtf8("label_21"));
+
+        formLayout_5->setWidget(0, QFormLayout::LabelRole, label_21);
+
+        fdShotSceneRadius = new QDoubleSpinBox(formLayoutWidget_5);
+        fdShotSceneRadius->setObjectName(QString::fromUtf8("fdShotSceneRadius"));
+        fdShotSceneRadius->setMinimum(0.01);
+        fdShotSceneRadius->setSingleStep(0.1);
+        fdShotSceneRadius->setValue(0.4);
+
+        formLayout_5->setWidget(0, QFormLayout::FieldRole, fdShotSceneRadius);
+
+        label_22 = new QLabel(formLayoutWidget_5);
+        label_22->setObjectName(QString::fromUtf8("label_22"));
+
+        formLayout_5->setWidget(1, QFormLayout::LabelRole, label_22);
+
+        fdShotDescriptorRadius = new QDoubleSpinBox(formLayoutWidget_5);
+        fdShotDescriptorRadius->setObjectName(QString::fromUtf8("fdShotDescriptorRadius"));
+        fdShotDescriptorRadius->setMinimum(0.01);
+        fdShotDescriptorRadius->setSingleStep(0.1);
+        fdShotDescriptorRadius->setValue(0.1);
+
+        formLayout_5->setWidget(1, QFormLayout::FieldRole, fdShotDescriptorRadius);
+
+        tabWidget->addTab(tab, QString());
+        tab_2 = new QWidget();
+        tab_2->setObjectName(QString::fromUtf8("tab_2"));
+        tabWidget->addTab(tab_2, QString());
+        fdDatabasePath = new QTextEdit(dockWidgetContents_5);
+        fdDatabasePath->setObjectName(QString::fromUtf8("fdDatabasePath"));
+        fdDatabasePath->setGeometry(QRect(10, 10, 181, 21));
+        sizePolicy1.setHeightForWidth(fdDatabasePath->sizePolicy().hasHeightForWidth());
+        fdDatabasePath->setSizePolicy(sizePolicy1);
+        fdDatabasePath->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        fdDatabasePath->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        fdDatabasePath->setTabChangesFocus(true);
+        fdDatabasePath->setLineWrapMode(QTextEdit::NoWrap);
+        fdDatabasePath->setReadOnly(true);
+        fdSetDatabase = new QPushButton(dockWidgetContents_5);
+        fdSetDatabase->setObjectName(QString::fromUtf8("fdSetDatabase"));
+        fdSetDatabase->setGeometry(QRect(200, 10, 75, 23));
         dockWidget->setWidget(dockWidgetContents_5);
         MainWindow->addDockWidget(static_cast<Qt::DockWidgetArea>(1), dockWidget);
 
@@ -642,6 +715,9 @@ public:
         mainToolBar->addAction(iconAbout);
 
         retranslateUi(MainWindow);
+
+        tabWidget->setCurrentIndex(0);
+
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -722,12 +798,18 @@ public:
         label_17->setText(QApplication::translate("MainWindow", "Reference Frame Radius: ", 0, QApplication::UnicodeUTF8));
         label_18->setText(QApplication::translate("MainWindow", "Bin Size:", 0, QApplication::UnicodeUTF8));
         label_19->setText(QApplication::translate("MainWindow", "Threshold:", 0, QApplication::UnicodeUTF8));
-        clKeypoints->setText(QString());
         label_20->setText(QApplication::translate("MainWindow", "Display Keypoints:", 0, QApplication::UnicodeUTF8));
+        clKeypoints->setText(QString());
         startGrouping->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
         startGrouping->setShortcut(QApplication::translate("MainWindow", "Ctrl+H", 0, QApplication::UnicodeUTF8));
         dockWidget->setWindowTitle(QApplication::translate("MainWindow", "Feature Database", 0, QApplication::UnicodeUTF8));
-        openDatabase->setText(QApplication::translate("MainWindow", "Database", 0, QApplication::UnicodeUTF8));
+        openDatabase->setText(QApplication::translate("MainWindow", "Database Manager", 0, QApplication::UnicodeUTF8));
+        calcFeatures->setText(QApplication::translate("MainWindow", "Calculate Features", 0, QApplication::UnicodeUTF8));
+        label_21->setText(QApplication::translate("MainWindow", "Radius:", 0, QApplication::UnicodeUTF8));
+        label_22->setText(QApplication::translate("MainWindow", "Descriptor Radius:", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "SHOT32", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("MainWindow", "FPFH", 0, QApplication::UnicodeUTF8));
+        fdSetDatabase->setText(QApplication::translate("MainWindow", "Set DB", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

@@ -46,8 +46,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->startMinCut, SIGNAL(clicked()), this, SLOT(minCut()));
     connect(ui->startCluster, SIGNAL(clicked()), this, SLOT(cluster()));
 
-    // Misc
+    // Feature Database
     connect(ui->openDatabase, SIGNAL(clicked()), this, SLOT(showDatabaseDialog()));
+    connect(ui->fdSetDatabase, SIGNAL(clicked()), this, SLOT(setDatabase()));
 
     // Test Connection
     connect(database, SIGNAL(buttonClicked()), this, SLOT(showAboutDialog()));
@@ -74,7 +75,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mcDockWidget->hide();
     ui->rgDockWidget->hide();
 
-    this->databasePath = "D:\Studium\FP\database";
+    // Feature Database
+    this->databasePath = "D:/Studium/FP/database";
+    ui->fdDatabasePath->setText(QString::fromStdString(this->databasePath));
 
 }
 
@@ -801,7 +804,19 @@ void MainWindow::showDatabaseDialog()
 //    Ui_databaseDialog databaseUi;
 //    databaseUi.setupUi(database);
 
-//    database->show();
+    //    database->show();
+}
+
+void MainWindow::setDatabase()
+{
+    QString directory = QFileDialog::getExistingDirectory(this, tr("Select a Directory"),QDir::currentPath());
+
+    if(directory != NULL) {
+        this->databasePath = directory.toStdString();
+        ui->fdDatabasePath->clear();
+        ui->fdDatabasePath->append(directory);
+    }
+
 }
 
 void MainWindow::toggleCoordinateSystem()

@@ -100,6 +100,7 @@ private slots:
     void showAboutDialog();
 
     void showDatabaseDialog();
+    void setDatabase();
 
     void toggleCoordinateSystem();
 
