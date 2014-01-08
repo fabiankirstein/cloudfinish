@@ -56,6 +56,7 @@
 #include "ui_about.h"
 #include "databaseDialog.h"
 
+
 #include <QVTKWidget.h>
 
 namespace Ui {
@@ -101,6 +102,8 @@ private slots:
 
     void showDatabaseDialog();
     void setDatabase();
+    void calcShotFeatures();
+    void addToDatabase();
 
     void toggleCoordinateSystem();
 
@@ -124,6 +127,7 @@ private:
     QString lastClFile;
 
     std::string databasePath;
+    pcl::PointCloud<pcl::SHOT352>::Ptr shotDescriptors;
 
 };
 

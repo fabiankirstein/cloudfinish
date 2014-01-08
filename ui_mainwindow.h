@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue 7. Jan 20:41:41 2014
+** Created: Wed 8. Jan 20:44:00 2014
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -21,6 +21,7 @@
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
@@ -136,7 +137,7 @@ public:
     QPushButton *openDatabase;
     QTabWidget *tabWidget;
     QWidget *tab;
-    QPushButton *calcFeatures;
+    QPushButton *calcShotFeatures;
     QWidget *formLayoutWidget_5;
     QFormLayout *formLayout_5;
     QLabel *label_21;
@@ -146,6 +147,12 @@ public:
     QWidget *tab_2;
     QTextEdit *fdDatabasePath;
     QPushButton *fdSetDatabase;
+    QLabel *fdMessage;
+    QWidget *formLayoutWidget_6;
+    QFormLayout *formLayout_6;
+    QLineEdit *fdIdent;
+    QLabel *label_23;
+    QPushButton *fdAddToDatabase;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -619,21 +626,22 @@ public:
         MainWindow->addDockWidget(static_cast<Qt::DockWidgetArea>(1), houghDockWidget);
         dockWidget = new QDockWidget(MainWindow);
         dockWidget->setObjectName(QString::fromUtf8("dockWidget"));
+        dockWidget->setEnabled(true);
         dockWidget->setMinimumSize(QSize(280, 38));
         dockWidget->setMaximumSize(QSize(280, 524287));
         dockWidgetContents_5 = new QWidget();
         dockWidgetContents_5->setObjectName(QString::fromUtf8("dockWidgetContents_5"));
         openDatabase = new QPushButton(dockWidgetContents_5);
         openDatabase->setObjectName(QString::fromUtf8("openDatabase"));
-        openDatabase->setGeometry(QRect(10, 210, 111, 23));
+        openDatabase->setGeometry(QRect(10, 40, 181, 23));
         tabWidget = new QTabWidget(dockWidgetContents_5);
         tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
-        tabWidget->setGeometry(QRect(0, 50, 281, 131));
+        tabWidget->setGeometry(QRect(0, 80, 281, 131));
         tab = new QWidget();
         tab->setObjectName(QString::fromUtf8("tab"));
-        calcFeatures = new QPushButton(tab);
-        calcFeatures->setObjectName(QString::fromUtf8("calcFeatures"));
-        calcFeatures->setGeometry(QRect(150, 70, 111, 23));
+        calcShotFeatures = new QPushButton(tab);
+        calcShotFeatures->setObjectName(QString::fromUtf8("calcShotFeatures"));
+        calcShotFeatures->setGeometry(QRect(150, 70, 111, 23));
         formLayoutWidget_5 = new QWidget(tab);
         formLayoutWidget_5->setObjectName(QString::fromUtf8("formLayoutWidget_5"));
         formLayoutWidget_5->setGeometry(QRect(10, 10, 251, 51));
@@ -686,6 +694,31 @@ public:
         fdSetDatabase = new QPushButton(dockWidgetContents_5);
         fdSetDatabase->setObjectName(QString::fromUtf8("fdSetDatabase"));
         fdSetDatabase->setGeometry(QRect(200, 10, 75, 23));
+        fdMessage = new QLabel(dockWidgetContents_5);
+        fdMessage->setObjectName(QString::fromUtf8("fdMessage"));
+        fdMessage->setGeometry(QRect(10, 220, 261, 16));
+        formLayoutWidget_6 = new QWidget(dockWidgetContents_5);
+        formLayoutWidget_6->setObjectName(QString::fromUtf8("formLayoutWidget_6"));
+        formLayoutWidget_6->setGeometry(QRect(10, 250, 261, 31));
+        formLayout_6 = new QFormLayout(formLayoutWidget_6);
+        formLayout_6->setSpacing(6);
+        formLayout_6->setContentsMargins(11, 11, 11, 11);
+        formLayout_6->setObjectName(QString::fromUtf8("formLayout_6"));
+        formLayout_6->setContentsMargins(0, 0, 0, 0);
+        fdIdent = new QLineEdit(formLayoutWidget_6);
+        fdIdent->setObjectName(QString::fromUtf8("fdIdent"));
+
+        formLayout_6->setWidget(0, QFormLayout::FieldRole, fdIdent);
+
+        label_23 = new QLabel(formLayoutWidget_6);
+        label_23->setObjectName(QString::fromUtf8("label_23"));
+
+        formLayout_6->setWidget(0, QFormLayout::LabelRole, label_23);
+
+        fdAddToDatabase = new QPushButton(dockWidgetContents_5);
+        fdAddToDatabase->setObjectName(QString::fromUtf8("fdAddToDatabase"));
+        fdAddToDatabase->setEnabled(false);
+        fdAddToDatabase->setGeometry(QRect(164, 280, 111, 23));
         dockWidget->setWidget(dockWidgetContents_5);
         MainWindow->addDockWidget(static_cast<Qt::DockWidgetArea>(1), dockWidget);
 
@@ -803,13 +836,16 @@ public:
         startGrouping->setText(QApplication::translate("MainWindow", "Start", 0, QApplication::UnicodeUTF8));
         startGrouping->setShortcut(QApplication::translate("MainWindow", "Ctrl+H", 0, QApplication::UnicodeUTF8));
         dockWidget->setWindowTitle(QApplication::translate("MainWindow", "Feature Database", 0, QApplication::UnicodeUTF8));
-        openDatabase->setText(QApplication::translate("MainWindow", "Database Manager", 0, QApplication::UnicodeUTF8));
-        calcFeatures->setText(QApplication::translate("MainWindow", "Calculate Features", 0, QApplication::UnicodeUTF8));
+        openDatabase->setText(QApplication::translate("MainWindow", "Open Database Manager", 0, QApplication::UnicodeUTF8));
+        calcShotFeatures->setText(QApplication::translate("MainWindow", "Calculate Features", 0, QApplication::UnicodeUTF8));
         label_21->setText(QApplication::translate("MainWindow", "Radius:", 0, QApplication::UnicodeUTF8));
         label_22->setText(QApplication::translate("MainWindow", "Descriptor Radius:", 0, QApplication::UnicodeUTF8));
-        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "SHOT32", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "SHOT352", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("MainWindow", "FPFH", 0, QApplication::UnicodeUTF8));
         fdSetDatabase->setText(QApplication::translate("MainWindow", "Set DB", 0, QApplication::UnicodeUTF8));
+        fdMessage->setText(QApplication::translate("MainWindow", "No Feature Descriptors calculated yet.", 0, QApplication::UnicodeUTF8));
+        label_23->setText(QApplication::translate("MainWindow", "Identifier:", 0, QApplication::UnicodeUTF8));
+        fdAddToDatabase->setText(QApplication::translate("MainWindow", "Add to Database", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

@@ -15,7 +15,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     window()->showMaximized();
 
-    database = new DatabaseDialog(this);
+    // Feature Database
+    this->databasePath = "D:/Studium/FP/database";
+    ui->fdDatabasePath->setText(QString::fromStdString(this->databasePath));
+    database = new DatabaseDialog(this, this->databasePath);
 
     ui->console->setFontPointSize(10.5);
     // CONNECTIONS
@@ -49,6 +52,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // Feature Database
     connect(ui->openDatabase, SIGNAL(clicked()), this, SLOT(showDatabaseDialog()));
     connect(ui->fdSetDatabase, SIGNAL(clicked()), this, SLOT(setDatabase()));
+    connect(ui->calcShotFeatures, SIGNAL(clicked()), this, SLOT(calcShotFeatures()));
+    connect(ui->fdAddToDatabase, SIGNAL(clicked()), this, SLOT(addToDatabase()));
 
     // Test Connection
     connect(database, SIGNAL(buttonClicked()), this, SLOT(showAboutDialog()));
@@ -56,6 +61,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // END CONNECTIONS
     mainCloud = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(new pcl::PointCloud<pcl::PointXYZRGB>);
     visu = new CF::CloudVisualizer(ui->vtkwidget, this);
+    shotDescriptors = pcl::PointCloud<pcl::SHOT352>::Ptr(new pcl::PointCloud<pcl::SHOT352>);
 
     // Bind Point Picking Callback
     boost::function<void(const pcl::visualization::PointPickingEvent&)> f = boost::bind(&MainWindow::mcPickPointCallback, this, _1);
@@ -74,10 +80,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->ecDockWidget->hide();
     ui->mcDockWidget->hide();
     ui->rgDockWidget->hide();
-
-    // Feature Database
-    this->databasePath = "D:/Studium/FP/database";
-    ui->fdDatabasePath->setText(QString::fromStdString(this->databasePath));
 
 }
 
@@ -798,13 +800,6 @@ void MainWindow::showAboutDialog()
 void MainWindow::showDatabaseDialog()
 {
     database->exec();
-
-//    QDialog *database = new QDialog(0,Qt::WindowSystemMenuHint | Qt::WindowTitleHint);
-
-//    Ui_databaseDialog databaseUi;
-//    databaseUi.setupUi(database);
-
-    //    database->show();
 }
 
 void MainWindow::setDatabase()
@@ -818,6 +813,88 @@ void MainWindow::setDatabase()
     }
 
 }
+
+void MainWindow::calcShotFeatures()
+{
+    if(mainCloud->size() == 0) {
+        this->displayError("Please open a Point Cloud first!");
+        return;
+    }
+
+    // Set Typedefs
+    typedef pcl::PointXYZRGB PointType;
+    typedef pcl::Normal NormalType;
+    typedef pcl::ReferenceFrame RFType;
+    typedef pcl::SHOT352 DescriptorType;
+
+    pcl::PointCloud<PointType>::Ptr keypoints (new pcl::PointCloud<PointType> ());
+    pcl::PointCloud<NormalType>::Ptr normals (new pcl::PointCloud<NormalType> ());
+    //pcl::PointCloud<DescriptorType>::Ptr descriptors (new pcl::PointCloud<DescriptorType> ());
+
+    // Get User Input
+    double radius = ui->fdShotSceneRadius->value();
+    double descriptorRadius = ui->fdShotDescriptorRadius->value();
+
+    this->printInfo("Calculating Features ...");
+
+    // Compute Normals
+    pcl::NormalEstimationOMP<PointType, NormalType> norm_est;
+    norm_est.setKSearch(10);
+    norm_est.setInputCloud(mainCloud);
+    norm_est.compute(*normals);
+
+    this->printInfo("Downsampling of the cloud ...");
+
+    //Downsample Clouds to Extract keypoints
+    pcl::PointCloud<int> sampled_indices;
+    pcl::UniformSampling<PointType> uniform_sampling;
+    uniform_sampling.setInputCloud(mainCloud);
+    uniform_sampling.setRadiusSearch(radius);
+    uniform_sampling.compute(sampled_indices);
+    pcl::copyPointCloud(*mainCloud, sampled_indices.points, *keypoints);
+    this->printInfo("Points: " + QString::number(mainCloud->size()) + " - Selected Keypoints: " + QString::number(keypoints->size()));
+
+    //Compute Descriptor for keypoints
+    this->printInfo("Determine Descriptors ...");
+
+    pcl::SHOTEstimationOMP<PointType, NormalType, DescriptorType> descr_est;
+    descr_est.setRadiusSearch(descriptorRadius);
+
+    descr_est.setInputCloud(keypoints);
+    descr_est.setInputNormals(normals);
+    descr_est.setSearchSurface(mainCloud);
+    descr_est.compute(*shotDescriptors);
+
+    size_t size = shotDescriptors->size();
+    this->printInfo("Descriptors found: " + QString::number(size));
+    this->printInfo("Caution! Descriptors are not saved yet!");
+
+    if(size > 0){
+        ui->fdAddToDatabase->setEnabled(true);
+    }
+
+    ui->fdMessage->setText(" Descriptors found: " + QString::number(size) + " ");
+    ui->fdMessage->setStyleSheet("QLabel { background-color : green; color : white; }");
+    //Util::writeFile(this->databasePath, "hallo.txt", "Hallo Welt!");
+}
+
+void MainWindow::addToDatabase()
+{
+    QString ident = ui->fdIdent->text();
+    if(ident.isEmpty() || ident.length() < 3 ) {
+        this->displayError("Please enter a valid Identifier! (At least 3 Characters)");
+        return;
+    }
+
+    std::string file = this->databasePath + "/" + ident.toStdString() + ".pcd";
+    //std::string file = this->databasePath + "/SHOT/" + ident.toStdString() + ".pcd";
+    this->printInfo("Saving to: " + QString::fromStdString(file));
+    pcl::io::savePCDFile(file, *shotDescriptors);
+    std::string size = QString::number(shotDescriptors->size()).toStdString();
+    Util::writeFile(this->databasePath,ident.toStdString() + ".data",size);
+
+}
+
 
 void MainWindow::toggleCoordinateSystem()
 {

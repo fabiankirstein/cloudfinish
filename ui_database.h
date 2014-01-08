@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'database.ui'
 **
-** Created: Tue 7. Jan 17:24:47 2014
+** Created: Wed 8. Jan 20:44:00 2014
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -33,19 +33,21 @@ public:
     {
         if (databaseDialog->objectName().isEmpty())
             databaseDialog->setObjectName(QString::fromUtf8("databaseDialog"));
-        databaseDialog->resize(752, 391);
+        databaseDialog->resize(900, 570);
+        databaseDialog->setMinimumSize(QSize(900, 570));
+        databaseDialog->setMaximumSize(QSize(900, 570));
         databaseDialog->setModal(false);
         buttonBox = new QDialogButtonBox(databaseDialog);
         buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
-        buttonBox->setGeometry(QRect(400, 350, 341, 32));
+        buttonBox->setGeometry(QRect(540, 530, 341, 32));
         buttonBox->setOrientation(Qt::Horizontal);
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
         halloButton = new QPushButton(databaseDialog);
         halloButton->setObjectName(QString::fromUtf8("halloButton"));
-        halloButton->setGeometry(QRect(20, 360, 75, 23));
+        halloButton->setGeometry(QRect(10, 530, 75, 23));
         tableView = new QTableView(databaseDialog);
         tableView->setObjectName(QString::fromUtf8("tableView"));
-        tableView->setGeometry(QRect(30, 20, 601, 281));
+        tableView->setGeometry(QRect(10, 10, 881, 511));
 
         retranslateUi(databaseDialog);
         QObject::connect(buttonBox, SIGNAL(accepted()), databaseDialog, SLOT(accept()));
@@ -56,8 +58,8 @@ public:
 
     void retranslateUi(QDialog *databaseDialog)
     {
-        databaseDialog->setWindowTitle(QApplication::translate("databaseDialog", "Feature Database", 0, QApplication::UnicodeUTF8));
-        halloButton->setText(QApplication::translate("databaseDialog", "PushButton", 0, QApplication::UnicodeUTF8));
+        databaseDialog->setWindowTitle(QApplication::translate("databaseDialog", "Feature Database Manager", 0, QApplication::UnicodeUTF8));
+        halloButton->setText(QApplication::translate("databaseDialog", "Open Model", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

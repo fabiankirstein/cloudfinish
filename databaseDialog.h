@@ -6,6 +6,11 @@
 #include <QDialog>
 #include <QStandardItemModel>
 #include <QStandardItem>
+
+#include <list>
+#include <string>
+
+#include "util.h"
 #include "ui_database.h"
 
 class DatabaseDialog : public QDialog, public Ui::databaseDialog {
@@ -15,7 +20,7 @@ private:
     Ui::databaseDialog *ui;
 
 public:
-    DatabaseDialog(QWidget * parent = 0);
+    DatabaseDialog(QWidget * parent, std::string databasePath);
 
 
 signals:
