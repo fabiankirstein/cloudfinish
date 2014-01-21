@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed 8. Jan 20:44:00 2014
+** Created: Tue 21. Jan 20:36:23 2014
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -153,6 +153,7 @@ public:
     QLineEdit *fdIdent;
     QLabel *label_23;
     QPushButton *fdAddToDatabase;
+    QPushButton *fdStartIdentify;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -719,6 +720,9 @@ public:
         fdAddToDatabase->setObjectName(QString::fromUtf8("fdAddToDatabase"));
         fdAddToDatabase->setEnabled(false);
         fdAddToDatabase->setGeometry(QRect(164, 280, 111, 23));
+        fdStartIdentify = new QPushButton(dockWidgetContents_5);
+        fdStartIdentify->setObjectName(QString::fromUtf8("fdStartIdentify"));
+        fdStartIdentify->setGeometry(QRect(10, 320, 75, 23));
         dockWidget->setWidget(dockWidgetContents_5);
         MainWindow->addDockWidget(static_cast<Qt::DockWidgetArea>(1), dockWidget);
 
@@ -846,6 +850,7 @@ public:
         fdMessage->setText(QApplication::translate("MainWindow", "No Feature Descriptors calculated yet.", 0, QApplication::UnicodeUTF8));
         label_23->setText(QApplication::translate("MainWindow", "Identifier:", 0, QApplication::UnicodeUTF8));
         fdAddToDatabase->setText(QApplication::translate("MainWindow", "Add to Database", 0, QApplication::UnicodeUTF8));
+        fdStartIdentify->setText(QApplication::translate("MainWindow", "Identify", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

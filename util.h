@@ -17,5 +17,5 @@ class Util {
 public:
     static void writeFile(string directory, string fileName, string content);
     static string readFile(string directory, string fileName);
-    static list<string> readFileNames(string directory);
+    static list<string> readFileNames(string directory, string extension);
 };

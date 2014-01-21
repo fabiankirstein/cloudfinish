@@ -1022,6 +1022,19 @@
       <string>Add to Database</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="fdStartIdentify">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>320</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Identify</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <action name="actionOpenPointCloud">

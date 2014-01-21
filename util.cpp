@@ -24,7 +24,7 @@ string Util::readFile(string directory, string fileName)
     return result;
 }
 
-list<string> Util::readFileNames(string directory)
+list<string> Util::readFileNames(string directory, string extension)
 {
     list<string> result;
 
@@ -43,7 +43,14 @@ list<string> Util::readFileNames(string directory)
                WideCharToMultiByte(CP_ACP,0,data.cFileName,-1, ch,260,&DefChar, NULL);
                string fileName(ch);
                if(fileName != "." && fileName != "..") {
-                   result.push_back(fileName);
+                   if(!extension.empty()) {
+                       string ext = fileName.substr(fileName.find_last_of(".") + 1);
+                       if(ext == extension) {
+                           result.push_back(fileName);
+                       }
+                   } else {
+                       result.push_back(fileName);
+                   }
                }
        } while (FindNextFile(hFind, &data));
        FindClose(hFind);

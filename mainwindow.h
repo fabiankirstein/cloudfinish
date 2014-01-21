@@ -59,6 +59,8 @@
 
 #include <QVTKWidget.h>
 
+using namespace std;
+
 namespace Ui {
 class MainWindow;
 }
@@ -104,6 +106,7 @@ private slots:
     void setDatabase();
     void calcShotFeatures();
     void addToDatabase();
+    void identifyScene();
 
     void toggleCoordinateSystem();
 

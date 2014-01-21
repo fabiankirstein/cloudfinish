@@ -5,7 +5,7 @@ DatabaseDialog::DatabaseDialog(QWidget *parent, std::string databasePath) : QDia
 
     connect(ui->halloButton, SIGNAL(clicked()),this, SLOT(sendSignal()));
 
-    std::list<std::string> files = Util::readFileNames(databasePath);
+    std::list<std::string> files = Util::readFileNames(databasePath,"");
 
     QStandardItemModel *model = new QStandardItemModel(files.size(),3,this); // 2 Rows, 3 Colums
 
