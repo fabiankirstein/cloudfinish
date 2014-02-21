@@ -16,7 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     window()->showMaximized();
 
     // Feature Database
-    this->databasePath = "D:/Studium/FP/database";
+    //this->databasePath = "D:/Studium/FP/database";
+    this->databasePath = "D:/Studium/FP/AR/database";
     ui->fdDatabasePath->setText(QString::fromStdString(this->databasePath));
     database = new DatabaseDialog(this, this->databasePath);
 
@@ -81,6 +82,19 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->ecDockWidget->hide();
     ui->mcDockWidget->hide();
     ui->rgDockWidget->hide();
+
+    // JSON TRYOUT
+
+    QString json = "{ \"encoding\" : \"UTF-8\", \"plug-ins\" : [\"python\",\"c++\",\"ruby\"],\"indent\" : {\"length\" : 3,\"use_space\" : true}}";
+    bool ok;
+    QtJson::JsonObject result = QtJson::parse(json,ok).toMap();
+    if(!ok) {
+        this->printError("Error while parsing JSON");
+    } else {
+        this->printInfo("Encoding: " + result["encoding"].toString());
+    }
+
+
 
 }
 
@@ -898,6 +912,10 @@ void MainWindow::addToDatabase()
 
 void MainWindow::identifyScene()
 {
+
+    // Get User Input
+    double descriptorDist = ui->fdDescriptorDistance->value();
+
     list<string> files = Util::readFileNames(databasePath,"pcd");
     map<string,pcl::PointCloud<pcl::SHOT352>::Ptr> modelMap;
     map<string,int> matchMap;
@@ -926,7 +944,7 @@ void MainWindow::identifyScene()
                 continue;
             }
             int found_neighs = match_search.nearestKSearch (model->at (i), 1, neigh_indices, neigh_sqr_dists);
-            if(found_neighs == 1 && neigh_sqr_dists[0] < 0.25){
+            if(found_neighs == 1 && neigh_sqr_dists[0] < descriptorDist){
                 matchMap[ident]++;
             }
 

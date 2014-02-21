@@ -18,13 +18,15 @@ SOURCES += main.cpp\
     cloudvisualizer.cpp \
     cloudio.cpp \
     databaseDialog.cpp \
-    util.cpp
+    util.cpp \
+    json.cpp
 
 HEADERS  += mainwindow.h \
     cloudvisualizer.h \
     cloudio.h \
     databaseDialog.h \
-    util.h
+    util.h \
+    json.h
 
 FORMS    += mainwindow.ui \
     about.ui \

@@ -62,3 +62,19 @@ list<string> Util::readFileNames(string directory, string extension)
     return result;
 
 }
+
+QStringList Util::QReadFileNames(QString directory, QString extension)
+{
+    QStringList extFilter("*.pcd");
+
+    if(!extension.isEmpty()){
+        //extFilter.append("*." + extension);
+    }
+
+    QDir dic(directory);
+    return dic.entryList(extFilter);
+
+}
+
+
+

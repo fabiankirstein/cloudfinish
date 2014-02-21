@@ -55,7 +55,7 @@
 
 #include "ui_about.h"
 #include "databaseDialog.h"
-
+#include "json.h"
 
 #include <QVTKWidget.h>
 

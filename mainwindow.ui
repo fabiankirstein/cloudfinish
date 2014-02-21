@@ -887,6 +887,9 @@
         </item>
         <item row="0" column="1">
          <widget class="QDoubleSpinBox" name="fdShotSceneRadius">
+          <property name="decimals">
+           <number>3</number>
+          </property>
           <property name="minimum">
            <double>0.010000000000000</double>
           </property>
@@ -1026,7 +1029,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>320</y>
+       <y>350</y>
        <width>75</width>
        <height>23</height>
       </rect>
@@ -1034,6 +1037,41 @@
      <property name="text">
       <string>Identify</string>
      </property>
+    </widget>
+    <widget class="QWidget" name="formLayoutWidget_7">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>310</y>
+       <width>261</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <layout class="QFormLayout" name="formLayout_7">
+      <item row="0" column="1">
+       <widget class="QDoubleSpinBox" name="fdDescriptorDistance">
+        <property name="minimum">
+         <double>0.010000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>0.990000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.250000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_24">
+        <property name="text">
+         <string>Descriptor Distance:</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </widget>
   </widget>
