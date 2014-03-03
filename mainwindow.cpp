@@ -83,17 +83,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mcDockWidget->hide();
     ui->rgDockWidget->hide();
 
-    // JSON TRYOUT
+    // Rest API Status Test
+    this->printInfo("Testing Semantic API ...");
+    QtJson::JsonObject result = restAPI.get("status");
+    QString status = (result["status"]).toString();
 
-    QString json = "{ \"encoding\" : \"UTF-8\", \"plug-ins\" : [\"python\",\"c++\",\"ruby\"],\"indent\" : {\"length\" : 3,\"use_space\" : true}}";
-    bool ok;
-    QtJson::JsonObject result = QtJson::parse(json,ok).toMap();
-    if(!ok) {
-        this->printError("Error while parsing JSON");
+    if(status == "ok") {
+        this->printInfo("Semantic API is running");
     } else {
-        this->printInfo("Encoding: " + result["encoding"].toString());
+        this->printError("Semantic API is NOT running");
     }
-
 
 
 }

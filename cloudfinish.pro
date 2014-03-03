@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -19,14 +20,16 @@ SOURCES += main.cpp\
     cloudio.cpp \
     databaseDialog.cpp \
     util.cpp \
-    json.cpp
+    json.cpp \
+    rest.cpp
 
 HEADERS  += mainwindow.h \
     cloudvisualizer.h \
     cloudio.h \
     databaseDialog.h \
     util.h \
-    json.h
+    json.h \
+    rest.h
 
 FORMS    += mainwindow.ui \
     about.ui \

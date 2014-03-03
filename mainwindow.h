@@ -52,10 +52,10 @@
 
 // END PCL ///////////////////////
 
-
 #include "ui_about.h"
 #include "databaseDialog.h"
 #include "json.h"
+#include "rest.h"
 
 #include <QVTKWidget.h>
 
@@ -131,6 +131,8 @@ private:
 
     std::string databasePath;
     pcl::PointCloud<pcl::SHOT352>::Ptr shotDescriptors;
+
+    Rest restAPI;
 
 };
 
