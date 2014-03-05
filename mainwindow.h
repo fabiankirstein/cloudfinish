@@ -5,6 +5,10 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QTime>
+#include <QSettings>
+#include <QMap>
+#include <QList>
+#include <QTime>
 
 #include "cloudvisualizer.h"
 #include "cloudio.h"
@@ -115,7 +119,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     CF::CloudVisualizer *visu;
-    QDialog *database;
+    DatabaseDialog *database;
 
     QString clCloud;
     void bleachCloud(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud);
@@ -131,6 +135,7 @@ private:
 
     std::string databasePath;
     pcl::PointCloud<pcl::SHOT352>::Ptr shotDescriptors;
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr shotKeypoints;
 
     Rest restAPI;
 

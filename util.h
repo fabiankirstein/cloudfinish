@@ -22,4 +22,5 @@ public:
     static string readFile(string directory, string fileName);
     static list<string> readFileNames(string directory, string extension);
     static QStringList QReadFileNames(QString directory, QString extension);
+    static int randInt(int low, int high);
 };

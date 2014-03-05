@@ -76,5 +76,10 @@ QStringList Util::QReadFileNames(QString directory, QString extension)
 
 }
 
+int Util::randInt(int low, int high)
+{
+    return qrand() % ((high + 1) - low) + low;
+}
+
 
 

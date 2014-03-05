@@ -15,9 +15,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     window()->showMaximized();
 
+    QTime time = QTime::currentTime();
+    qsrand((uint)time.msec());
+
     // Feature Database
     //this->databasePath = "D:/Studium/FP/database";
-    this->databasePath = "D:/Studium/FP/AR/database";
+    this->databasePath = "D:/Studium/FP/db_toytrain";
     ui->fdDatabasePath->setText(QString::fromStdString(this->databasePath));
     database = new DatabaseDialog(this, this->databasePath);
 
@@ -64,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mainCloud = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(new pcl::PointCloud<pcl::PointXYZRGB>);
     visu = new CF::CloudVisualizer(ui->vtkwidget, this);
     shotDescriptors = pcl::PointCloud<pcl::SHOT352>::Ptr(new pcl::PointCloud<pcl::SHOT352>);
+    shotKeypoints = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(new pcl::PointCloud<pcl::PointXYZRGB>);
 
     // Bind Point Picking Callback
     boost::function<void(const pcl::visualization::PointPickingEvent&)> f = boost::bind(&MainWindow::mcPickPointCallback, this, _1);
@@ -84,15 +88,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->rgDockWidget->hide();
 
     // Rest API Status Test
-    this->printInfo("Testing Semantic API ...");
-    QtJson::JsonObject result = restAPI.get("status");
-    QString status = (result["status"]).toString();
+//    this->printInfo("Testing Semantic API ...");
+//    QtJson::JsonObject result = restAPI.get("status");
+//    QString status = (result["status"]).toString();
 
-    if(status == "ok") {
-        this->printInfo("Semantic API is running");
-    } else {
-        this->printError("Semantic API is NOT running");
-    }
+//    if(status == "ok") {
+//        this->printInfo("Semantic API is running");
+//    } else {
+//        this->printError("Semantic API is NOT running");
+//    }
 
 
 }
@@ -813,6 +817,7 @@ void MainWindow::showAboutDialog()
 
 void MainWindow::showDatabaseDialog()
 {
+    database->initData();
     database->exec();
 }
 
@@ -841,7 +846,6 @@ void MainWindow::calcShotFeatures()
     typedef pcl::ReferenceFrame RFType;
     typedef pcl::SHOT352 DescriptorType;
 
-    pcl::PointCloud<PointType>::Ptr keypoints (new pcl::PointCloud<PointType> ());
     pcl::PointCloud<NormalType>::Ptr normals (new pcl::PointCloud<NormalType> ());
     //pcl::PointCloud<DescriptorType>::Ptr descriptors (new pcl::PointCloud<DescriptorType> ());
 
@@ -865,8 +869,8 @@ void MainWindow::calcShotFeatures()
     uniform_sampling.setInputCloud(mainCloud);
     uniform_sampling.setRadiusSearch(radius);
     uniform_sampling.compute(sampled_indices);
-    pcl::copyPointCloud(*mainCloud, sampled_indices.points, *keypoints);
-    this->printInfo("Points: " + QString::number(mainCloud->size()) + " - Selected Keypoints: " + QString::number(keypoints->size()));
+    pcl::copyPointCloud(*mainCloud, sampled_indices.points, *shotKeypoints);
+    this->printInfo("Points: " + QString::number(mainCloud->size()) + " - Selected Keypoints: " + QString::number(shotKeypoints->size()));
 
     //Compute Descriptor for keypoints
     this->printInfo("Determine Descriptors ...");
@@ -874,7 +878,7 @@ void MainWindow::calcShotFeatures()
     pcl::SHOTEstimationOMP<PointType, NormalType, DescriptorType> descr_est;
     descr_est.setRadiusSearch(descriptorRadius);
 
-    descr_est.setInputCloud(keypoints);
+    descr_est.setInputCloud(shotKeypoints);
     descr_est.setInputNormals(normals);
     descr_est.setSearchSurface(mainCloud);
     descr_est.compute(*shotDescriptors);
@@ -900,13 +904,23 @@ void MainWindow::addToDatabase()
         return;
     }
 
-    std::string file = this->databasePath + "/" + ident.toStdString() + ".pcd";
-    //std::string file = this->databasePath + "/SHOT/" + ident.toStdString() + ".pcd";
-    this->printInfo("Saving to: " + QString::fromStdString(file));
-    pcl::io::savePCDFile(file, *shotDescriptors);
-    std::string size = QString::number(shotDescriptors->size()).toStdString();
-    Util::writeFile(this->databasePath,ident.toStdString() + ".data",size);
+    QString databasePath = QString::fromStdString(this->databasePath);
 
+    QString metaFileName = databasePath + "/" + ident + ".meta";
+    QString modelFileName = databasePath + "/" + ident + "_model.pcd";
+    QString keypointsFileName = databasePath + "/" + ident + "_points.pcd";
+    QString featuresFileName = databasePath + "/" + ident + "_features.pcd";
+
+    this->printInfo("Saving to: " + metaFileName);
+
+    pcl::io::savePCDFile(featuresFileName.toStdString(), *shotDescriptors);
+    pcl::io::savePCDFile(keypointsFileName.toStdString(), *shotKeypoints);
+    pcl::io::savePCDFile(modelFileName.toStdString(), *mainCloud);
+
+    QSettings settings(metaFileName, QSettings::IniFormat);
+    settings.setValue("identifier",ident);
+    settings.setValue("countFeatures",QString::number(shotDescriptors->size()));
+    settings.sync();
 }
 
 void MainWindow::identifyScene()
@@ -915,58 +929,192 @@ void MainWindow::identifyScene()
     // Get User Input
     double descriptorDist = ui->fdDescriptorDistance->value();
 
-    list<string> files = Util::readFileNames(databasePath,"pcd");
-    map<string,pcl::PointCloud<pcl::SHOT352>::Ptr> modelMap;
-    map<string,int> matchMap;
+    // Set Typedefs
+    typedef pcl::PointXYZRGB PointType;
+    typedef pcl::Normal NormalType;
+    typedef pcl::ReferenceFrame RFType;
+    typedef pcl::SHOT352 DescriptorType;
 
-    for (list<string>::const_iterator i = files.begin(), end = files.end(); i != end; ++i) {
-        string absolutPath =  this->databasePath + "/" + *i;
-        this->printInfo("Loading Descriptors for: " + QString::fromStdString(absolutPath));
-        modelMap[*i] = pcl::PointCloud<pcl::SHOT352>::Ptr(new pcl::PointCloud<pcl::SHOT352>);
-        matchMap[*i] = 0;
-        pcl::io::loadPCDFile(absolutPath, *(modelMap[*i]));
-    }
+    // Build Data Structures
+    list<string> files = Util::readFileNames(databasePath,"meta");
+    QString databasePath = QString::fromStdString(this->databasePath);
 
-    for (map<string,pcl::PointCloud<pcl::SHOT352>::Ptr>::const_iterator i = modelMap.begin(), end = modelMap.end(); i != end; ++i) {
-        string ident = i->first;
-        pcl::PointCloud<pcl::SHOT352>::Ptr model = i->second;
-        this->printInfo("Calculating Match for: " + QString::fromStdString(ident));
+    QList<string> databaseList = QList<string>::fromStdList(files);
+    pcl::PointCloud<pcl::SHOT352>::Ptr loadedFeatures = pcl::PointCloud<pcl::SHOT352>::Ptr(new pcl::PointCloud<pcl::SHOT352>);
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr loadedKeypoints = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(new pcl::PointCloud<pcl::PointXYZRGB>);
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr loadedModel = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(new pcl::PointCloud<pcl::PointXYZRGB>);
+
+    QMap<QString,pcl::PointCloud<pcl::SHOT352>::Ptr> featuresMap;
+    QMap<QString,pcl::PointCloud<pcl::PointXYZRGB>::Ptr> keypointsMap;
+
+    // Iterate through every element in the database and init the Maps
+    for (int i = 0; i < databaseList.size(); ++i) {
+        // Get the identifier
+        QString ident = QString::fromStdString(databaseList.at(i)).split(".",QString::SkipEmptyParts).at(0);
+
+        // Set the filenames
+        QString metaFileName = databasePath + "/" + ident + ".meta";
+        QString modelFileName = databasePath + "/" + ident + "_model.pcd";
+        QString keypointsFileName = databasePath + "/" + ident + "_points.pcd";
+        QString featuresFileName = databasePath + "/" + ident + "_features.pcd";
+
+        pcl::PointCloud<NormalType>::Ptr model_normals (new pcl::PointCloud<NormalType> ());
+        pcl::PointCloud<NormalType>::Ptr scene_normals (new pcl::PointCloud<NormalType> ());
+
+        this->printInfo("Current Database Element: " + ident);
+
+        //keypointsMap[ident] = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(new pcl::PointCloud<pcl::PointXYZRGB>);
+        pcl::io::loadPCDFile(featuresFileName.toStdString(), *loadedFeatures);
+        pcl::io::loadPCDFile(keypointsFileName.toStdString(), *loadedKeypoints);
+        pcl::io::loadPCDFile(modelFileName.toStdString(), *loadedModel);
 
         pcl::KdTreeFLANN<pcl::SHOT352> match_search;
-        match_search.setInputCloud (shotDescriptors);
+        match_search.setInputCloud (loadedFeatures);
+        pcl::CorrespondencesPtr model_scene_corrs (new pcl::Correspondences());
 
-        for (size_t i = 0; i < model->size (); ++i) {
+        //  For each scene keypoint descriptor, find nearest neighbor into the model keypoints descriptor cloud and add it to the correspondences vector.
+        for (size_t i = 0; i < shotDescriptors->size (); ++i)
+        {
             std::vector<int> neigh_indices (1);
             std::vector<float> neigh_sqr_dists (1);
-            if (!pcl_isfinite (model->at (i).descriptor[0])) //skipping NaNs
+            if (!pcl_isfinite (shotDescriptors->at (i).descriptor[0])) //skipping NaNs
             {
                 continue;
             }
-            int found_neighs = match_search.nearestKSearch (model->at (i), 1, neigh_indices, neigh_sqr_dists);
-            if(found_neighs == 1 && neigh_sqr_dists[0] < descriptorDist){
-                matchMap[ident]++;
+            int found_neighs = match_search.nearestKSearch (shotDescriptors->at (i), 1, neigh_indices, neigh_sqr_dists);
+            if(found_neighs == 1 && neigh_sqr_dists[0] < (float)descriptorDist) //  add match only if the squared descriptor distance is less than 0.25 (SHOT descriptor distances are between 0 and 1 by design)
+            {
+                pcl::Correspondence corr (neigh_indices[0], static_cast<int> (i), neigh_sqr_dists[0]);
+                model_scene_corrs->push_back (corr);
             }
+        }
+
+        this->printInfo("Correspondences found: " + QString::number(model_scene_corrs->size()));
+        this->printInfo("Performing Identifying with Hough3D ...");
+
+        // Compute Normals
+        pcl::NormalEstimationOMP<PointType, NormalType> norm_est;
+        norm_est.setKSearch (10);
+        norm_est.setInputCloud (loadedModel);
+        norm_est.compute (*model_normals);
+        norm_est.setInputCloud (mainCloud);
+        norm_est.compute (*scene_normals);
+
+
+        //  Actual Clustering
+        std::vector<Eigen::Matrix4f, Eigen::aligned_allocator<Eigen::Matrix4f> > rototranslations;
+        std::vector<pcl::Correspondences> clustered_corrs;
+
+        //  Using Hough3D
+        pcl::PointCloud<RFType>::Ptr model_rf (new pcl::PointCloud<RFType> ());
+        pcl::PointCloud<RFType>::Ptr scene_rf (new pcl::PointCloud<RFType> ());
+
+        pcl::BOARDLocalReferenceFrameEstimation<PointType, NormalType, RFType> rf_est;
+        rf_est.setFindHoles (true);
+        rf_est.setRadiusSearch (0.10);
+
+        rf_est.setInputCloud (loadedKeypoints);
+        rf_est.setInputNormals (model_normals);
+        rf_est.setSearchSurface (loadedModel);
+        rf_est.compute (*model_rf);
+
+        rf_est.setInputCloud (shotKeypoints);
+        rf_est.setInputNormals (scene_normals);
+        rf_est.setSearchSurface (mainCloud);
+        rf_est.compute (*scene_rf);
+
+        //  Clustering
+        pcl::Hough3DGrouping<PointType, PointType, RFType, RFType> clusterer;
+        clusterer.setHoughBinSize (0.21);
+        clusterer.setHoughThreshold (-0.4);
+        clusterer.setUseInterpolation (true);
+        clusterer.setUseDistanceWeight (false);
+
+        clusterer.setInputCloud (loadedKeypoints);
+        clusterer.setInputRf (model_rf);
+        clusterer.setSceneCloud (shotKeypoints);
+        clusterer.setSceneRf (scene_rf);
+        clusterer.setModelSceneCorrespondences (model_scene_corrs);
+
+        //clusterer.cluster (clustered_corrs);
+        clusterer.recognize (rototranslations, clustered_corrs);
+
+        this->printInfo("Model instances found: " + QString::number(rototranslations.size()));
+
+        for (size_t i = 0; i < rototranslations.size (); ++i)
+        {
+            pcl::PointCloud<PointType>::Ptr rotated_model (new pcl::PointCloud<PointType> ());
+            pcl::transformPointCloud (*loadedModel, *rotated_model, rototranslations[i]);
+
+            std::stringstream ss_cloud;
+            ss_cloud << ident.toStdString() << i;
+
+            pcl::visualization::PointCloudColorHandlerCustom<PointType> rotated_model_color_handler (rotated_model, Util::randInt(50,200), Util::randInt(50,200), Util::randInt(50,200));
+            visu->visualizer.removePointCloud(ss_cloud.str());
+            visu->visualizer.addPointCloud (rotated_model, rotated_model_color_handler, ss_cloud.str ());
 
         }
 
-        this->printInfo("Matches so far: " + QString::number(matchMap[ident]));
+        this->printInfo("Finished Recognition");
+        this->updateCloud();
+
     }
 
-    // Find Match
-    string result = "";
-    int init = 0;
-    for (map<string,int>::const_iterator i = matchMap.begin(), end = matchMap.end(); i != end; ++i) {
-        if(i->second > init) {
-            result = i->first;
-            init = i->second;
-        }
-    }
 
-    if(!result.empty()){
-        this->printInfo("The Match is: " + QString::fromStdString(result));
-    } else {
-        this->printInfo("No Match found");
-    }
+
+
+
+//    map<string,pcl::PointCloud<pcl::SHOT352>::Ptr> modelMap;
+//    map<string,int> matchMap;
+
+//    for (list<string>::const_iterator i = files.begin(), end = files.end(); i != end; ++i) {
+//        string absolutPath =  this->databasePath + "/" + *i;
+//        this->printInfo("Loading Descriptors for: " + QString::fromStdString(absolutPath));
+//        modelMap[*i] = pcl::PointCloud<pcl::SHOT352>::Ptr(new pcl::PointCloud<pcl::SHOT352>);
+//        matchMap[*i] = 0;
+//        pcl::io::loadPCDFile(absolutPath, *(modelMap[*i]));
+//    }
+
+//    for (map<string,pcl::PointCloud<pcl::SHOT352>::Ptr>::const_iterator i = modelMap.begin(), end = modelMap.end(); i != end; ++i) {
+//        string ident = i->first;
+//        pcl::PointCloud<pcl::SHOT352>::Ptr model = i->second;
+//        this->printInfo("Calculating Match for: " + QString::fromStdString(ident));
+
+//        pcl::KdTreeFLANN<pcl::SHOT352> match_search;
+//        match_search.setInputCloud (shotDescriptors);
+
+//        for (size_t i = 0; i < model->size (); ++i) {
+//            std::vector<int> neigh_indices (1);
+//            std::vector<float> neigh_sqr_dists (1);
+//            if (!pcl_isfinite (model->at (i).descriptor[0])) //skipping NaNs
+//            {
+//                continue;
+//            }
+//            int found_neighs = match_search.nearestKSearch (model->at (i), 1, neigh_indices, neigh_sqr_dists);
+//            if(found_neighs == 1 && neigh_sqr_dists[0] < descriptorDist){
+//                matchMap[ident]++;
+//            }
+
+//        }
+
+//        this->printInfo("Matches so far: " + QString::number(matchMap[ident]));
+//    }
+
+//    // Find Match
+//    string result = "";
+//    int init = 0;
+//    for (map<string,int>::const_iterator i = matchMap.begin(), end = matchMap.end(); i != end; ++i) {
+//        if(i->second > init) {
+//            result = i->first;
+//            init = i->second;
+//        }
+//    }
+
+//    if(!result.empty()){
+//        this->printInfo("The Match is: " + QString::fromStdString(result));
+//    } else {
+//        this->printInfo("No Match found");
+//    }
 
 }
 
