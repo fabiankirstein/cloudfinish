@@ -20,9 +20,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Feature Database
     //this->databasePath = "D:/Studium/FP/database";
-    this->databasePath = "D:/Studium/FP/db_toytrain";
+    this->databasePath = "D:/Studium/FP/db_toytrain_small";
     ui->fdDatabasePath->setText(QString::fromStdString(this->databasePath));
-    database = new DatabaseDialog(this, this->databasePath);
+    database = new DatabaseDialog(this);
 
     ui->console->setFontPointSize(10.5);
     // CONNECTIONS
@@ -165,7 +165,7 @@ void MainWindow::openFile()
 
 
         visu->visualizer.removeAllPointClouds();
-        visu->visualizer.removeAllShapes();
+        //visu->visualizer.removeAllShapes();
         //this->bleachCloud(mainCloud);
         //pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZRGB> colorHandler (mainCloud, 255, 255, 255);
         visu->visualizer.addPointCloud(mainCloud, cloud);
@@ -304,6 +304,17 @@ void MainWindow::mcPickPointCallback(const pcl::visualization::PointPickingEvent
     visu->visualizer.removeShape("mcPickSphere");
     visu->visualizer.addSphere(this->mcPickPoint, 0.1, 0.5, 0.6, 0.3, "mcPickSphere");
     this->printInfo("Set Point at: x=" + QString::number(this->mcPickPoint.x) + ", y=" + QString::number(this->mcPickPoint.y) + ", z=" + QString::number(this->mcPickPoint.z));
+}
+
+void MainWindow::addText(QString text, double x, double y, double z, double size, double r, double g, double b)
+{
+    //visu->visualizer.addText("hallo",100,100);
+    pcl::PointXYZRGB p;
+    p.x = x;
+    p.y = y;
+    p.z = z;
+    visu->visualizer.addText3D<pcl::PointXYZRGB>(text.toStdString(), p, size, r, g, b);
+
 }
 
 
@@ -817,7 +828,7 @@ void MainWindow::showAboutDialog()
 
 void MainWindow::showDatabaseDialog()
 {
-    database->initData();
+    database->initData(this->databasePath);
     database->exec();
 }
 
@@ -1041,16 +1052,38 @@ void MainWindow::identifyScene()
 
         this->printInfo("Model instances found: " + QString::number(rototranslations.size()));
 
+        // Calculate the center of the main cloud to determine direction of the text
+        Eigen::Vector4f mainCloudCenter;
+        pcl::compute3DCentroid(*mainCloud, mainCloudCenter);
+
         for (size_t i = 0; i < rototranslations.size (); ++i)
         {
             pcl::PointCloud<PointType>::Ptr rotated_model (new pcl::PointCloud<PointType> ());
             pcl::transformPointCloud (*loadedModel, *rotated_model, rototranslations[i]);
-
             std::stringstream ss_cloud;
             ss_cloud << ident.toStdString() << i;
 
             pcl::visualization::PointCloudColorHandlerCustom<PointType> rotated_model_color_handler (rotated_model, Util::randInt(50,200), Util::randInt(50,200), Util::randInt(50,200));
             visu->visualizer.removePointCloud(ss_cloud.str());
+
+            // Draw the labels of the objects
+            Eigen::Vector4f center;
+            pcl::compute3DCentroid(*rotated_model, center);
+            pcl::PointXYZ startLine(center[0], center[1], center[2]);
+            double offset = 1.0;
+            for(int i = 0; i < 3; i++){
+                if(center[i] >= mainCloudCenter[i]) {
+                    center[i] += offset;
+                } else {
+                    center[i] -= offset;
+                }
+            }
+            pcl::PointXYZ endLine(center[0], center[1], center[2]);
+            this->addText(ident, center[0], center[1], center[2], 0.2, 1.0, 0.0, 0.0);
+
+            visu->visualizer.addLine<pcl::PointXYZ, pcl::PointXYZ> (startLine, endLine, 0, 255, 0, ident.toStdString() + "_line");
+
+            //this->printInfo("Center: " + QString::number(center[0]));
             visu->visualizer.addPointCloud (rotated_model, rotated_model_color_handler, ss_cloud.str ());
 
         }

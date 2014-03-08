@@ -1,17 +1,15 @@
 #include "databaseDialog.h"
 
-DatabaseDialog::DatabaseDialog(QWidget *parent, std::string databasePath) : QDialog(parent), ui(new Ui::databaseDialog) {
+DatabaseDialog::DatabaseDialog(QWidget *parent) : QDialog(parent), ui(new Ui::databaseDialog) {
     ui->setupUi(this);
     connect(ui->halloButton, SIGNAL(clicked()),this, SLOT(sendSignal()));
-
-    this->databasePath = databasePath;
 
 
     //ui->tableView->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 
 }
 
-void DatabaseDialog::initData()
+void DatabaseDialog::initData(std::string databasePath)
 {
     std::list<std::string> files = Util::readFileNames(databasePath,"meta");
 

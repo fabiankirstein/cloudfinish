@@ -137,6 +137,8 @@ private:
     pcl::PointCloud<pcl::SHOT352>::Ptr shotDescriptors;
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr shotKeypoints;
 
+    void addText(QString text, double x, double y, double z, double size, double r, double g, double b);
+
     Rest restAPI;
 
 };

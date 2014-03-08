@@ -22,8 +22,8 @@ private:
     std::string databasePath;
 
 public:
-    DatabaseDialog(QWidget * parent, std::string databasePath);
-    void initData();
+    DatabaseDialog(QWidget * parent);
+    void initData(std::string databasePath);
 
 
 signals:
