@@ -87,6 +87,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mcDockWidget->hide();
     ui->rgDockWidget->hide();
 
+//    QtJson::JsonObject j;
+//    j["name"] = "Fabi";
+//    QtJson::JsonObject result = restAPI.post("recognition", j);
+//    this->printInfo((result["status"]).toString());
+
+
     // Rest API Status Test
 //    this->printInfo("Testing Semantic API ...");
 //    QtJson::JsonObject result = restAPI.get("status");

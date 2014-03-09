@@ -21,6 +21,7 @@ class Rest {
 public:
     Rest();
     QtJson::JsonObject get(QString action);
+    QtJson::JsonObject post(QString action, QtJson::JsonObject content);
 
 };
 
