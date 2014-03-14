@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu 13. Mar 20:44:51 2014
+** Created: Fri 14. Mar 10:04:54 2014
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -668,7 +668,7 @@ public:
         fdShotSceneRadius->setDecimals(3);
         fdShotSceneRadius->setMinimum(0.01);
         fdShotSceneRadius->setSingleStep(0.1);
-        fdShotSceneRadius->setValue(0.4);
+        fdShotSceneRadius->setValue(0.1);
 
         formLayout_5->setWidget(0, QFormLayout::FieldRole, fdShotSceneRadius);
 
@@ -764,18 +764,6 @@ public:
         formLayout_7->setWidget(0, QFormLayout::FieldRole, fdDescriptorDistance);
 
         dockWidget->setWidget(dockWidgetContents_5);
-        openDatabase->raise();
-        tabWidget->raise();
-        fdDatabasePath->raise();
-        fdSetDatabase->raise();
-        fdMessage->raise();
-        formLayoutWidget_6->raise();
-        fdAddToDatabase->raise();
-        fdStartIdentify->raise();
-        formLayoutWidget_7->raise();
-        label_24->raise();
-        fdDescriptorDistance->raise();
-        fdDescriptorDistance->raise();
         MainWindow->addDockWidget(static_cast<Qt::DockWidgetArea>(1), dockWidget);
 
         menuBar->addAction(menuDatei->menuAction());

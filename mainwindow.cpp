@@ -171,7 +171,7 @@ void MainWindow::openFile()
 
 
         visu->visualizer.removeAllPointClouds();
-        //visu->visualizer.removeAllShapes();
+        visu->visualizer.removeAllShapes();
         //this->bleachCloud(mainCloud);
         //pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZRGB> colorHandler (mainCloud, 255, 255, 255);
         visu->visualizer.addPointCloud(mainCloud, cloud);
@@ -962,8 +962,12 @@ void MainWindow::identifyScene()
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr loadedKeypoints = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(new pcl::PointCloud<pcl::PointXYZRGB>);
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr loadedModel = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(new pcl::PointCloud<pcl::PointXYZRGB>);
 
-    QMap<QString,pcl::PointCloud<pcl::SHOT352>::Ptr> featuresMap;
-    QMap<QString,pcl::PointCloud<pcl::PointXYZRGB>::Ptr> keypointsMap;
+    //QMap<QString,pcl::PointCloud<pcl::SHOT352>::Ptr> featuresMap;
+    //QMap<QString,pcl::PointCloud<pcl::PointXYZRGB>::Ptr> keypointsMap;
+
+    QList<QString> recognizedObjects;
+    QMap<QString,pcl::PointCloud<pcl::PointXYZRGB>::Ptr> objectMap;
+    QMap<QString,pcl::PointXYZ> centerMap;
 
     // Iterate through every element in the database and init the Maps
     for (int i = 0; i < databaseList.size(); ++i) {
@@ -1063,8 +1067,6 @@ void MainWindow::identifyScene()
         Eigen::Vector4f mainCloudCenter;
         pcl::compute3DCentroid(*mainCloud, mainCloudCenter);
 
-        QList<QString> recognizedObjects;
-
         for (size_t i = 0; i < rototranslations.size (); ++i)
         {
             pcl::PointCloud<PointType>::Ptr rotated_model (new pcl::PointCloud<PointType> ());
@@ -1088,94 +1090,77 @@ void MainWindow::identifyScene()
                 }
             }
             pcl::PointXYZ endLine(center[0], center[1], center[2]);
-            this->addText(ident, center[0], center[1], center[2], 0.2, 1.0, 0.0, 0.0);
+            this->addText(ident, center[0], center[1], center[2], 0.2, 1.0, 1.0, 1.0);
 
             visu->visualizer.addLine<pcl::PointXYZ, pcl::PointXYZ> (startLine, endLine, 0, 255, 0, ident.toStdString() + "_line");
 
             //this->printInfo("Center: " + QString::number(center[0]));
             visu->visualizer.addPointCloud (rotated_model, rotated_model_color_handler, ss_cloud.str ());
 
+            // Add for semenatic detection later
+            centerMap[ident] = startLine;
+            objectMap[ident] = rotated_model;
             recognizedObjects.append(ident);
 
         }
 
-        // Do the semantic
-        this->printInfo("Sending Request to Semantic Service");
-        QtJson::JsonObject request;
-        QtJson::JsonArray objects;
-
-        for (int i = 0; i < recognizedObjects.size(); ++i) {
-            QString ident = recognizedObjects.at(i);
-            QSettings settings(QString::fromStdString(this->databasePath) + "/" + ident + ".meta", QSettings::IniFormat);
-            QString url = settings.value("url", "unknown").toString();
-            objects.append(url);
-        }
-
-        request["objects"] = objects;
-        QtJson::JsonObject result = restAPI.post("recognition", request);
-        this->printInfo((result["status"]).toString());
-
-
-        this->printInfo("Finished Recognition");
         this->updateCloud();
 
     }
 
+    // Do the semantic
+    this->printInfo("Sending Request to Semantic Service");
+    QtJson::JsonObject request;
+    QtJson::JsonArray objects;
+
+    QMap<QString, QString> urlMap;
+
+    for (int i = 0; i < recognizedObjects.size(); ++i) {
+        QString ident = recognizedObjects.at(i);
+        QSettings settings(QString::fromStdString(this->databasePath) + "/" + ident + ".meta", QSettings::IniFormat);
+        QString url = settings.value("url", "unknown").toString();
+        objects.append(url);
+        urlMap[ident] = url;
+    }
+
+    request["objects"] = objects;
+    QtJson::JsonObject result = restAPI.post("recognition", request);
+    for (int i = 0; i < recognizedObjects.size(); ++i) {
+        QString identOrigin = recognizedObjects.at(i);
+        QString url = urlMap[recognizedObjects.at(i)];
+        if(result.contains(url)) {
+            QtJson::JsonObject sub = result[url].toMap();
+            if(sub.contains("connection")) {
+                QString connection = (sub["connection"]).toString();
+                this->printSuccess("Found Connection: " + url + " >>> " + connection);
+                QString identConnection = urlMap.key(connection);
+                if(recognizedObjects.contains(identConnection)) {
+                    this->printInfo("Visualize Connections");
+                    string lineId = identOrigin.toStdString() + identConnection.toStdString() + "_line";
+                    visu->visualizer.addLine<pcl::PointXYZ, pcl::PointXYZ> (centerMap[identConnection],
+                                                                            centerMap[identOrigin],
+                                                                            255, 255, 0,
+                                                                            lineId);
+                    visu->visualizer.setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_LINE_WIDTH, 5.0, lineId);
+                    double x = (centerMap[identConnection].x + centerMap[identOrigin].x) / 2;
+                    double y = (centerMap[identConnection].y + centerMap[identOrigin].y) / 2;
+                    double z = (centerMap[identConnection].z + centerMap[identOrigin].z) / 2;
+                    this->addText("hallo welt", x, y, z, 0.1, 1.0, 0.0, 0.0);
+
+                }
 
 
 
+            }
+        }
+    }
 
-//    map<string,pcl::PointCloud<pcl::SHOT352>::Ptr> modelMap;
-//    map<string,int> matchMap;
 
-//    for (list<string>::const_iterator i = files.begin(), end = files.end(); i != end; ++i) {
-//        string absolutPath =  this->databasePath + "/" + *i;
-//        this->printInfo("Loading Descriptors for: " + QString::fromStdString(absolutPath));
-//        modelMap[*i] = pcl::PointCloud<pcl::SHOT352>::Ptr(new pcl::PointCloud<pcl::SHOT352>);
-//        matchMap[*i] = 0;
-//        pcl::io::loadPCDFile(absolutPath, *(modelMap[*i]));
-//    }
 
-//    for (map<string,pcl::PointCloud<pcl::SHOT352>::Ptr>::const_iterator i = modelMap.begin(), end = modelMap.end(); i != end; ++i) {
-//        string ident = i->first;
-//        pcl::PointCloud<pcl::SHOT352>::Ptr model = i->second;
-//        this->printInfo("Calculating Match for: " + QString::fromStdString(ident));
+    this->printInfo("Finished Semantic");
+    this->updateCloud();
 
-//        pcl::KdTreeFLANN<pcl::SHOT352> match_search;
-//        match_search.setInputCloud (shotDescriptors);
 
-//        for (size_t i = 0; i < model->size (); ++i) {
-//            std::vector<int> neigh_indices (1);
-//            std::vector<float> neigh_sqr_dists (1);
-//            if (!pcl_isfinite (model->at (i).descriptor[0])) //skipping NaNs
-//            {
-//                continue;
-//            }
-//            int found_neighs = match_search.nearestKSearch (model->at (i), 1, neigh_indices, neigh_sqr_dists);
-//            if(found_neighs == 1 && neigh_sqr_dists[0] < descriptorDist){
-//                matchMap[ident]++;
-//            }
-
-//        }
-
-//        this->printInfo("Matches so far: " + QString::number(matchMap[ident]));
-//    }
-
-//    // Find Match
-//    string result = "";
-//    int init = 0;
-//    for (map<string,int>::const_iterator i = matchMap.begin(), end = matchMap.end(); i != end; ++i) {
-//        if(i->second > init) {
-//            result = i->first;
-//            init = i->second;
-//        }
-//    }
-
-//    if(!result.empty()){
-//        this->printInfo("The Match is: " + QString::fromStdString(result));
-//    } else {
-//        this->printInfo("No Match found");
-//    }
 
 }
 

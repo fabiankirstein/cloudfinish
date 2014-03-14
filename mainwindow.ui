@@ -897,7 +897,7 @@
            <double>0.100000000000000</double>
           </property>
           <property name="value">
-           <double>0.400000000000000</double>
+           <double>0.100000000000000</double>
           </property>
          </widget>
         </item>
@@ -1086,18 +1086,6 @@
       </item>
      </layout>
     </widget>
-    <zorder>openDatabase</zorder>
-    <zorder>tabWidget</zorder>
-    <zorder>fdDatabasePath</zorder>
-    <zorder>fdSetDatabase</zorder>
-    <zorder>fdMessage</zorder>
-    <zorder>formLayoutWidget_6</zorder>
-    <zorder>fdAddToDatabase</zorder>
-    <zorder>fdStartIdentify</zorder>
-    <zorder>formLayoutWidget_7</zorder>
-    <zorder>label_24</zorder>
-    <zorder>fdDescriptorDistance</zorder>
-    <zorder>fdDescriptorDistance</zorder>
    </widget>
   </widget>
   <action name="actionOpenPointCloud">
