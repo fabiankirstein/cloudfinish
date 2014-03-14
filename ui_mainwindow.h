@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu 6. Mar 13:57:54 2014
+** Created: Thu 13. Mar 20:44:51 2014
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -152,12 +152,14 @@ public:
     QFormLayout *formLayout_6;
     QLineEdit *fdIdent;
     QLabel *label_23;
+    QLineEdit *fdURL;
+    QLabel *label_25;
     QPushButton *fdAddToDatabase;
     QPushButton *fdStartIdentify;
     QWidget *formLayoutWidget_7;
     QFormLayout *formLayout_7;
-    QDoubleSpinBox *fdDescriptorDistance;
     QLabel *label_24;
+    QDoubleSpinBox *fdDescriptorDistance;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -705,7 +707,7 @@ public:
         fdMessage->setGeometry(QRect(10, 220, 261, 16));
         formLayoutWidget_6 = new QWidget(dockWidgetContents_5);
         formLayoutWidget_6->setObjectName(QString::fromUtf8("formLayoutWidget_6"));
-        formLayoutWidget_6->setGeometry(QRect(10, 250, 261, 31));
+        formLayoutWidget_6->setGeometry(QRect(10, 250, 261, 48));
         formLayout_6 = new QFormLayout(formLayoutWidget_6);
         formLayout_6->setSpacing(6);
         formLayout_6->setContentsMargins(11, 11, 11, 11);
@@ -721,21 +723,37 @@ public:
 
         formLayout_6->setWidget(0, QFormLayout::LabelRole, label_23);
 
+        fdURL = new QLineEdit(formLayoutWidget_6);
+        fdURL->setObjectName(QString::fromUtf8("fdURL"));
+
+        formLayout_6->setWidget(1, QFormLayout::FieldRole, fdURL);
+
+        label_25 = new QLabel(formLayoutWidget_6);
+        label_25->setObjectName(QString::fromUtf8("label_25"));
+
+        formLayout_6->setWidget(1, QFormLayout::LabelRole, label_25);
+
         fdAddToDatabase = new QPushButton(dockWidgetContents_5);
         fdAddToDatabase->setObjectName(QString::fromUtf8("fdAddToDatabase"));
         fdAddToDatabase->setEnabled(false);
-        fdAddToDatabase->setGeometry(QRect(164, 280, 111, 23));
+        fdAddToDatabase->setGeometry(QRect(164, 310, 111, 23));
         fdStartIdentify = new QPushButton(dockWidgetContents_5);
         fdStartIdentify->setObjectName(QString::fromUtf8("fdStartIdentify"));
-        fdStartIdentify->setGeometry(QRect(10, 350, 75, 23));
+        fdStartIdentify->setGeometry(QRect(10, 370, 75, 23));
         formLayoutWidget_7 = new QWidget(dockWidgetContents_5);
         formLayoutWidget_7->setObjectName(QString::fromUtf8("formLayoutWidget_7"));
-        formLayoutWidget_7->setGeometry(QRect(10, 310, 261, 22));
+        formLayoutWidget_7->setGeometry(QRect(10, 340, 261, 22));
         formLayout_7 = new QFormLayout(formLayoutWidget_7);
         formLayout_7->setSpacing(6);
         formLayout_7->setContentsMargins(11, 11, 11, 11);
         formLayout_7->setObjectName(QString::fromUtf8("formLayout_7"));
+        formLayout_7->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
         formLayout_7->setContentsMargins(0, 0, 0, 0);
+        label_24 = new QLabel(formLayoutWidget_7);
+        label_24->setObjectName(QString::fromUtf8("label_24"));
+
+        formLayout_7->setWidget(0, QFormLayout::LabelRole, label_24);
+
         fdDescriptorDistance = new QDoubleSpinBox(formLayoutWidget_7);
         fdDescriptorDistance->setObjectName(QString::fromUtf8("fdDescriptorDistance"));
         fdDescriptorDistance->setMinimum(0.01);
@@ -745,12 +763,19 @@ public:
 
         formLayout_7->setWidget(0, QFormLayout::FieldRole, fdDescriptorDistance);
 
-        label_24 = new QLabel(formLayoutWidget_7);
-        label_24->setObjectName(QString::fromUtf8("label_24"));
-
-        formLayout_7->setWidget(0, QFormLayout::LabelRole, label_24);
-
         dockWidget->setWidget(dockWidgetContents_5);
+        openDatabase->raise();
+        tabWidget->raise();
+        fdDatabasePath->raise();
+        fdSetDatabase->raise();
+        fdMessage->raise();
+        formLayoutWidget_6->raise();
+        fdAddToDatabase->raise();
+        fdStartIdentify->raise();
+        formLayoutWidget_7->raise();
+        label_24->raise();
+        fdDescriptorDistance->raise();
+        fdDescriptorDistance->raise();
         MainWindow->addDockWidget(static_cast<Qt::DockWidgetArea>(1), dockWidget);
 
         menuBar->addAction(menuDatei->menuAction());
@@ -876,6 +901,7 @@ public:
         fdSetDatabase->setText(QApplication::translate("MainWindow", "Set DB", 0, QApplication::UnicodeUTF8));
         fdMessage->setText(QApplication::translate("MainWindow", "No Feature Descriptors calculated yet.", 0, QApplication::UnicodeUTF8));
         label_23->setText(QApplication::translate("MainWindow", "Identifier:", 0, QApplication::UnicodeUTF8));
+        label_25->setText(QApplication::translate("MainWindow", "RDF-URL:", 0, QApplication::UnicodeUTF8));
         fdAddToDatabase->setText(QApplication::translate("MainWindow", "Add to Database", 0, QApplication::UnicodeUTF8));
         fdStartIdentify->setText(QApplication::translate("MainWindow", "Identify", 0, QApplication::UnicodeUTF8));
         label_24->setText(QApplication::translate("MainWindow", "Descriptor Distance:", 0, QApplication::UnicodeUTF8));

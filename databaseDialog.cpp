@@ -11,12 +11,13 @@ DatabaseDialog::DatabaseDialog(QWidget *parent) : QDialog(parent), ui(new Ui::da
 
 void DatabaseDialog::initData(std::string databasePath)
 {
+
     std::list<std::string> files = Util::readFileNames(databasePath,"meta");
 
     QStandardItemModel *model = new QStandardItemModel(files.size(),3,this); // 2 Rows, 3 Colums
 
     model->setHorizontalHeaderItem(0, new QStandardItem(QString("Name")));
-    model->setHorizontalHeaderItem(1, new QStandardItem(QString("Identifier")));
+    model->setHorizontalHeaderItem(1, new QStandardItem(QString("RDF-URL")));
     model->setHorizontalHeaderItem(2, new QStandardItem(QString("Features")));
 
     ui->tableView->setModel(model);
@@ -30,11 +31,15 @@ void DatabaseDialog::initData(std::string databasePath)
         QString fileName = QString::fromStdString(*it).split(".",QString::SkipEmptyParts).at(0);
         QStandardItem *firstRow = new QStandardItem(fileName);
 
-        QSettings settings(QString::fromStdString(this->databasePath + "/" + fileName.toStdString() + ".meta"), QSettings::IniFormat);
+        QSettings settings(QString::fromStdString(databasePath) + "/" + fileName + ".meta", QSettings::IniFormat);
         QString countFeatures = settings.value("countFeatures", "unknown").toString();
         QStandardItem *thirdRow = new QStandardItem(countFeatures);
 
+        QString url = settings.value("url", "unknown").toString();
+        QStandardItem *secondRow = new QStandardItem(url);
+
         model->setItem(index,0,firstRow);
+        model->setItem(index,1,secondRow);
         model->setItem(index,2,thirdRow);
         index++;
 

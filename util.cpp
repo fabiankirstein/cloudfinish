@@ -31,11 +31,11 @@ list<string> Util::readFileNames(string directory, string extension)
     HANDLE hFind;
     WIN32_FIND_DATA data;
 
-    directory += "/*.*";
-    std::wstring stemp = std::wstring(directory.begin(), directory.end());
+    string dir = directory + "/*.*";
+    std::wstring stemp = std::wstring(dir.begin(), dir.end());
     hFind = FindFirstFile(stemp.c_str(), &data);
 
-   printf(directory.c_str());
+   //printf(directory.c_str());
    if (hFind != INVALID_HANDLE_VALUE) {
        do {
                char ch[260];

@@ -937,6 +937,7 @@ void MainWindow::addToDatabase()
     QSettings settings(metaFileName, QSettings::IniFormat);
     settings.setValue("identifier",ident);
     settings.setValue("countFeatures",QString::number(shotDescriptors->size()));
+    settings.setValue("url",ui->fdURL->text());
     settings.sync();
 }
 
@@ -1062,6 +1063,8 @@ void MainWindow::identifyScene()
         Eigen::Vector4f mainCloudCenter;
         pcl::compute3DCentroid(*mainCloud, mainCloudCenter);
 
+        QList<QString> recognizedObjects;
+
         for (size_t i = 0; i < rototranslations.size (); ++i)
         {
             pcl::PointCloud<PointType>::Ptr rotated_model (new pcl::PointCloud<PointType> ());
@@ -1092,7 +1095,26 @@ void MainWindow::identifyScene()
             //this->printInfo("Center: " + QString::number(center[0]));
             visu->visualizer.addPointCloud (rotated_model, rotated_model_color_handler, ss_cloud.str ());
 
+            recognizedObjects.append(ident);
+
         }
+
+        // Do the semantic
+        this->printInfo("Sending Request to Semantic Service");
+        QtJson::JsonObject request;
+        QtJson::JsonArray objects;
+
+        for (int i = 0; i < recognizedObjects.size(); ++i) {
+            QString ident = recognizedObjects.at(i);
+            QSettings settings(QString::fromStdString(this->databasePath) + "/" + ident + ".meta", QSettings::IniFormat);
+            QString url = settings.value("url", "unknown").toString();
+            objects.append(url);
+        }
+
+        request["objects"] = objects;
+        QtJson::JsonObject result = restAPI.post("recognition", request);
+        this->printInfo((result["status"]).toString());
+
 
         this->printInfo("Finished Recognition");
         this->updateCloud();
