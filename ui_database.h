@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'database.ui'
 **
-** Created: Fri 21. Feb 13:56:15 2014
+** Created: Sat 15. Mar 09:07:53 2014
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -28,6 +28,7 @@ public:
     QDialogButtonBox *buttonBox;
     QPushButton *halloButton;
     QTableView *tableView;
+    QPushButton *openRDF;
 
     void setupUi(QDialog *databaseDialog)
     {
@@ -44,10 +45,15 @@ public:
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
         halloButton = new QPushButton(databaseDialog);
         halloButton->setObjectName(QString::fromUtf8("halloButton"));
-        halloButton->setGeometry(QRect(10, 530, 75, 23));
+        halloButton->setGeometry(QRect(10, 530, 171, 23));
         tableView = new QTableView(databaseDialog);
         tableView->setObjectName(QString::fromUtf8("tableView"));
         tableView->setGeometry(QRect(10, 10, 881, 511));
+        tableView->setSelectionMode(QAbstractItemView::SingleSelection);
+        tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+        openRDF = new QPushButton(databaseDialog);
+        openRDF->setObjectName(QString::fromUtf8("openRDF"));
+        openRDF->setGeometry(QRect(190, 530, 171, 23));
 
         retranslateUi(databaseDialog);
         QObject::connect(buttonBox, SIGNAL(accepted()), databaseDialog, SLOT(accept()));
@@ -60,6 +66,7 @@ public:
     {
         databaseDialog->setWindowTitle(QApplication::translate("databaseDialog", "Feature Database Manager", 0, QApplication::UnicodeUTF8));
         halloButton->setText(QApplication::translate("databaseDialog", "Open Model", 0, QApplication::UnicodeUTF8));
+        openRDF->setText(QApplication::translate("databaseDialog", "Open RDF Resource", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

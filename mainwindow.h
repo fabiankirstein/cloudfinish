@@ -89,6 +89,7 @@ public:
 private slots:
     void exitProgram();
     void openFile();
+    void openFileFromDatabase(QString ident);
     void saveFile();
     void saveAsPNG();
 
@@ -126,6 +127,7 @@ private:
     void setFallBack();
     void displayError(QString message);
     void updateCloud();
+    void openMainCloud(QString path);
 
     void mcPickPointCallback(const pcl::visualization::PointPickingEvent &event);
     pcl::PointXYZ mcPickPoint;

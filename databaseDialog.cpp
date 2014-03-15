@@ -2,7 +2,8 @@
 
 DatabaseDialog::DatabaseDialog(QWidget *parent) : QDialog(parent), ui(new Ui::databaseDialog) {
     ui->setupUi(this);
-    connect(ui->halloButton, SIGNAL(clicked()),this, SLOT(sendSignal()));
+    connect(ui->halloButton, SIGNAL(clicked()),this, SLOT(openModel()));
+    connect(ui->openRDF, SIGNAL(clicked()), this, SLOT(openRDF()));
 
 
     //ui->tableView->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
@@ -22,6 +23,7 @@ void DatabaseDialog::initData(std::string databasePath)
 
     ui->tableView->setModel(model);
     ui->tableView->setColumnWidth( 0, 200);
+    ui->tableView->setColumnWidth( 1, 300);
     ui->tableView->horizontalHeader()->setStretchLastSection(true);
 
     int index = 0;
@@ -48,7 +50,26 @@ void DatabaseDialog::initData(std::string databasePath)
 }
 
 
-void DatabaseDialog::sendSignal()
+void DatabaseDialog::openModel()
 {
-    emit buttonClicked();
+    QItemSelectionModel *select = ui->tableView->selectionModel();
+    QModelIndexList indexList = select->selectedRows();
+    if(indexList.size() == 1){
+        int selectedRow = indexList.at(0).row();
+        QString value = ui->tableView->model()->data(ui->tableView->model()->index(selectedRow,0)).toString();
+        this->close();
+        emit openSelectedModel(value);
+    }
+
+}
+
+void DatabaseDialog::openRDF()
+{
+    QItemSelectionModel *select = ui->tableView->selectionModel();
+    QModelIndexList indexList = select->selectedRows();
+    if(indexList.size() == 1){
+        int selectedRow = indexList.at(0).row();
+        QString value = ui->tableView->model()->data(ui->tableView->model()->index(selectedRow,1)).toString();
+        QDesktopServices::openUrl(QUrl(value));
+    }
 }

@@ -7,6 +7,9 @@
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <QSettings>
+#include <QDesktopServices>
+#include <QUrl>
+
 
 #include <list>
 #include <string>
@@ -25,11 +28,11 @@ public:
     DatabaseDialog(QWidget * parent);
     void initData(std::string databasePath);
 
-
 signals:
-    void buttonClicked();
+    void openSelectedModel(QString ident);
 
 public slots:
-    void sendSignal();
+    void openModel();
+    void openRDF();
 
 };

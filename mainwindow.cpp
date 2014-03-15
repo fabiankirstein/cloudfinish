@@ -60,8 +60,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->fdAddToDatabase, SIGNAL(clicked()), this, SLOT(addToDatabase()));
     connect(ui->fdStartIdentify, SIGNAL(clicked()), this, SLOT(identifyScene()));
 
-    // Test Connection
-    connect(database, SIGNAL(buttonClicked()), this, SLOT(showAboutDialog()));
+    // Database Manager Connections
+    connect(database, SIGNAL(openSelectedModel(QString)), this, SLOT(openFileFromDatabase(QString)));
 
     // END CONNECTIONS
     mainCloud = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(new pcl::PointCloud<pcl::PointXYZRGB>);
@@ -152,37 +152,48 @@ void MainWindow::openFile()
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open Point Cloud"), this->lastFile, tr("PCD (*.pcd);;PLY (*.ply)"));
 
     if(fileName != NULL) {
-
-        this->lastFile = QFileInfo(fileName).path();
-
-        if(fileName.endsWith(".pcd")) {
-            this->printInfo("Loading File: " + fileName);
-            qApp->processEvents();
-            pcl::io::loadPCDFile(fileName.toStdString(), *mainCloud);
-            this->printSuccess("Done Loading File: " + fileName);
-        }
-
-        if(fileName.endsWith(".ply")) {
-            this->printInfo("Loading File: " + fileName);
-            qApp->processEvents();
-            pcl::io::loadPLYFile(fileName.toStdString(), *mainCloud);
-            this->printSuccess("Done Loading File: " + fileName);
-        }
-
-
-        visu->visualizer.removeAllPointClouds();
-        visu->visualizer.removeAllShapes();
-        //this->bleachCloud(mainCloud);
-        //pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZRGB> colorHandler (mainCloud, 255, 255, 255);
-        visu->visualizer.addPointCloud(mainCloud, cloud);
-        visu->visualizer.resetCamera();
-        visu->update();
-
-        QString numberPoints = QString::number(mainCloud->points.size());
-        this->setStatusTip("Loaded Point Cloud: " + fileName + " (Points: " + numberPoints + ")");
+        this->openMainCloud(fileName);
     }
 
 }
+
+void MainWindow::openFileFromDatabase(QString ident)
+{
+    QString path = QString::fromStdString(this->databasePath) + "/" + ident + "_model.pcd";
+    this->openMainCloud(path);
+}
+
+void MainWindow::openMainCloud(QString path)
+{
+    this->lastFile = QFileInfo(path).path();
+
+    if(path.endsWith(".pcd")) {
+        this->printInfo("Loading File: " + path);
+        qApp->processEvents();
+        pcl::io::loadPCDFile(path.toStdString(), *mainCloud);
+        this->printSuccess("Done Loading File: " + path);
+    }
+
+    if(path.endsWith(".ply")) {
+        this->printInfo("Loading File: " + path);
+        qApp->processEvents();
+        pcl::io::loadPLYFile(path.toStdString(), *mainCloud);
+        this->printSuccess("Done Loading File: " + path);
+    }
+
+
+    visu->visualizer.removeAllPointClouds();
+    visu->visualizer.removeAllShapes();
+    //this->bleachCloud(mainCloud);
+    //pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZRGB> colorHandler (mainCloud, 255, 255, 255);
+    visu->visualizer.addPointCloud(mainCloud, cloud);
+    visu->visualizer.resetCamera();
+    visu->update();
+
+    QString numberPoints = QString::number(mainCloud->points.size());
+    this->setStatusTip("Loaded Point Cloud: " + path + " (Points: " + numberPoints + ")");
+}
+
 
 void MainWindow::saveFile()
 {
@@ -943,6 +954,7 @@ void MainWindow::addToDatabase()
 
 void MainWindow::identifyScene()
 {
+    this->calcShotFeatures();
 
     // Get User Input
     double descriptorDist = ui->fdDescriptorDistance->value();
@@ -1033,7 +1045,9 @@ void MainWindow::identifyScene()
 
         pcl::BOARDLocalReferenceFrameEstimation<PointType, NormalType, RFType> rf_est;
         rf_est.setFindHoles (true);
+
         rf_est.setRadiusSearch (0.10);
+        //rf_est.setRadiusSearch (0.60);
 
         rf_est.setInputCloud (loadedKeypoints);
         rf_est.setInputNormals (model_normals);
@@ -1047,8 +1061,10 @@ void MainWindow::identifyScene()
 
         //  Clustering
         pcl::Hough3DGrouping<PointType, PointType, RFType, RFType> clusterer;
+        //clusterer.setHoughBinSize (0.10);
         clusterer.setHoughBinSize (0.21);
         clusterer.setHoughThreshold (-0.4);
+        //clusterer.setHoughThreshold (-0.5);
         clusterer.setUseInterpolation (true);
         clusterer.setUseDistanceWeight (false);
 
@@ -1074,7 +1090,7 @@ void MainWindow::identifyScene()
             std::stringstream ss_cloud;
             ss_cloud << ident.toStdString() << i;
 
-            pcl::visualization::PointCloudColorHandlerCustom<PointType> rotated_model_color_handler (rotated_model, Util::randInt(50,200), Util::randInt(50,200), Util::randInt(50,200));
+            pcl::visualization::PointCloudColorHandlerCustom<PointType> rotated_model_color_handler (rotated_model, Util::randInt(50,255), Util::randInt(50,255), Util::randInt(192,255));
             visu->visualizer.removePointCloud(ss_cloud.str());
 
             // Draw the labels of the objects
@@ -1082,6 +1098,7 @@ void MainWindow::identifyScene()
             pcl::compute3DCentroid(*rotated_model, center);
             pcl::PointXYZ startLine(center[0], center[1], center[2]);
             double offset = 1.0;
+            //double offset = 0.2;
             for(int i = 0; i < 3; i++){
                 if(center[i] >= mainCloudCenter[i]) {
                     center[i] += offset;
@@ -1091,6 +1108,7 @@ void MainWindow::identifyScene()
             }
             pcl::PointXYZ endLine(center[0], center[1], center[2]);
             this->addText(ident, center[0], center[1], center[2], 0.2, 1.0, 1.0, 1.0);
+            //this->addText(ident, center[0], center[1], center[2], 0.05, 1.0, 1.0, 1.0);
 
             visu->visualizer.addLine<pcl::PointXYZ, pcl::PointXYZ> (startLine, endLine, 0, 255, 0, ident.toStdString() + "_line");
 
