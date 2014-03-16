@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri 14. Mar 10:04:54 2014
+** Created: Sun 16. Mar 15:52:14 2014
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -668,7 +668,7 @@ public:
         fdShotSceneRadius->setDecimals(3);
         fdShotSceneRadius->setMinimum(0.01);
         fdShotSceneRadius->setSingleStep(0.1);
-        fdShotSceneRadius->setValue(0.1);
+        fdShotSceneRadius->setValue(0.2);
 
         formLayout_5->setWidget(0, QFormLayout::FieldRole, fdShotSceneRadius);
 
@@ -759,7 +759,7 @@ public:
         fdDescriptorDistance->setMinimum(0.01);
         fdDescriptorDistance->setMaximum(0.99);
         fdDescriptorDistance->setSingleStep(0.01);
-        fdDescriptorDistance->setValue(0.25);
+        fdDescriptorDistance->setValue(0.2);
 
         formLayout_7->setWidget(0, QFormLayout::FieldRole, fdDescriptorDistance);
 

@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Feature Database
     //this->databasePath = "D:/Studium/FP/database";
-    this->databasePath = "D:/Studium/FP/db_toytrain_small";
+    this->databasePath = "D:/Studium/FP/db_train_small";
     ui->fdDatabasePath->setText(QString::fromStdString(this->databasePath));
     database = new DatabaseDialog(this);
 
@@ -981,6 +981,10 @@ void MainWindow::identifyScene()
     QMap<QString,pcl::PointCloud<pcl::PointXYZRGB>::Ptr> objectMap;
     QMap<QString,pcl::PointXYZ> centerMap;
 
+    // Calculate the center of the main cloud to determine direction of the text
+    Eigen::Vector4f mainCloudCenter;
+    pcl::compute3DCentroid(*mainCloud, mainCloudCenter);
+
     // Iterate through every element in the database and init the Maps
     for (int i = 0; i < databaseList.size(); ++i) {
         // Get the identifier
@@ -1063,7 +1067,8 @@ void MainWindow::identifyScene()
         pcl::Hough3DGrouping<PointType, PointType, RFType, RFType> clusterer;
         //clusterer.setHoughBinSize (0.10);
         clusterer.setHoughBinSize (0.21);
-        clusterer.setHoughThreshold (-0.4);
+        //clusterer.setHoughThreshold (-0.4);
+        clusterer.setHoughThreshold (-1.0);
         //clusterer.setHoughThreshold (-0.5);
         clusterer.setUseInterpolation (true);
         clusterer.setUseDistanceWeight (false);
@@ -1079,10 +1084,6 @@ void MainWindow::identifyScene()
 
         this->printInfo("Model instances found: " + QString::number(rototranslations.size()));
 
-        // Calculate the center of the main cloud to determine direction of the text
-        Eigen::Vector4f mainCloudCenter;
-        pcl::compute3DCentroid(*mainCloud, mainCloudCenter);
-
         for (size_t i = 0; i < rototranslations.size (); ++i)
         {
             pcl::PointCloud<PointType>::Ptr rotated_model (new pcl::PointCloud<PointType> ());
@@ -1097,26 +1098,12 @@ void MainWindow::identifyScene()
             Eigen::Vector4f center;
             pcl::compute3DCentroid(*rotated_model, center);
             pcl::PointXYZ startLine(center[0], center[1], center[2]);
-            double offset = 1.0;
-            //double offset = 0.2;
-            for(int i = 0; i < 3; i++){
-                if(center[i] >= mainCloudCenter[i]) {
-                    center[i] += offset;
-                } else {
-                    center[i] -= offset;
-                }
-            }
-            pcl::PointXYZ endLine(center[0], center[1], center[2]);
-            this->addText(ident, center[0], center[1], center[2], 0.2, 1.0, 1.0, 1.0);
-            //this->addText(ident, center[0], center[1], center[2], 0.05, 1.0, 1.0, 1.0);
-
-            visu->visualizer.addLine<pcl::PointXYZ, pcl::PointXYZ> (startLine, endLine, 0, 255, 0, ident.toStdString() + "_line");
+            centerMap[ident] = startLine;
 
             //this->printInfo("Center: " + QString::number(center[0]));
             visu->visualizer.addPointCloud (rotated_model, rotated_model_color_handler, ss_cloud.str ());
 
             // Add for semenatic detection later
-            centerMap[ident] = startLine;
             objectMap[ident] = rotated_model;
             recognizedObjects.append(ident);
 
@@ -1142,11 +1129,30 @@ void MainWindow::identifyScene()
     }
 
     request["objects"] = objects;
+    this->printInfo("Request Payload: " + QtJson::serialize(request));
     QtJson::JsonObject result = restAPI.post("recognition", request);
     for (int i = 0; i < recognizedObjects.size(); ++i) {
         QString identOrigin = recognizedObjects.at(i);
         QString url = urlMap[recognizedObjects.at(i)];
-        if(result.contains(url)) {
+
+        Eigen::Vector4f endLineVector;
+        endLineVector[0] = centerMap[identOrigin].x;
+        endLineVector[1] = centerMap[identOrigin].y;
+        endLineVector[2] = centerMap[identOrigin].z;
+        double offset = 1.5;
+        for(int i = 0; i < 3; i++){
+            if(endLineVector[i] >= mainCloudCenter[i]) {
+                endLineVector[i] += offset;
+            } else {
+                endLineVector[i] -= offset;
+            }
+        }
+       pcl::PointXYZ endLine(endLineVector[0], endLineVector[1], endLineVector[2]);
+       visu->visualizer.addLine<pcl::PointXYZ, pcl::PointXYZ> (centerMap[identOrigin], endLine, 0, 255, 0, identOrigin.toStdString() + "_line");
+
+       QString label = identOrigin;
+
+       if(result.contains(url)) {
             QtJson::JsonObject sub = result[url].toMap();
             if(sub.contains("connection")) {
                 QString connection = (sub["connection"]).toString();
@@ -1166,11 +1172,31 @@ void MainWindow::identifyScene()
                     this->addText("hallo welt", x, y, z, 0.1, 1.0, 0.0, 0.0);
 
                 }
+            }
+
+            if(sub.contains("name")) {
+                label = sub["name"].toString();
+            }
+
+            if(sub.contains("properties")) {
+                QtJson::JsonObject properties = sub["properties"].toMap();
+                QtJson::JsonObject::const_iterator i = properties.constBegin();
+                while(i != properties.constEnd()) {
+                    this->addText(i.key() + ": " + i.value().toString(), endLine.x, endLine.y+0.3, endLine.z, 0.10, 1.0, 1.0, 1.0);
+                    this->printSuccess(i.key() + " --- "  + i.value().toString());
+                    ++i;
+                }
 
 
-
+                label = sub["name"].toString();
             }
         }
+
+       this->addText(label, endLine.x, endLine.y, endLine.z, 0.15, 1.0, 1.0, 1.0);
+
+
+
+
     }
 
 
