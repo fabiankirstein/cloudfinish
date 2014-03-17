@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Feature Database
     //this->databasePath = "D:/Studium/FP/database";
-    this->databasePath = "D:/Studium/FP/db_train_small";
+    this->databasePath = "D:/Studium/FP/db_train";
     ui->fdDatabasePath->setText(QString::fromStdString(this->databasePath));
     database = new DatabaseDialog(this);
 
@@ -326,11 +326,13 @@ void MainWindow::mcPickPointCallback(const pcl::visualization::PointPickingEvent
 void MainWindow::addText(QString text, double x, double y, double z, double size, double r, double g, double b)
 {
     //visu->visualizer.addText("hallo",100,100);
+    int hash = Util::randInt(1,10000);
+    QString id = text + "_" + QString::number(hash);
     pcl::PointXYZRGB p;
     p.x = x;
     p.y = y;
     p.z = z;
-    visu->visualizer.addText3D<pcl::PointXYZRGB>(text.toStdString(), p, size, r, g, b);
+    visu->visualizer.addText3D<pcl::PointXYZRGB>(text.toStdString(), p, size, r, g, b, id.toStdString());
 
 }
 
@@ -1135,43 +1137,43 @@ void MainWindow::identifyScene()
         QString identOrigin = recognizedObjects.at(i);
         QString url = urlMap[recognizedObjects.at(i)];
 
-        Eigen::Vector4f endLineVector;
-        endLineVector[0] = centerMap[identOrigin].x;
-        endLineVector[1] = centerMap[identOrigin].y;
-        endLineVector[2] = centerMap[identOrigin].z;
-        double offset = 1.5;
-        for(int i = 0; i < 3; i++){
-            if(endLineVector[i] >= mainCloudCenter[i]) {
-                endLineVector[i] += offset;
-            } else {
-                endLineVector[i] -= offset;
-            }
-        }
-       pcl::PointXYZ endLine(endLineVector[0], endLineVector[1], endLineVector[2]);
+       pcl::PointXYZ endLine = this->calcOffset(centerMap[identOrigin],mainCloudCenter);
        visu->visualizer.addLine<pcl::PointXYZ, pcl::PointXYZ> (centerMap[identOrigin], endLine, 0, 255, 0, identOrigin.toStdString() + "_line");
-
+        visu->visualizer.setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_LINE_WIDTH, 3.0, identOrigin.toStdString() + "_line");
        QString label = identOrigin;
 
        if(result.contains(url)) {
             QtJson::JsonObject sub = result[url].toMap();
-            if(sub.contains("connection")) {
-                QString connection = (sub["connection"]).toString();
-                this->printSuccess("Found Connection: " + url + " >>> " + connection);
-                QString identConnection = urlMap.key(connection);
-                if(recognizedObjects.contains(identConnection)) {
-                    this->printInfo("Visualize Connections");
-                    string lineId = identOrigin.toStdString() + identConnection.toStdString() + "_line";
-                    visu->visualizer.addLine<pcl::PointXYZ, pcl::PointXYZ> (centerMap[identConnection],
-                                                                            centerMap[identOrigin],
-                                                                            255, 255, 0,
-                                                                            lineId);
-                    visu->visualizer.setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_LINE_WIDTH, 5.0, lineId);
-                    double x = (centerMap[identConnection].x + centerMap[identOrigin].x) / 2;
-                    double y = (centerMap[identConnection].y + centerMap[identOrigin].y) / 2;
-                    double z = (centerMap[identConnection].z + centerMap[identOrigin].z) / 2;
-                    this->addText("hallo welt", x, y, z, 0.1, 1.0, 0.0, 0.0);
+            if(sub.contains("connections")) {
+                QtJson::JsonArray connections = (sub["connections"]).toList();
 
+                foreach(QVariant c, connections) {
+                    QString connection = c.toString();
+                    this->printSuccess("Found Connection: " + url + " >>> " + connection);
+                    QString identConnection = urlMap.key(connection);
+                    if(recognizedObjects.contains(identConnection)) {
+                        string lineId = identOrigin.toStdString() + identConnection.toStdString() + "_line";
+
+                        float distance = pcl::euclideanDistance<pcl::PointXYZ,pcl::PointXYZ>(centerMap[identConnection],centerMap[identOrigin]);
+
+                        this->printInfo("Distance: " + QString::number(distance));
+                        if(distance < 2.0) {
+                            this->printInfo("Visualize Connection");
+                            visu->visualizer.addLine<pcl::PointXYZ, pcl::PointXYZ> (this->calcOffset(centerMap[identConnection], mainCloudCenter),
+                                                                                    endLine,
+                                                                                    255, 255, 0,
+                                                                                    lineId);
+                            //visu->visualizer.setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_LINE_WIDTH, 3.0, lineId);
+                            double x = (centerMap[identConnection].x + centerMap[identOrigin].x) / 2;
+                            double y = (centerMap[identConnection].y + centerMap[identOrigin].y) / 2;
+                            double z = (centerMap[identConnection].z + centerMap[identOrigin].z) / 2;
+                        }
+
+                        //this->addText("hallo welt", x, y, z, 0.1, 1.0, 0.0, 0.0);
+
+                    }
                 }
+
             }
 
             if(sub.contains("name")) {
@@ -1181,21 +1183,20 @@ void MainWindow::identifyScene()
             if(sub.contains("properties")) {
                 QtJson::JsonObject properties = sub["properties"].toMap();
                 QtJson::JsonObject::const_iterator i = properties.constBegin();
+                double lineWidth = 0.4;
                 while(i != properties.constEnd()) {
-                    this->addText(i.key() + ": " + i.value().toString(), endLine.x, endLine.y+0.3, endLine.z, 0.10, 1.0, 1.0, 1.0);
-                    this->printSuccess(i.key() + " --- "  + i.value().toString());
+                    label += "\n" + i.key() + ": " + i.value().toString();
+                    //this->addText(i.key() + ": " + i.value().toString(), endLine.x+lineWidth, endLine.y, endLine.z, 0.10, 1.0, 1.0, 1.0);
+                    //this->printSuccess(i.key() + " --- "  + i.value().toString());
                     ++i;
+                    lineWidth += lineWidth;
                 }
 
-
-                label = sub["name"].toString();
             }
         }
 
-       this->addText(label, endLine.x, endLine.y, endLine.z, 0.15, 1.0, 1.0, 1.0);
-
-
-
+       pcl::PointXYZ endLabel = this->calcOffset(centerMap[identOrigin],mainCloudCenter,1.7);
+       this->addText(label, endLabel.x, endLabel.y, endLabel.z, 0.10, 1.0, 1.0, 1.0);
 
     }
 
@@ -1205,8 +1206,25 @@ void MainWindow::identifyScene()
     this->updateCloud();
 
 
-
 }
+
+pcl::PointXYZ MainWindow::calcOffset(pcl::PointXYZ& center, Eigen::Vector4f& mainCloudCenter, double offset) {
+    Eigen::Vector4f endLineVector;
+    endLineVector[0] = center.x;
+    endLineVector[1] = center.y;
+    endLineVector[2] = center.z;
+    for(int i = 0; i < 3; i++){
+        if(endLineVector[i] >= mainCloudCenter[i]) {
+            endLineVector[i] += offset;
+        } else {
+            endLineVector[i] -= offset;
+        }
+    }
+   pcl::PointXYZ endLine(endLineVector[0], endLineVector[1], endLineVector[2]);
+   return endLine;
+}
+
+
 
 
 void MainWindow::toggleCoordinateSystem()

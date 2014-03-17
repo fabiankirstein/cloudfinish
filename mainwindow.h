@@ -17,6 +17,7 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/io/ply_io.h>
 #include <pcl/io/io.h>
+#include <pcl/common/distances.h>
 
 // Region Growing
 #include <vector>
@@ -140,6 +141,7 @@ private:
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr shotKeypoints;
 
     void addText(QString text, double x, double y, double z, double size, double r, double g, double b);
+    pcl::PointXYZ calcOffset(pcl::PointXYZ& center, Eigen::Vector4f& mainCloudCenter, double offset = 1.5);
 
     Rest restAPI;
 
