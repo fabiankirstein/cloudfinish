@@ -1139,7 +1139,7 @@ void MainWindow::identifyScene()
 
        pcl::PointXYZ endLine = this->calcOffset(centerMap[identOrigin],mainCloudCenter);
        visu->visualizer.addLine<pcl::PointXYZ, pcl::PointXYZ> (centerMap[identOrigin], endLine, 0, 255, 0, identOrigin.toStdString() + "_line");
-        visu->visualizer.setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_LINE_WIDTH, 3.0, identOrigin.toStdString() + "_line");
+       visu->visualizer.setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_LINE_WIDTH, 3.0, identOrigin.toStdString() + "_line");
        QString label = identOrigin;
 
        if(result.contains(url)) {
@@ -1163,7 +1163,7 @@ void MainWindow::identifyScene()
                                                                                     endLine,
                                                                                     255, 255, 0,
                                                                                     lineId);
-                            //visu->visualizer.setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_LINE_WIDTH, 3.0, lineId);
+                            visu->visualizer.setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_LINE_WIDTH, 3.0, lineId);
                             double x = (centerMap[identConnection].x + centerMap[identOrigin].x) / 2;
                             double y = (centerMap[identConnection].y + centerMap[identOrigin].y) / 2;
                             double z = (centerMap[identConnection].z + centerMap[identOrigin].z) / 2;
